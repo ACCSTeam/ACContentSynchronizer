@@ -10,7 +10,6 @@ namespace ACContentSynchronizer.Models {
 
     public Task<byte[]> Pack() {
       const string zipsPath = "archives";
-      const string dataPath = "data";
 
       if (Directory.Exists(zipsPath)) {
         Directory.Delete(zipsPath, true);
@@ -20,25 +19,55 @@ namespace ACContentSynchronizer.Models {
       Directory.CreateDirectory(Path.Combine(zipsPath, Constants.CarsFolder));
       Directory.CreateDirectory(Path.Combine(zipsPath, Constants.TracksFolder));
 
-      if (File.Exists(dataPath)) {
-        File.Delete(dataPath);
+      if (File.Exists(Constants.DataFile)) {
+        File.Delete(Constants.DataFile);
       }
 
       foreach (var car in Cars) {
-        var zipPath = Path.Combine(zipsPath, Constants.CarsFolder, car.Name.Replace(' ', '_'));
-        ZipFile.CreateFromDirectory(car.LocalPath, zipPath,
-          CompressionLevel.Optimal, false);
+        var carPath = Path.Combine(zipsPath, Constants.CarsFolder, NormalizeName(car.Name));
+        DirectoryCopy(car.LocalPath, carPath, true);
       }
 
       if (Track != null) {
-        var zipPath = Path.Combine(zipsPath, Constants.TracksFolder, Track.Name.Replace(' ', '_'));
-        ZipFile.CreateFromDirectory(Track.LocalPath, zipPath,
-          CompressionLevel.Optimal, false);
+        var trackPath = Path.Combine(zipsPath, Constants.TracksFolder, NormalizeName(Track.Name));
+        DirectoryCopy(Track.LocalPath, trackPath, true);
       }
 
-      ZipFile.CreateFromDirectory(zipsPath, dataPath, CompressionLevel.Optimal, false);
+      ZipFile.CreateFromDirectory(zipsPath, Constants.DataFile, CompressionLevel.Optimal, false);
 
-      return File.ReadAllBytesAsync(dataPath);
+      return File.ReadAllBytesAsync(Constants.DataFile);
+    }
+
+    private string NormalizeName(string name) {
+      return name.Replace(' ', '_');
+    }
+
+    private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs) {
+      DirectoryInfo dir = new(sourceDirName);
+
+      if (!dir.Exists) {
+        throw new DirectoryNotFoundException(
+          "Source directory does not exist or could not be found: "
+          + sourceDirName);
+      }
+
+      DirectoryInfo[] dirs = dir.GetDirectories();
+
+      Directory.CreateDirectory(destDirName);
+
+      FileInfo[] files = dir.GetFiles();
+
+      foreach (FileInfo file in files) {
+        string tempPath = Path.Combine(destDirName, file.Name);
+        file.CopyTo(tempPath, false);
+      }
+
+      if (copySubDirs) {
+        foreach (DirectoryInfo subDir in dirs) {
+          string tempPath = Path.Combine(destDirName, subDir.Name);
+          DirectoryCopy(subDir.FullName, tempPath, copySubDirs);
+        }
+      }
     }
   }
 }

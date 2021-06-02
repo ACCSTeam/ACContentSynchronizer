@@ -1,6 +1,5 @@
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Models;
