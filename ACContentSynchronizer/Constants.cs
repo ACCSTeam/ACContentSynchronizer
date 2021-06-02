@@ -4,6 +4,6 @@ namespace ACContentSynchronizer {
     public const string ContentFolder = "content";
     public const string TracksFolder = "tracks";
     public const string CarsFolder = "cars";
-    public const string DataFile = "data.zip";
+    public const string ContentArchive = "content.zip";
   }
 }

@@ -1,24 +1,56 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
+using Microsoft.VisualBasic;
 
 namespace ACContentSynchronizer.Util {
-  internal class Program {
-    private static void Main(string[] args) {
+  internal static class Program {
+    private static async Task Main(string[] args) {
       try {
         var serverAddress = args[0];
-        var dataPath = args[1];
-        var dataReceiver = new DataReceiver(dataPath);
+        var gamePath = args[2];
+        var dataReceiver = new DataReceiver(serverAddress);
 
-        Console.WriteLine("Downloading content...");
+        Console.WriteLine($"Server address: {serverAddress}");
+        Console.WriteLine($"Game path: {gamePath}");
+        Console.WriteLine("Downloading manifest...");
 
-        dataReceiver.DownloadData(serverAddress);
+        await dataReceiver.DownloadManifest();
 
-        Console.WriteLine("Content downloaded");
-        Console.WriteLine("Trying to save content...");
+        Console.WriteLine("Manifest downloaded");
+        Console.WriteLine("Content comparing");
 
-        dataReceiver.SaveData();
+        var updatableEntries = dataReceiver.CompareContent(gamePath);
 
-        Console.WriteLine("Content saved");
+        if (updatableEntries.Any()) {
+          var entriesNames = string.Join("\n ", updatableEntries
+            .Select(entry => new DirectoryInfo(entry).Name));
+
+          Console.WriteLine($"Entries:\n {entriesNames}\nneed updates. \nDownload now (Y/N)");
+
+          var key = Console.ReadKey();
+          Console.WriteLine();
+
+          if (key.Key == ConsoleKey.Y) {
+            Console.WriteLine("Downloading content...");
+
+            await dataReceiver.DownloadData(updatableEntries);
+
+            Console.WriteLine("Content downloaded");
+            Console.WriteLine("Trying to save content...");
+
+            dataReceiver.SaveData();
+
+            Console.WriteLine("Content saved");
+            Console.WriteLine("Applying changes...");
+
+            dataReceiver.Apply(gamePath);
+          }
+        }
+
+        Console.WriteLine("Done!");
       } catch (Exception e) {
         Console.WriteLine(e);
       } finally {

@@ -5,69 +5,32 @@ using System.Threading.Tasks;
 
 namespace ACContentSynchronizer.Models {
   public class AvailableContent {
-    public List<CarInfo> Cars { get; set; } = new();
-    public TrackInfo? Track { get; set; }
+    public List<EntryInfo> Cars { get; set; } = new();
+    public EntryInfo? Track { get; set; }
 
     public Task<byte[]> Pack() {
-      const string zipsPath = "archives";
+      DirectoryUtils.DeleteIfExists(Constants.ContentFolder, true);
+      Directory.CreateDirectory(Constants.ContentFolder);
+      Directory.CreateDirectory(Path.Combine(Constants.ContentFolder, Constants.CarsFolder));
+      Directory.CreateDirectory(Path.Combine(Constants.ContentFolder, Constants.TracksFolder));
 
-      if (Directory.Exists(zipsPath)) {
-        Directory.Delete(zipsPath, true);
-      }
-
-      Directory.CreateDirectory(zipsPath);
-      Directory.CreateDirectory(Path.Combine(zipsPath, Constants.CarsFolder));
-      Directory.CreateDirectory(Path.Combine(zipsPath, Constants.TracksFolder));
-
-      if (File.Exists(Constants.DataFile)) {
-        File.Delete(Constants.DataFile);
+      if (File.Exists(Constants.ContentArchive)) {
+        File.Delete(Constants.ContentArchive);
       }
 
       foreach (var car in Cars) {
-        var carPath = Path.Combine(zipsPath, Constants.CarsFolder, NormalizeName(car.Name));
-        DirectoryCopy(car.LocalPath, carPath, true);
+        var carPath = Path.Combine(Constants.ContentFolder, Constants.CarsFolder, car.Name);
+        DirectoryUtils.Copy(car.Path, carPath, true);
       }
 
       if (Track != null) {
-        var trackPath = Path.Combine(zipsPath, Constants.TracksFolder, NormalizeName(Track.Name));
-        DirectoryCopy(Track.LocalPath, trackPath, true);
+        var trackPath = Path.Combine(Constants.ContentFolder, Constants.TracksFolder, Track.Name);
+        DirectoryUtils.Copy(Track.Path, trackPath, true);
       }
 
-      ZipFile.CreateFromDirectory(zipsPath, Constants.DataFile, CompressionLevel.Optimal, false);
+      ZipFile.CreateFromDirectory(Constants.ContentFolder, Constants.ContentArchive, CompressionLevel.Optimal, false);
 
-      return File.ReadAllBytesAsync(Constants.DataFile);
-    }
-
-    private string NormalizeName(string name) {
-      return name.Replace(' ', '_');
-    }
-
-    private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs) {
-      DirectoryInfo dir = new(sourceDirName);
-
-      if (!dir.Exists) {
-        throw new DirectoryNotFoundException(
-          "Source directory does not exist or could not be found: "
-          + sourceDirName);
-      }
-
-      DirectoryInfo[] dirs = dir.GetDirectories();
-
-      Directory.CreateDirectory(destDirName);
-
-      FileInfo[] files = dir.GetFiles();
-
-      foreach (FileInfo file in files) {
-        string tempPath = Path.Combine(destDirName, file.Name);
-        file.CopyTo(tempPath, false);
-      }
-
-      if (copySubDirs) {
-        foreach (DirectoryInfo subDir in dirs) {
-          string tempPath = Path.Combine(destDirName, subDir.Name);
-          DirectoryCopy(subDir.FullName, tempPath, copySubDirs);
-        }
-      }
+      return File.ReadAllBytesAsync(Constants.ContentArchive);
     }
   }
 }

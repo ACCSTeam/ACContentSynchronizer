@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -6,49 +7,49 @@ using ACContentSynchronizer.Models;
 
 namespace ACContentSynchronizer {
   public static class ContentUtils {
-    public static async Task<AvailableContent> GetContent(string gamePath, string trackName) {
+    public static readonly JsonSerializerOptions JsonSerializerOptions = new() {
+      PropertyNameCaseInsensitive = true,
+    };
+
+    public static Manifest GetManifest(string gamePath, string trackName) {
       var path = Path.Combine(gamePath, Constants.ContentFolder);
       var pathsOfCars = Directory.GetDirectories(Path.Combine(path, Constants.CarsFolder));
       var pathsOfTracks = Directory.GetDirectories(Path.Combine(path, Constants.TracksFolder));
-      var availableContent = new AvailableContent();
-
-      var options = new JsonSerializerOptions {
-        PropertyNameCaseInsensitive = true,
-      };
+      var manifest = new Manifest();
 
       foreach (var carPath in pathsOfCars) {
-        var carInfoPath = Path.Combine(carPath, "ui", "ui_car.json");
-
-        if (!File.Exists(carInfoPath)) {
-          continue;
-        }
-
-        var json = await File.ReadAllTextAsync(carInfoPath);
-        var carInfo = JsonSerializer.Deserialize<CarInfo>(json, options);
-
-        if (carInfo == null) {
-          continue;
-        }
-
-        carInfo.LocalPath = carPath;
-        availableContent.Cars.Add(carInfo);
+        manifest.Cars.Add(new EntryManifest(carPath));
       }
 
       var trackPath = pathsOfTracks.FirstOrDefault(track => track.Contains(trackName));
 
       if (!string.IsNullOrEmpty(trackPath)) {
-        var trackInfoPath = Path.Combine(trackPath, "ui", "ui_track.json");
-        var trackInfo = new TrackInfo { Name = trackPath.Split('/').LastOrDefault() ?? "" };
+        manifest.Tracks.Add(new EntryManifest(trackPath));
+      }
 
-        if (File.Exists(trackInfoPath)) {
-          var json = await File.ReadAllTextAsync(trackInfoPath);
-          trackInfo = JsonSerializer.Deserialize<TrackInfo>(json, options);
-        }
+      return manifest;
+    }
 
-        if (trackInfo != null) {
-          trackInfo.LocalPath = trackPath;
-          availableContent.Track = trackInfo;
-        }
+    public static AvailableContent GetContent(string gamePath, string trackName, string[] updatableContent) {
+      var availableContent = new AvailableContent();
+      var path = Path.Combine(gamePath, Constants.ContentFolder);
+
+      var pathsOfCars = Directory.GetDirectories(Path
+          .Combine(path, Constants.CarsFolder))
+        .Where(updatableContent.Contains);
+
+      var pathsOfTracks = Directory.GetDirectories(Path
+          .Combine(path, Constants.TracksFolder))
+        .Where(updatableContent.Contains);
+
+      foreach (var carPath in pathsOfCars) {
+        availableContent.Cars.Add(new EntryInfo(carPath));
+      }
+
+      var trackPath = pathsOfTracks.FirstOrDefault(track => track.Contains(trackName));
+
+      if (!string.IsNullOrEmpty(trackPath)) {
+        availableContent.Track = new EntryInfo(trackPath);
       }
 
       return availableContent;
