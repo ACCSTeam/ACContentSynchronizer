@@ -3,14 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
-using Microsoft.VisualBasic;
 
 namespace ACContentSynchronizer.Util {
   internal static class Program {
     private static async Task Main(string[] args) {
       try {
         var serverAddress = args[0];
-        var gamePath = args[2];
+        var gamePath = args[1];
         var dataReceiver = new DataReceiver(serverAddress);
 
         Console.WriteLine($"Server address: {serverAddress}");
@@ -36,6 +35,7 @@ namespace ACContentSynchronizer.Util {
           if (key.Key == ConsoleKey.Y) {
             Console.WriteLine("Downloading content...");
 
+            dataReceiver.OnDownload += Console.WriteLine;
             await dataReceiver.DownloadData(updatableEntries);
 
             Console.WriteLine("Content downloaded");

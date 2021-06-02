@@ -1,4 +1,4 @@
-using System.Linq;
+using System.IO;
 
 namespace ACContentSynchronizer.Models {
   public class EntryInfo {
@@ -6,7 +6,7 @@ namespace ACContentSynchronizer.Models {
       Path = path;
     }
 
-    public string Name => Path.Split('/').LastOrDefault() ?? "";
+    public string Name => new DirectoryInfo(Path).Name;
     public string Path { get; set; }
   }
 }

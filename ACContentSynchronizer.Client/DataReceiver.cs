@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Models;
 
 namespace ACContentSynchronizer.Client {
   public class DataReceiver {
+    public delegate void ProgressEvent(string progress);
+
     private const string DownloadsPath = "downloads";
-    private Manifest _manifest = new();
     private readonly HttpClient _client;
+    private Manifest _manifest = new();
 
     public DataReceiver(string serverAddress) {
       if (string.IsNullOrEmpty(serverAddress)) {
@@ -24,8 +25,11 @@ namespace ACContentSynchronizer.Client {
 
       _client = new HttpClient {
         BaseAddress = new Uri(serverAddress),
+        Timeout = Timeout.InfiniteTimeSpan,
       };
     }
+
+    public event ProgressEvent OnDownload;
 
     public async Task DownloadManifest() {
       var json = await _client.GetStringAsync("getManifest");
@@ -47,15 +51,60 @@ namespace ACContentSynchronizer.Client {
     }
 
     public async Task DownloadData(List<string> updatableEntries) {
+      OnDownload?.Invoke("Preparing...");
       var content = JsonContent.Create(updatableEntries);
       var response = await _client.PostAsync("getContent", content);
-      var data = await response.Content.ReadAsByteArrayAsync();
 
       if (!File.Exists(Constants.ContentArchive)) {
         await File.Create(Constants.ContentArchive).DisposeAsync();
       }
 
-      await File.WriteAllBytesAsync(Constants.ContentArchive, data);
+      await using var responseStream = await response.Content.ReadAsStreamAsync();
+      var totalBytes = response.Content.Headers.ContentLength ?? 0;
+
+      var totalBytesRead = 0L;
+      var readCount = 0L;
+      var buffer = new byte[8192];
+      var isMoreToRead = true;
+      double progress = -1;
+
+      await using var fileStream = new FileStream(Constants.ContentArchive,
+        FileMode.Create,
+        FileAccess.Write,
+        FileShare.None,
+        8192,
+        true);
+
+      do {
+        var bytesRead = await responseStream.ReadAsync(buffer.AsMemory(0, buffer.Length));
+        if (bytesRead == 0) {
+          isMoreToRead = false;
+          progress = Progress(totalBytesRead, totalBytes, progress);
+          continue;
+        }
+
+        await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+
+        totalBytesRead += bytesRead;
+        readCount += 1;
+
+        if (readCount % 100 == 0) {
+          progress = Progress(totalBytesRead, totalBytes, progress);
+        }
+      } while (isMoreToRead);
+    }
+
+    private double Progress(long totalBytesRead, long totalBytes, double progress) {
+      var nextStep = Math.Round((double) totalBytesRead / totalBytes * 100);
+
+      if (!(nextStep > progress)) {
+        return progress;
+      }
+
+      progress = nextStep;
+      OnDownload?.Invoke($"{progress}%");
+
+      return progress;
     }
 
     public void SaveData() {

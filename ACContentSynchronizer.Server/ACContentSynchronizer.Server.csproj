@@ -10,25 +10,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ACContentSynchronizer\ACContentSynchronizer.csproj" />
+        <ProjectReference Include="..\ACContentSynchronizer\ACContentSynchronizer.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="archives\**" />
+        <None Remove="content\**" />
+        <None Remove="content.zip" />
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Remove="archives\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="archives\**" />
-      <None Remove="data" />
-      <None Remove="data.zip" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Remove="archives\**" />
+        <Content Remove="content\**" />
     </ItemGroup>
 
 </Project>

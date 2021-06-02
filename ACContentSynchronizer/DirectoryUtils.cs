@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 
 namespace ACContentSynchronizer {
   public static class DirectoryUtils {
@@ -43,15 +44,10 @@ namespace ACContentSynchronizer {
     }
 
     public static long Size(string dirName) {
-      long size = 0;
       var dirInfo = new DirectoryInfo(dirName);
 
-      foreach (FileInfo fi in dirInfo.GetFiles("*", SearchOption.AllDirectories))
-      {
-        size += fi.Length;
-      }
-
-      return size;
+      return dirInfo.GetFiles("*", SearchOption.AllDirectories)
+        .Sum(fi => fi.Length);
     }
   }
 }
