@@ -6,7 +6,7 @@ namespace ACContentSynchronizer.Models {
       Path = path;
     }
 
-    public string Name => new DirectoryInfo(Path).Name;
+    public string Name => string.IsNullOrEmpty(Path) ? "" : new DirectoryInfo(Path).Name;
     public string Path { get; set; }
   }
 }

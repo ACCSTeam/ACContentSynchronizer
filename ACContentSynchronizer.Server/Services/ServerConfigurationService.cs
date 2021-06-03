@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
 namespace ACContentSynchronizer.Server.Services {
@@ -10,6 +13,38 @@ namespace ACContentSynchronizer.Server.Services {
 
     public ServerConfigurationService(IConfiguration configuration) {
       _configuration = configuration;
+    }
+
+    public void CheckAccess(string password) {
+      var serverConfig = GetServerPath();
+
+      if (!string.IsNullOrEmpty(serverConfig)) {
+        var adminPassword = GetStringValue(serverConfig, "SERVER", "ADMIN_PASSWORD");
+
+        if (adminPassword == password) {
+          return;
+        }
+      }
+
+      throw new Exception("");
+    }
+
+    public async Task UpdateConfig(string? track, List<string> cars) {
+      var serverConfigPath = GetServerPath();
+
+      if (!string.IsNullOrEmpty(serverConfigPath)) {
+        var serverConfig = GetServerConfig(serverConfigPath);
+
+        if (!string.IsNullOrEmpty(track)) {
+          serverConfig["SERVER"]["TRACK"] = track;
+        }
+
+        if (cars.Any()) {
+          serverConfig["SERVER"]["CARS"] = string.Join(';', cars);
+        }
+
+        await SaveConfig(serverConfigPath, serverConfig);
+      }
     }
 
     public string? GetTrackName() {
@@ -32,11 +67,14 @@ namespace ACContentSynchronizer.Server.Services {
         : cars.Split(';');
     }
 
-    private string? GetStringValue(string path, string section, string key) {
+    private Dictionary<string, Dictionary<string, string>> GetServerConfig(string path) {
       var serverCfgPath = Path.Combine(path, Constants.ServerCfg);
-      var serverCfg = IniToDictionary(serverCfgPath);
+      return IniToDictionary(serverCfgPath);
+    }
 
+    private string? GetStringValue(string path, string section, string key) {
       try {
+        var serverCfg = GetServerConfig(path);
         return serverCfg[section][key];
       } catch {
         return null;
@@ -85,6 +123,29 @@ namespace ACContentSynchronizer.Server.Services {
       }
 
       return ini;
+    }
+
+    private async Task SaveConfig(string path, Dictionary<string, Dictionary<string, string>> data) {
+      var serverCfgPath = Path.Combine(path, Constants.ServerCfg);
+      var now = DateTime.Now.ToString("yyyy-MM-dd_hh:mm:ss");
+      var backupPath = Path.Combine(path, "backup", now);
+      var config = new StringBuilder();
+
+      DirectoryUtils.CreateIfNotExists(backupPath);
+
+      File.Move(serverCfgPath, Path.Combine(backupPath, Constants.ServerCfg));
+
+      await FileUtils.CreateIfNotExists(serverCfgPath);
+
+      foreach (var (section, values) in data) {
+        config.Append($"[{section}]\n");
+
+        foreach (var (key, value) in values) {
+          config.Append($"{key}={value}\n");
+        }
+      }
+
+      await File.WriteAllTextAsync(serverCfgPath, config.ToString());
     }
   }
 }

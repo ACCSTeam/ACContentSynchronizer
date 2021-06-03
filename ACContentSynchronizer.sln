@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACContentSynchronizer.Serve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACContentSynchronizer", "ACContentSynchronizer\ACContentSynchronizer.csproj", "{52E6291A-956F-4CA0-B524-E51B8C76E7F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACContentSynchronizer.Util", "ACContentSynchronizer.Util\ACContentSynchronizer.Util.csproj", "{B81E326D-1DCF-44A9-A3C9-34889C288169}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACContentSynchronizer.Cli", "ACContentSynchronizer.Cli\ACContentSynchronizer.Cli.csproj", "{B81E326D-1DCF-44A9-A3C9-34889C288169}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACContentSynchronizer.Client", "ACContentSynchronizer.Client\ACContentSynchronizer.Client.csproj", "{85D13274-593C-45A1-BAA9-D5678222622E}"
 EndProject

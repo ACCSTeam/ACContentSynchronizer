@@ -1,5 +1,6 @@
 namespace ACContentSynchronizer {
   public class Constants {
+    public const string DownloadsPath = "downloads";
     public const string ContentType = "application/zip";
     public const string ContentFolder = "content";
     public const string TracksFolder = "tracks";

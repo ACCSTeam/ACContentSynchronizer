@@ -13,10 +13,7 @@ namespace ACContentSynchronizer.Models {
       Directory.CreateDirectory(Constants.ContentFolder);
       Directory.CreateDirectory(Path.Combine(Constants.ContentFolder, Constants.CarsFolder));
       Directory.CreateDirectory(Path.Combine(Constants.ContentFolder, Constants.TracksFolder));
-
-      if (File.Exists(Constants.ContentArchive)) {
-        File.Delete(Constants.ContentArchive);
-      }
+      FileUtils.DeleteIfExists(Constants.ContentArchive);
 
       foreach (var car in Cars) {
         var carPath = Path.Combine(Constants.ContentFolder, Constants.CarsFolder, car.Name);
