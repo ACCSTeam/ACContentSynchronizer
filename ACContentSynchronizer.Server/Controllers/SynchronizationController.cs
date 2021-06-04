@@ -54,16 +54,23 @@ namespace ACContentSynchronizer.Server.Controllers {
       ContentUtils.UnpackContent();
       var downloadedContent = ContentUtils.ApplyContent(gamePath);
 
-      await _serverConfiguration.UpdateConfig(downloadedContent.track, downloadedContent.cars);
+      // await _serverConfiguration.UpdateConfig(downloadedContent.track, downloadedContent.cars);
     }
 
     private async Task GetArchive() {
-      const int bufferLength = 8192;
       var isMoreToRead = true;
+      int bufferLength;
+
+      if (Request.Body.Length > int.MaxValue) {
+        bufferLength = int.MaxValue;
+      } else {
+        bufferLength = (int) Request.Body.Length;
+      }
+
       var buffer = new byte[bufferLength];
 
       FileUtils.DeleteIfExists(Constants.ContentArchive);
-      DirectoryUtils.DeleteIfExists(Constants.DownloadsPath);
+      DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
 
       await using var fileStream = new FileStream(Constants.ContentArchive,
         FileMode.Create,

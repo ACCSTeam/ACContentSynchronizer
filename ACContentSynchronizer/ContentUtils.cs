@@ -19,10 +19,10 @@ namespace ACContentSynchronizer {
 
       return new Manifest {
         Cars = pathsOfCars.Where(carPath => carsName.Contains(new DirectoryInfo(carPath).Name))
-          .Select(carPath => new EntryManifest(carPath))
+          .Select(carPath => new EntryManifest(carPath, DirectoryUtils.Size(carPath)))
           .ToList(),
         Tracks = pathsOfTracks.Where(trackPath => new DirectoryInfo(trackPath).Name == trackName)
-          .Select(trackPath => new EntryManifest(trackPath))
+          .Select(trackPath => new EntryManifest(trackPath, DirectoryUtils.Size(trackPath)))
           .ToList(),
       };
     }
@@ -70,7 +70,7 @@ namespace ACContentSynchronizer {
         return;
       }
 
-      DirectoryUtils.DeleteIfExists(Constants.DownloadsPath);
+      DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
       Directory.CreateDirectory(Constants.DownloadsPath);
       ZipFile.ExtractToDirectory(Constants.ContentArchive, Constants.DownloadsPath);
       File.Delete(Constants.ContentArchive);

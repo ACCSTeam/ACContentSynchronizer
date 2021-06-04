@@ -1,8 +1,9 @@
 namespace ACContentSynchronizer.Models {
   public class EntryManifest : EntryInfo {
-    public EntryManifest(string path) : base(path) {
+    public EntryManifest(string path, long size) : base(path) {
+      Size = size;
     }
 
-    public long Size => DirectoryUtils.Size(Path);
+    public long Size { get; set; }
   }
 }
