@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using ACContentSynchronizer.ClientGui.ViewModels;
-using ACContentSynchronizer.ClientGui.Views;
+using ACContentSynchronizer.ClientGui.Windows;
 
 namespace ACContentSynchronizer.ClientGui {
   public class App : Application {
@@ -12,9 +12,7 @@ namespace ACContentSynchronizer.ClientGui {
 
     public override void OnFrameworkInitializationCompleted() {
       if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
-        desktop.MainWindow = new MainWindow {
-          DataContext = new MainWindowViewModel(),
-        };
+        desktop.MainWindow = MainWindow.Instance;
       }
 
       base.OnFrameworkInitializationCompleted();

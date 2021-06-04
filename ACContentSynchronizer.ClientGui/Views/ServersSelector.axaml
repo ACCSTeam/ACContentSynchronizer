@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ACContentSynchronizer.ClientGui.Views.ServersSelector">
+
+    <Design.DataContext>
+        <views:ServersSelectorViewModel />
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="300, *">
+        <Grid Grid.Column="0"
+              RowDefinitions="*,50">
+            <ListBox Grid.Row="0"
+                     Name="ServersList"
+                     Items="{Binding Servers}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*, 30">
+                            <TextBlock Grid.Column="0"
+                                       Text="{Binding}" />
+                            <Button Grid.Column="1"
+                                    Command="{Binding ElementName=ServersList, Path=DataContext.GetDataFromServer}"
+                                    CommandParameter="{Binding}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Grid Grid.Row="1"
+                  ColumnDefinitions="*,  50">
+                <TextBox Grid.Column="0"
+                         Text="{Binding Server}" />
+                <Button Grid.Column="1"
+                        Content="Add"
+                        Command="{Binding AddServer}"
+                        CommandParameter="{Binding Server}" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="1">
+
+        </Grid>
+    </Grid>
+
+</UserControl>

@@ -83,8 +83,8 @@ namespace ACContentSynchronizer.Server.Services {
 
     private string? GetServerPath() {
       var gamePath = _configuration.GetValue<string>("GamePath");
-      var server = _configuration.GetValue<string>("Server");
-      var serverPath = Path.Combine(gamePath, Constants.ServerPresetsPath, server);
+      var preset = _configuration.GetValue<string>("Preset");
+      var serverPath = Path.Combine(gamePath, Constants.ServerPresetsPath, preset);
 
       return Directory.Exists(serverPath)
         ? serverPath

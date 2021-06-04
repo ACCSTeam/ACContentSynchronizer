@@ -27,7 +27,7 @@ namespace ACContentSynchronizer {
       };
     }
 
-    public static AvailableContent GetContent(string gamePath, List<string> updatableContent) {
+    public static AvailableContent PrepareContent(string gamePath, List<string> updatableContent) {
       var availableContent = new AvailableContent();
       var path = Path.Combine(gamePath, Constants.ContentFolder);
 
@@ -88,23 +88,19 @@ namespace ACContentSynchronizer {
 
       foreach (var car in downloadedCars) {
         var carName = new DirectoryInfo(car).Name;
-
         if (string.IsNullOrEmpty(carName)) {
           continue;
         }
 
         var contentCarPath = Path.Combine(content.CarsPath, carName);
-
-        DirectoryUtils.DeleteIfExists(contentCarPath, true);
-        Directory.Move(car, contentCarPath);
+        MoveContent(car, contentCarPath);
       }
 
       if (!string.IsNullOrEmpty(downloadedTrack)) {
         var trackName = new DirectoryInfo(downloadedTrack).Name;
         var contentTrackPath = Path.Combine(content.TracksPath, trackName);
 
-        DirectoryUtils.DeleteIfExists(contentTrackPath, true);
-        Directory.Move(downloadedTrack, contentTrackPath);
+        MoveContent(downloadedTrack, contentTrackPath);
       }
 
       DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
@@ -115,6 +111,16 @@ namespace ACContentSynchronizer {
         !string.IsNullOrEmpty(downloadedTrack)
           ? new DirectoryInfo(downloadedTrack).Name
           : null);
+    }
+
+    private static void MoveContent(string entry, string contentPath) {
+      DirectoryUtils.DeleteIfExists(contentPath, true);
+      if (Path.GetPathRoot(entry) == Path.GetPathRoot(contentPath)) {
+        Directory.Move(entry, contentPath);
+      } else {
+        DirectoryUtils.Copy(entry, contentPath, true);
+        DirectoryUtils.DeleteIfExists(entry, true);
+      }
     }
 
     private static List<string> GetDownloadedEntries(string entryType) {

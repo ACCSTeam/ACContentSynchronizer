@@ -69,7 +69,7 @@ namespace ACContentSynchronizer.Cli {
           dataReceiver.OnDownload += progress =>
             Console.WriteLine(progress < 0 ? "Preparing..." : $"{progress}%");
 
-          await dataReceiver.DownloadData(updatableEntries);
+          dataReceiver.DownloadContent("");
 
           Console.WriteLine("Content downloaded");
           Console.WriteLine("Trying to save content...");

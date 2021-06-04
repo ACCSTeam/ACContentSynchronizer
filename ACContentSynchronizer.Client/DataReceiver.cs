@@ -15,6 +15,7 @@ using ACContentSynchronizer.Models;
 namespace ACContentSynchronizer.Client {
   public class DataReceiver {
     public delegate void ProgressEvent(double progress);
+    public delegate void CompleteEvent();
 
     private readonly HttpClient _client;
     private Manifest _manifest = new();
@@ -31,6 +32,7 @@ namespace ACContentSynchronizer.Client {
     }
 
     public event ProgressEvent OnDownload;
+    public event CompleteEvent OnComplete;
 
     public async Task DownloadManifest() {
       var json = await _client.GetStringAsync("getManifest");
@@ -49,46 +51,25 @@ namespace ACContentSynchronizer.Client {
       return updatableEntries.ToList();
     }
 
-    public async Task DownloadData(List<string> updatableEntries) {
+    public async Task<string> PrepareContent(List<string> updatableEntries) {
+      var result = await _client.PostAsync("prepareContent", JsonContent.Create(updatableEntries));
+      var session = await result.Content.ReadAsStringAsync();
+      return session;
+    }
+
+    public void DownloadContent(string session) {
+      var server = $"{_client.BaseAddress}downloadContent?session={session}";
+      using var client = new WebClient();
+
       OnDownload?.Invoke(-1);
-      var content = JsonContent.Create(updatableEntries);
-      var response = await _client.PostAsync("getContent", content);
 
-      await FileUtils.CreateIfNotExists(Constants.ContentArchive);
+      client.DownloadProgressChanged += (_, e) => OnDownload?.Invoke(e.ProgressPercentage);
+      client.DownloadFileCompleted += (_, e) => OnComplete?.Invoke();
+      client.DownloadFileAsync(new Uri(server), Constants.ContentArchive);
+    }
 
-      await using var responseStream = await response.Content.ReadAsStreamAsync();
-      var totalBytes = response.Content.Headers.ContentLength ?? 0;
-
-      var totalBytesRead = 0L;
-      var readCount = 0L;
-      var buffer = new byte[8192];
-      var isMoreToRead = true;
-      double progress = -1;
-
-      await using var fileStream = new FileStream(Constants.ContentArchive,
-        FileMode.Create,
-        FileAccess.Write,
-        FileShare.None,
-        8192,
-        true);
-
-      do {
-        var bytesRead = await responseStream.ReadAsync(buffer.AsMemory(0, buffer.Length));
-        if (bytesRead == 0) {
-          isMoreToRead = false;
-          progress = Progress(totalBytesRead, totalBytes, progress);
-          continue;
-        }
-
-        await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
-
-        totalBytesRead += bytesRead;
-        readCount += 1;
-
-        if (readCount % 100 == 0) {
-          progress = Progress(totalBytesRead, totalBytes, progress);
-        }
-      } while (isMoreToRead);
+    public Task RemoveSession(string session) {
+      return _client.GetAsync($"removeSession?session={session}");
     }
 
     private double Progress(long totalBytesRead, long totalBytes, double progress) {
@@ -113,9 +94,10 @@ namespace ACContentSynchronizer.Client {
     }
 
     public async Task SetContent(string adminPassword, string gamePath, List<string> updateEntries) {
-      var content = ContentUtils.GetContent(gamePath, updateEntries);
+      var content = ContentUtils.PrepareContent(gamePath, updateEntries);
+      content.Pack("client");
       await _client.PostAsync($"setContent?adminPassword={adminPassword}",
-        new ByteArrayContent(await content.Pack()));
+        new ByteArrayContent(await File.ReadAllBytesAsync(Constants.ContentArchive)));
     }
 
     private bool EntryNeedUpdate(EntryManifest entry, string carsPath) {

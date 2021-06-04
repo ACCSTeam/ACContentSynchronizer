@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Models;
 using ACContentSynchronizer.Server.Services;
@@ -36,12 +37,26 @@ namespace ACContentSynchronizer.Server.Controllers {
       return ContentUtils.GetManifest(gamePath, cars, trackName);
     }
 
-    [HttpPost("getContent")]
-    public async Task<FileResult> GetContent([FromBody] List<string> updatableContent) {
+    [HttpPost("prepareContent")]
+    public string PrepareContent([FromBody] List<string> updatableContent) {
       var gamePath = _configuration.GetValue<string>("GamePath");
 
-      var content = ContentUtils.GetContent(gamePath, updatableContent);
-      return new FileContentResult(await content.Pack(), Constants.ContentType);
+      var content = ContentUtils.PrepareContent(gamePath, updatableContent);
+      Response.Headers.Add("session", HttpContext.Connection.Id);
+      content.Pack(HttpContext.Connection.Id);
+      return HttpContext.Connection.Id;
+    }
+
+    [HttpGet("downloadContent")]
+    public async Task<FileResult> DownloadContent(string session) {
+      var path = Path.Combine(session, Constants.ContentArchive);
+      var content = await System.IO.File.ReadAllBytesAsync(path);
+      return new FileContentResult(content, Constants.ContentType);
+    }
+
+    [HttpGet("removeSession")]
+    public void RemoveSession(string session) {
+      DirectoryUtils.DeleteIfExists(session, true);
     }
 
     [HttpPost("setContent")]
