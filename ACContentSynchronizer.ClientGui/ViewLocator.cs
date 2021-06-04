@@ -1,7 +1,7 @@
 using System;
+using ACContentSynchronizer.ClientGui.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using ACContentSynchronizer.ClientGui.ViewModels;
 
 namespace ACContentSynchronizer.ClientGui {
   public class ViewLocator : IDataTemplate {
@@ -13,9 +13,8 @@ namespace ACContentSynchronizer.ClientGui {
 
       if (type != null) {
         return (Control) Activator.CreateInstance(type)!;
-      } else {
-        return new TextBlock { Text = "Not Found: " + name };
       }
+      return new TextBlock { Text = "Not Found: " + name };
     }
 
     public bool Match(object data) {

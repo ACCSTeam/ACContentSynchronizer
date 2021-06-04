@@ -1,18 +1,15 @@
-using System.Threading;
-using System.Threading.Tasks;
 using ACContentSynchronizer.Client.Models;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Threading;
 
 namespace ACContentSynchronizer.ClientGui.Windows {
   public class SettingsWindow : Window {
     private readonly SettingsWindowViewModel _vm;
 
     public SettingsWindow() {
-      DataContext = _vm = new();
+      DataContext = _vm = new SettingsWindowViewModel();
 
       InitializeComponent();
 #if DEBUG

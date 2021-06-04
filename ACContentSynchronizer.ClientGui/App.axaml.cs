@@ -1,8 +1,7 @@
+using ACContentSynchronizer.ClientGui.Windows;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using ACContentSynchronizer.ClientGui.ViewModels;
-using ACContentSynchronizer.ClientGui.Windows;
 
 namespace ACContentSynchronizer.ClientGui {
   public class App : Application {

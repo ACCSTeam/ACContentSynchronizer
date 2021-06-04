@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -9,7 +7,7 @@ namespace ACContentSynchronizer.ClientGui.Windows {
     private readonly DownloadContentWindowViewModel _vm;
 
     public DownloadContentWindow() {
-      DataContext = _vm = new();
+      DataContext = _vm = new DownloadContentWindowViewModel();
 
       InitializeComponent();
 #if DEBUG

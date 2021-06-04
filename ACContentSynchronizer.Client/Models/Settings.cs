@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -8,11 +7,13 @@ namespace ACContentSynchronizer.Client.Models {
   public class Settings {
     private static Settings _instance;
 
-    public static Settings Instance() => _instance ??= Load();
-
     public string GamePath { get; set; } = "";
 
     public List<string> Servers { get; set; } = new();
+
+    public static Settings Instance() {
+      return _instance ??= Load();
+    }
 
     public async Task Save() {
       var json = JsonSerializer.Serialize(this);

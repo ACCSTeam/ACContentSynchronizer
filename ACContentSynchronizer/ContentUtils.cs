@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -78,7 +77,7 @@ namespace ACContentSynchronizer {
 
     public static (List<string> cars, string? track) ApplyContent(string gamePath) {
       if (!Directory.Exists(gamePath)) {
-        return (new(), string.Empty);
+        return (new List<string>(), string.Empty);
       }
 
       var downloadedCars = GetDownloadedEntries(Constants.CarsFolder);

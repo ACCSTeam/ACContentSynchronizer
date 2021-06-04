@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -14,8 +12,9 @@ using ACContentSynchronizer.Models;
 
 namespace ACContentSynchronizer.Client {
   public class DataReceiver {
-    public delegate void ProgressEvent(double progress);
     public delegate void CompleteEvent();
+
+    public delegate void ProgressEvent(double progress);
 
     private readonly HttpClient _client;
     private Manifest _manifest = new();
@@ -64,25 +63,12 @@ namespace ACContentSynchronizer.Client {
       OnDownload?.Invoke(-1);
 
       client.DownloadProgressChanged += (_, e) => OnDownload?.Invoke(e.ProgressPercentage);
-      client.DownloadFileCompleted += (_, e) => OnComplete?.Invoke();
+      client.DownloadFileCompleted += (_, _) => OnComplete?.Invoke();
       client.DownloadFileAsync(new Uri(server), Constants.ContentArchive);
     }
 
     public Task RemoveSession(string session) {
       return _client.GetAsync($"removeSession?session={session}");
-    }
-
-    private double Progress(long totalBytesRead, long totalBytes, double progress) {
-      var nextStep = Math.Round((double) totalBytesRead / totalBytes * 100);
-
-      if (!(nextStep > progress)) {
-        return progress;
-      }
-
-      progress = nextStep;
-      OnDownload?.Invoke(progress);
-
-      return progress;
     }
 
     public void SaveData() {

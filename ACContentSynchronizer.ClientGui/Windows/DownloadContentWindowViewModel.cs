@@ -9,13 +9,13 @@ using ReactiveUI;
 namespace ACContentSynchronizer.ClientGui.Windows {
   public class DownloadContentWindowViewModel : ViewModelBase {
     private bool _canClose;
+    private double _progress;
+    private string _state = "";
 
     public bool CanClose {
       get => _canClose;
       set => this.RaiseAndSetIfChanged(ref _canClose, value);
     }
-
-    private string _state = "";
 
     public string State {
       get => _state;
@@ -24,8 +24,6 @@ namespace ACContentSynchronizer.ClientGui.Windows {
         this.RaiseAndSetIfChanged(ref _state, state);
       }
     }
-
-    private double _progress;
 
     public double Progress {
       get => _progress;

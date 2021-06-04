@@ -1,5 +1,3 @@
-using ACContentSynchronizer.ClientGui.Windows;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
@@ -8,7 +6,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
     private readonly ServersSelectorViewModel _vm;
 
     public ServersSelector() {
-      DataContext = _vm = new();
+      DataContext = _vm = new ServersSelectorViewModel();
       InitializeComponent();
     }
 
@@ -17,4 +15,3 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
   }
 }
-

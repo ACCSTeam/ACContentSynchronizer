@@ -1,7 +1,4 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
-using ACContentSynchronizer.Client;
 using ACContentSynchronizer.Client.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.ClientGui.Windows;
@@ -10,12 +7,12 @@ using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class ServersSelectorViewModel : ViewModelBase {
+    private string _server = "";
+
     public ServersSelectorViewModel() {
       var settings = Settings.Instance();
       Servers.AddRange(settings.Servers);
     }
-
-    private string _server = "";
 
     public string Server {
       get => _server;
