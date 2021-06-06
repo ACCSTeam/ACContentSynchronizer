@@ -9,6 +9,8 @@ namespace ACContentSynchronizer.Client.Models {
 
     public string GamePath { get; set; } = "";
 
+    public string AdminPassword { get; set; } = "";
+
     public List<string> Servers { get; set; } = new();
 
     public static Settings Instance() {

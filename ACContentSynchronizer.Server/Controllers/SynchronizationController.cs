@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace ACContentSynchronizer.Server.Controllers {
+  [ApiController]
   public class SynchronizationController : ControllerBase {
     private readonly IConfiguration _configuration;
     private readonly ServerConfigurationService _serverConfiguration;
@@ -36,10 +37,10 @@ namespace ACContentSynchronizer.Server.Controllers {
     }
 
     [HttpPost("prepareContent")]
-    public string PrepareContent([FromBody] List<string> updatableContent) {
+    public string PrepareContent(Manifest manifest) {
       var gamePath = _configuration.GetValue<string>("GamePath");
 
-      var content = ContentUtils.PrepareContent(gamePath, updatableContent);
+      var content = ContentUtils.PrepareContent(gamePath, manifest);
       Response.Headers.Add("session", HttpContext.Connection.Id);
       content.Pack(HttpContext.Connection.Id);
       return HttpContext.Connection.Id;
@@ -57,50 +58,27 @@ namespace ACContentSynchronizer.Server.Controllers {
       DirectoryUtils.DeleteIfExists(session, true);
     }
 
-    [HttpPost("setContent")]
+    [HttpPost("getUpdateManifest")]
+    public Manifest GetUpdatableEntries(Manifest manifest) {
+      var gamePath = _configuration.GetValue<string>("GamePath");
+      return ContentUtils.CompareContent(gamePath, manifest);
+    }
+
+    [HttpPost("updateContent")]
     [DisableRequestSizeLimit]
-    public async Task SetContent(string adminPassword) {
+    public async Task UpdateContent(UpdateManifest updateManifest, string adminPassword) {
       var gamePath = _configuration.GetValue<string>("GamePath");
       _serverConfiguration.CheckAccess(adminPassword);
 
-      await GetArchive();
+      await _serverConfiguration.GetArchive(updateManifest.Content);
       ContentUtils.UnpackContent();
-      var downloadedContent = ContentUtils.ApplyContent(gamePath);
+      var (cars, track) = ContentUtils.ApplyContent(gamePath);
 
-      // await _serverConfiguration.UpdateConfig(downloadedContent.track, downloadedContent.cars);
-    }
+      var presetPath = await _serverConfiguration.UpdateConfig(updateManifest.Manifest);
 
-    private async Task GetArchive() {
-      var isMoreToRead = true;
-      int bufferLength;
-
-      if (Request.Body.Length > int.MaxValue) {
-        bufferLength = int.MaxValue;
-      } else {
-        bufferLength = (int) Request.Body.Length;
+      if (!string.IsNullOrEmpty(presetPath)) {
+        await _serverConfiguration.RunServer(presetPath);
       }
-
-      var buffer = new byte[bufferLength];
-
-      FileUtils.DeleteIfExists(Constants.ContentArchive);
-      DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
-
-      await using var fileStream = new FileStream(Constants.ContentArchive,
-        FileMode.Create,
-        FileAccess.Write,
-        FileShare.None,
-        bufferLength,
-        true);
-
-      do {
-        var bytesRead = await Request.Body.ReadAsync(buffer.AsMemory(0, bufferLength));
-        if (bytesRead == 0) {
-          isMoreToRead = false;
-          continue;
-        }
-
-        await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
-      } while (isMoreToRead);
     }
   }
 }

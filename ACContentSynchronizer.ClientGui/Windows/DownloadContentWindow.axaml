@@ -17,6 +17,7 @@
                  IsReadOnly="True" />
         <ProgressBar Value="{Binding Progress}" />
         <Button Content="Close"
-                IsEnabled="{Binding CanClose}"></Button>
+                IsEnabled="{Binding CanClose}"
+                Click="Close"></Button>
     </StackPanel>
 </Window>

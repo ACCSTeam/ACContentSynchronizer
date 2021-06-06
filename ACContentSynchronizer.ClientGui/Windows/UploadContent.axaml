@@ -1,0 +1,43 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:windows="clr-namespace:ACContentSynchronizer.ClientGui.Windows"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ACContentSynchronizer.ClientGui.Windows.UploadContentWindow"
+        Title="UploadContentWindow">
+
+    <Design.DataContext>
+        <windows:UploadContentViewModel />
+    </Design.DataContext>
+
+    <StackPanel Spacing="10"
+                HorizontalAlignment="Stretch">
+        <StackPanel Orientation="Horizontal"
+                    Spacing="10"
+                    Height="300">
+            <ListBox Items="{Binding Cars}"
+                     SelectedItems="{Binding SelectedCars}"
+                     SelectionMode="Multiple">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name }" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <ListBox Items="{Binding Tracks}"
+                     SelectedItem="{Binding SelectedTrack}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name }" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        <Panel HorizontalAlignment="Center">
+            <Button Content="Upload"
+                    Command="{Binding UploadContent}" />
+        </Panel>
+    </StackPanel>
+</Window>

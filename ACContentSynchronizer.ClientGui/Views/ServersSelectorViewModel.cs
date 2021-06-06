@@ -1,8 +1,12 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client.Models;
+using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.ClientGui.Windows;
 using Avalonia.Collections;
+using Avalonia.Interactivity;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views {
@@ -11,7 +15,9 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     public ServersSelectorViewModel() {
       var settings = Settings.Instance();
-      Servers.AddRange(settings.Servers);
+      Servers.AddRange(settings.Servers.Select(ip => new ServerEntry {
+        Ip = ip,
+      }));
     }
 
     public string Server {
@@ -19,19 +25,39 @@ namespace ACContentSynchronizer.ClientGui.Views {
       set => this.RaiseAndSetIfChanged(ref _server, value);
     }
 
-    public AvaloniaList<string> Servers { get; set; } = new();
+    private ServerEntry? _selectedServer;
 
-    public async Task AddServer(string server) {
-      var serverUrl = $"http://{server}";
-      var settings = Settings.Instance();
-
-      settings.Servers.Add(serverUrl);
-      await settings.Save();
-      Servers.Add(serverUrl);
+    public ServerEntry? SelectedServer {
+      get => _selectedServer;
+      set => this.RaiseAndSetIfChanged(ref _selectedServer, value);
     }
 
-    public void GetDataFromServer(string server) {
-      DownloadContentWindow.Open(MainWindow.Instance, server);
+    public AvaloniaList<ServerEntry> Servers { get; set; } = new();
+
+    public async Task AddServer(string ip) {
+      var settings = Settings.Instance();
+      settings.Servers.Add(ip);
+      await settings.Save();
+
+      Servers.Add(new() {
+        Ip = ip,
+      });
+    }
+
+    public void DownloadContent(string http) {
+      DownloadContentWindow.Open(MainWindow.Instance, http);
+    }
+
+    public void UploadContent(string http) {
+      UploadContentWindow.Open(MainWindow.Instance, http);
+    }
+
+    public async Task RemoveServer(ServerEntry server) {
+      var settings = Settings.Instance();
+      settings.Servers.Remove(server.Ip);
+      await settings.Save();
+
+      Servers.Remove(server);
     }
   }
 }

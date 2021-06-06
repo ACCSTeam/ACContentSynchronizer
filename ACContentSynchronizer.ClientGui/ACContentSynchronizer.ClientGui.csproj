@@ -5,7 +5,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Models\" />
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
     <ItemGroup>
@@ -27,6 +26,9 @@
       </Compile>
       <Compile Update="Windows\DownloadContentWindowViewModel.cs">
         <DependentUpon>DownloadContentWindow.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Windows\UploadContentViewModel.cs">
+        <DependentUpon>UploadContent.axaml</DependentUpon>
       </Compile>
     </ItemGroup>
     <ItemGroup>

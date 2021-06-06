@@ -17,7 +17,6 @@ namespace ACContentSynchronizer.Client {
     public delegate void ProgressEvent(double progress);
 
     private readonly HttpClient _client;
-    private Manifest _manifest = new();
 
     public DataReceiver(string serverAddress) {
       if (string.IsNullOrEmpty(serverAddress)) {
@@ -33,25 +32,17 @@ namespace ACContentSynchronizer.Client {
     public event ProgressEvent OnDownload;
     public event CompleteEvent OnComplete;
 
-    public async Task DownloadManifest() {
+    public async Task<Manifest> DownloadManifest() {
       var json = await _client.GetStringAsync("getManifest");
-      _manifest = JsonSerializer.Deserialize<Manifest>(json, ContentUtils.JsonSerializerOptions);
+      return JsonSerializer.Deserialize<Manifest>(json, ContentUtils.JsonSerializerOptions);
     }
 
-    public List<string> CompareContent(string gamePath) {
-      FileUtils.DeleteIfExists(Constants.ContentArchive);
-
-      var content = ContentUtils.GetContentHierarchy(gamePath);
-
-      var cars = _manifest.Cars.Where(entry => EntryNeedUpdate(entry, content.CarsPath));
-      var tracks = _manifest.Tracks.Where(entry => EntryNeedUpdate(entry, content.TracksPath));
-      var updatableEntries = cars.Union(tracks).Select(entry => entry.Name);
-
-      return updatableEntries.ToList();
+    public Manifest CompareContent(string gamePath, Manifest manifest) {
+      return ContentUtils.CompareContent(gamePath, manifest);
     }
 
-    public async Task<string> PrepareContent(List<string> updatableEntries) {
-      var result = await _client.PostAsync("prepareContent", JsonContent.Create(updatableEntries));
+    public async Task<string> PrepareContent(Manifest manifest) {
+      var result = await _client.PostAsJsonAsync("prepareContent", JsonContent.Create(manifest));
       var session = await result.Content.ReadAsStringAsync();
       return session;
     }
@@ -79,23 +70,20 @@ namespace ACContentSynchronizer.Client {
       ContentUtils.ApplyContent(gamePath);
     }
 
-    public async Task SetContent(string adminPassword, string gamePath, List<string> updateEntries) {
-      var content = ContentUtils.PrepareContent(gamePath, updateEntries);
-      content.Pack("client");
-      await _client.PostAsync($"setContent?adminPassword={adminPassword}",
-        new ByteArrayContent(await File.ReadAllBytesAsync(Constants.ContentArchive)));
+    public async Task<Manifest> GetUpdateManifest(Manifest manifest) {
+      var response = await _client.PostAsJsonAsync("getUpdateManifest", manifest);
+      var json = await response.Content.ReadAsStringAsync();
+      return JsonSerializer.Deserialize<Manifest>(json, ContentUtils.JsonSerializerOptions);
     }
 
-    private bool EntryNeedUpdate(EntryManifest entry, string carsPath) {
-      var localEntry = Directory.GetDirectories(carsPath)
-        .FirstOrDefault(dir => new DirectoryInfo(dir).Name == entry.Name);
-
-      if (string.IsNullOrEmpty(localEntry)) {
-        return true;
-      }
-
-      var needUpdate = entry.Size != DirectoryUtils.Size(localEntry);
-      return needUpdate;
+    public async Task UpdateContent(string adminPassword, string gamePath, Manifest comparedManifest,UpdateManifest updateManifest) {
+      var content = ContentUtils.PrepareContent(gamePath, comparedManifest);
+      var session = "client";
+      content.Pack(session);
+      var contentArchive = Path.Combine(session, Constants.ContentArchive);
+      var data = await File.ReadAllBytesAsync(contentArchive);
+      updateManifest.Content = data;
+      await _client.PostAsJsonAsync($"updateContent?adminPassword={adminPassword}", updateManifest);
     }
   }
 }

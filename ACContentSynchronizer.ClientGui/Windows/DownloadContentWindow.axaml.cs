@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Windows {
@@ -22,7 +23,11 @@ namespace ACContentSynchronizer.ClientGui.Windows {
     public static void Open(Window parent, string server) {
       var wnd = new DownloadContentWindow();
       var unused = wnd._vm.GetDataFromServer(server);
-      wnd.Show(parent);
+      wnd.ShowDialog(parent);
+    }
+
+    private void Close(object? sender, RoutedEventArgs e) {
+      Close();
     }
   }
 }

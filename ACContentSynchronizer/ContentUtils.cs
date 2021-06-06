@@ -15,28 +15,66 @@ namespace ACContentSynchronizer {
       var path = Path.Combine(gamePath, Constants.ContentFolder);
       var pathsOfCars = Directory.GetDirectories(Path.Combine(path, Constants.CarsFolder));
       var pathsOfTracks = Directory.GetDirectories(Path.Combine(path, Constants.TracksFolder));
+      var trackPath = pathsOfTracks.FirstOrDefault(x => new DirectoryInfo(x).Name == trackName);
 
-      return new Manifest {
+      var manifest = new Manifest {
         Cars = pathsOfCars.Where(carPath => carsName.Contains(new DirectoryInfo(carPath).Name))
           .Select(carPath => new EntryManifest(carPath, DirectoryUtils.Size(carPath)))
           .ToList(),
-        Tracks = pathsOfTracks.Where(trackPath => new DirectoryInfo(trackPath).Name == trackName)
-          .Select(trackPath => new EntryManifest(trackPath, DirectoryUtils.Size(trackPath)))
-          .ToList(),
       };
+
+      if (!string.IsNullOrEmpty(trackPath)) {
+        manifest.Track = new EntryManifest(trackPath, DirectoryUtils.Size(trackPath));
+      }
+
+      return manifest;
     }
 
-    public static AvailableContent PrepareContent(string gamePath, List<string> updatableContent) {
+    public static Manifest CompareContent(string gamePath, Manifest manifest) {
+      FileUtils.DeleteIfExists(Constants.ContentArchive);
+
+      var (carsPath, tracksPath) = GetContentHierarchy(gamePath);
+
+      var cars = manifest.Cars.Where(entry => EntryNeedUpdate(entry, carsPath));
+      var tracksNeedUpdate = EntryNeedUpdate(manifest.Track, tracksPath);
+      var comparedManifest = new Manifest {
+        Cars = cars.ToList(),
+      };
+
+      if (tracksNeedUpdate) {
+        comparedManifest.Track = manifest.Track;
+      }
+
+      return comparedManifest;
+    }
+
+    private static bool EntryNeedUpdate(EntryManifest? entry, string carsPath) {
+      if (entry == null) {
+        return false;
+      }
+
+      var localEntry = Directory.GetDirectories(carsPath)
+        .FirstOrDefault(dir => new DirectoryInfo(dir).Name == entry.Name);
+
+      if (string.IsNullOrEmpty(localEntry)) {
+        return true;
+      }
+
+      var needUpdate = entry.Size != DirectoryUtils.Size(localEntry);
+      return needUpdate;
+    }
+
+    public static AvailableContent PrepareContent(string gamePath, Manifest manifest) {
       var availableContent = new AvailableContent();
       var path = Path.Combine(gamePath, Constants.ContentFolder);
 
-      var pathsOfCars = Directory.GetDirectories(Path
-          .Combine(path, Constants.CarsFolder))
-        .Where(dir => updatableContent.Contains(new DirectoryInfo(dir).Name));
+      var pathsOfCars = Directory.GetDirectories(Path.Combine(path, Constants.CarsFolder))
+        .Where(dir => manifest.Cars
+          .Select(x => x.Name)
+          .Contains(new DirectoryInfo(dir).Name));
 
-      var trackPath = Directory.GetDirectories(Path
-          .Combine(path, Constants.TracksFolder))
-        .FirstOrDefault(dir => updatableContent.Contains(new DirectoryInfo(dir).Name));
+      var trackPath = Directory.GetDirectories(Path.Combine(path, Constants.TracksFolder))
+        .FirstOrDefault(dir => manifest.Track?.Name == new DirectoryInfo(dir).Name);
 
       foreach (var carPath in pathsOfCars) {
         availableContent.Cars.Add(new EntryInfo(carPath));
@@ -126,9 +164,7 @@ namespace ACContentSynchronizer {
       return Directory.GetDirectories(Path.Combine(Constants.DownloadsPath, entryType)).ToList();
     }
 
-    public static (string Path,
-      string CarsPath,
-      string TracksPath) GetContentHierarchy(string path) {
+    public static (string CarsPath, string TracksPath) GetContentHierarchy(string path) {
       var contentPath = Path.Combine(path, Constants.ContentFolder);
       var contentCarsPath = Path.Combine(contentPath, Constants.CarsFolder);
       var contentTracksPath = Path.Combine(contentPath, Constants.TracksFolder);
@@ -137,7 +173,7 @@ namespace ACContentSynchronizer {
       DirectoryUtils.CreateIfNotExists(contentCarsPath);
       DirectoryUtils.CreateIfNotExists(contentTracksPath);
 
-      return (contentPath, contentCarsPath, contentTracksPath);
+      return (contentCarsPath, contentTracksPath);
     }
   }
 }

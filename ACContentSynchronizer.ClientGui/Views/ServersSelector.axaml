@@ -15,16 +15,24 @@
               RowDefinitions="*,50">
             <ListBox Grid.Row="0"
                      Name="ServersList"
-                     Items="{Binding Servers}">
+                     Items="{Binding Servers}"
+                     DoubleTapped="SelectServer"
+                     SelectedItem="{Binding SelectedServer}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid ColumnDefinitions="*, 30">
-                            <TextBlock Grid.Column="0"
-                                       Text="{Binding}" />
-                            <Button Grid.Column="1"
-                                    Command="{Binding ElementName=ServersList, Path=DataContext.GetDataFromServer}"
-                                    CommandParameter="{Binding}" />
-                        </Grid>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
+                            <TextBlock Text="{Binding Name }" />
+                            <Button Content="C"
+                                    Command="{Binding ElementName=ServersList, Path=DataContext.DownloadContent}"
+                                    CommandParameter="{Binding Http}" />
+                            <Button Content="U"
+                                    Command="{Binding ElementName=ServersList, Path=DataContext.UploadContent}"
+                                    CommandParameter="{Binding Http}" />
+                            <Button Content="R"
+                                    Command="{Binding ElementName=ServersList, Path=DataContext.RemoveServer}"
+                                    CommandParameter="{Binding }" />
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -38,9 +46,7 @@
                         CommandParameter="{Binding Server}" />
             </Grid>
         </Grid>
-        <Grid Grid.Column="1">
-
-        </Grid>
+        <Grid Grid.Column="1" />
     </Grid>
 
 </UserControl>

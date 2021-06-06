@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Views {
@@ -12,6 +13,10 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
+    }
+
+    private void SelectServer(object? sender, RoutedEventArgs e) {
+      var server = _vm.SelectedServer;
     }
   }
 }

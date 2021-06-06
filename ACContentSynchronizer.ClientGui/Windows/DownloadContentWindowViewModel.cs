@@ -36,36 +36,45 @@ namespace ACContentSynchronizer.ClientGui.Windows {
         var dataReceiver = new DataReceiver(server);
 
         State = "Downloading manifest...";
-        await dataReceiver.DownloadManifest();
+        var manifest = await dataReceiver.DownloadManifest();
         State = "Manifest downloaded";
 
         State = "Content comparing";
-        var updatableEntries = dataReceiver.CompareContent(settings.GamePath);
+        var comparedManifest = dataReceiver.CompareContent(settings.GamePath, manifest);
 
-        if (updatableEntries.Any()) {
+        if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
           State = "Preparing content...";
-          var session = await dataReceiver.PrepareContent(updatableEntries);
+          var session = await dataReceiver.PrepareContent(comparedManifest);
 
           dataReceiver.OnDownload += progress => Progress = progress;
-          dataReceiver.OnComplete += () => Task.Run(() => {
-            State = "Downloaded";
-            dataReceiver.RemoveSession(session);
+          dataReceiver.OnComplete += () => Task.Factory.StartNew(() => {
+            try {
+              State = "Downloaded";
+              dataReceiver.RemoveSession(session);
 
-            State = "Trying to save content...";
-            dataReceiver.SaveData();
-            State = "Content saved";
+              State = "Trying to save content...";
+              dataReceiver.SaveData();
+              State = "Content saved";
 
-            State = "Applying changes...";
-            dataReceiver.Apply(settings.GamePath);
-            State = "Done!";
-            CanClose = true;
+              State = "Applying changes...";
+              dataReceiver.Apply(settings.GamePath);
+              State = "Done!";
+            } catch (Exception e) {
+              State = $"ERROR: {e.Message}";
+            } finally {
+              CanClose = true;
+            }
           });
 
           State = "Downloading content...";
           dataReceiver.DownloadContent(session);
+        } else {
+          State = "Content no need to update";
+          CanClose = true;
         }
       } catch (Exception e) {
-        State = e.Message;
+        State = $"ERROR: {e.Message}";
+        CanClose = true;
       }
     }
   }

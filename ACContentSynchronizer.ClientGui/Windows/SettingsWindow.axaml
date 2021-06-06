@@ -16,9 +16,11 @@
             <TextBox Grid.Column="0"
                      Text="{Binding Path}" />
             <Button Grid.Column="1"
+                    Content="Open"
                     Click="SelectPath" />
         </Grid>
-        <Button Click="Apply" />
+        <Button Click="Apply"
+                Content="Apply"/>
     </StackPanel>
 
 </Window>

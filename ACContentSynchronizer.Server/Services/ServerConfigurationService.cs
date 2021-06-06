@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using ACContentSynchronizer.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace ACContentSynchronizer.Server.Services {
@@ -28,22 +32,110 @@ namespace ACContentSynchronizer.Server.Services {
       throw new Exception("");
     }
 
-    public async Task UpdateConfig(string? track, List<string> cars) {
-      var serverConfigPath = GetServerPath();
+    public async Task GetArchive(byte[] data) {
+      FileUtils.DeleteIfExists(Constants.ContentArchive);
+      DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
+      await FileUtils.CreateIfNotExists(Constants.ContentArchive);
+      await File.WriteAllBytesAsync(Constants.ContentArchive, data);
+    }
 
-      if (!string.IsNullOrEmpty(serverConfigPath)) {
-        var serverConfig = GetServerConfig(serverConfigPath);
+    public async Task<string?> UpdateConfig(Manifest manifest) {
+      var presetPath = GetServerPath();
 
-        if (!string.IsNullOrEmpty(track)) {
-          serverConfig["SERVER"]["TRACK"] = track;
+      if (!string.IsNullOrEmpty(presetPath)) {
+        var serverConfig = GetServerConfig(presetPath);
+        var entryList = new Dictionary<string, Dictionary<string, string>>();
+
+        var gamePath = _configuration.GetValue<string>("GamePath");
+        var contentPath = Path.Combine(gamePath, Constants.ContentFolder);
+
+        if (!string.IsNullOrEmpty(manifest.Track?.Name)) {
+          serverConfig["SERVER"]["TRACK"] = manifest.Track.Name;
+
+          var trackPath = Path.Combine(contentPath, Constants.TracksFolder, manifest.Track.Name, "ui");
+          var variants = Directory.GetDirectories(trackPath);
+
+          if (variants.Any()) {
+            serverConfig["SERVER"]["CONFIG_TRACK"] = variants.First();
+          }
         }
 
-        if (cars.Any()) {
-          serverConfig["SERVER"]["CARS"] = string.Join(';', cars);
+        if (manifest.Cars.Any()) {
+          serverConfig["SERVER"]["CARS"] = string.Join(';', manifest.Cars.Select(x => x.Name));
+
+          for (var i = 0; i < manifest.Cars.Count; i++) {
+            var car = manifest.Cars[i];
+            var carPath = Path.Combine(contentPath, Constants.CarsFolder, car.Name, "skins");
+            var skins = Directory.GetDirectories(carPath);
+
+            if (!skins.Any()) {
+              continue;
+            }
+
+            entryList.Add(
+              $"CAR_{i}", new() {
+                { "MODEL", car.Name },
+                { "SKIN", new DirectoryInfo(skins.First()).Name },
+                { "SPECTATOR_MODE", "0" },
+                { "DRIVERNAME", "" },
+                { "TEAM", "" },
+                { "GUID", "" },
+                { "BALLAST", "0" },
+                { "RESTRICTOR", "0" },
+              });
+          }
         }
 
-        await SaveConfig(serverConfigPath, serverConfig);
+        await SaveConfig(presetPath, Constants.EntryList, entryList);
+        await SaveConfig(presetPath, Constants.ServerCfg, serverConfig);
       }
+
+      return presetPath;
+    }
+
+    public async Task RunServer(string presetPath) {
+      var gamePath = _configuration.GetValue<string>("GamePath");
+      var serverPath = Path.Combine(gamePath, "server");
+      var serverExecutableName = "acServer.exe";
+      var serverExecutablePath = Path.Combine(serverPath, serverExecutableName);
+      var serverCfgPath = Path.Combine(presetPath, Constants.ServerCfg);
+      var entryListPath = Path.Combine(presetPath, Constants.EntryList);
+
+      var serverConfig = GetServerConfig(presetPath);
+      var port = serverConfig["SERVER"]["HTTP_PORT"];
+
+      var client = new HttpClient {
+        BaseAddress = new Uri($"http://localhost:{port}/"),
+      };
+
+      while (await ServerIsEmpty(client)) {
+        await Task.Delay(TimeSpan.FromSeconds(5));
+      }
+
+      var runningProcess = Process.GetProcesses().FirstOrDefault(x => x.ProcessName == serverExecutableName);
+      runningProcess?.Kill();
+
+      var process = new Process {
+        StartInfo = {
+          FileName = serverExecutablePath,
+          Arguments = $"-c \"{serverCfgPath}\" -e \"{entryListPath}\"",
+          UseShellExecute = false,
+          WorkingDirectory = Path.GetDirectoryName(serverExecutablePath) ?? "",
+          RedirectStandardOutput = true,
+          CreateNoWindow = true,
+          RedirectStandardError = true,
+          StandardOutputEncoding = Encoding.UTF8,
+          StandardErrorEncoding = Encoding.UTF8,
+        },
+      };
+
+      process.Start();
+    }
+
+    private async Task<bool> ServerIsEmpty(HttpClient client) {
+      var json = await client.GetStringAsync("INFO");
+      var serverInfo = JsonSerializer.Deserialize<ServerInfo>(json, ContentUtils.JsonSerializerOptions);
+      return serverInfo == null || serverInfo.Clients < 1;
     }
 
     public string? GetTrackName() {
@@ -110,7 +202,7 @@ namespace ACContentSynchronizer.Server.Services {
       for (var i = 0; i < sections.Count; i++) {
         var index = sections[i];
         var nextIndex = sections.Count - 1 == i
-          ? lines.Count - 1
+          ? lines.Count
           : sections[i + 1];
         var count = nextIndex - sections[i] - 1;
         var sectionLines = lines.GetRange(index + 1, count);
@@ -124,17 +216,20 @@ namespace ACContentSynchronizer.Server.Services {
       return ini;
     }
 
-    private async Task SaveConfig(string path, Dictionary<string, Dictionary<string, string>> data) {
-      var serverCfgPath = Path.Combine(path, Constants.ServerCfg);
-      var now = DateTime.Now.ToString("yyyy-MM-dd_hh:mm:ss");
-      var backupPath = Path.Combine(path, "backup", now);
+    private async Task SaveConfig(string path, string cfg, Dictionary<string, Dictionary<string, string>> data) {
+      var cfgPath = Path.Combine(path, cfg);
       var config = new StringBuilder();
 
-      DirectoryUtils.CreateIfNotExists(backupPath);
+      // var backupPath = Path.Combine(path, "backup");
+      // DirectoryUtils.CreateIfNotExists(backupPath);
+      //
+      // var now = DateTime.Now.ToString("yyyy-MM-dd_hh:mm:ss");
+      // backupPath = Path.Combine(backupPath, now);
+      // DirectoryUtils.CreateIfNotExists(backupPath);
 
-      File.Move(serverCfgPath, Path.Combine(backupPath, Constants.ServerCfg));
+      // File.Move(serverCfgPath, Path.Combine(backupPath, Constants.ServerCfg));
 
-      await FileUtils.CreateIfNotExists(serverCfgPath);
+      await FileUtils.CreateIfNotExists(cfgPath);
 
       foreach (var (section, values) in data) {
         config.Append($"[{section}]\n");
@@ -144,7 +239,7 @@ namespace ACContentSynchronizer.Server.Services {
         }
       }
 
-      await File.WriteAllTextAsync(serverCfgPath, config.ToString());
+      await File.WriteAllTextAsync(cfgPath, config.ToString());
     }
   }
 }
