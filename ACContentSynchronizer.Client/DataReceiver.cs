@@ -29,10 +29,10 @@ namespace ACContentSynchronizer.Client {
       };
     }
 
-    public event ProgressEvent OnDownload;
-    public event CompleteEvent OnComplete;
+    public event ProgressEvent? OnDownload;
+    public event CompleteEvent? OnComplete;
 
-    public async Task<Manifest> DownloadManifest() {
+    public async Task<Manifest?> DownloadManifest() {
       var json = await _client.GetStringAsync("getManifest");
       return JsonSerializer.Deserialize<Manifest>(json, ContentUtils.JsonSerializerOptions);
     }
@@ -42,7 +42,7 @@ namespace ACContentSynchronizer.Client {
     }
 
     public async Task<string> PrepareContent(Manifest manifest) {
-      var result = await _client.PostAsJsonAsync("prepareContent", JsonContent.Create(manifest));
+      var result = await _client.PostAsJsonAsync("prepareContent", manifest);
       var session = await result.Content.ReadAsStringAsync();
       return session;
     }
@@ -70,7 +70,7 @@ namespace ACContentSynchronizer.Client {
       ContentUtils.ApplyContent(gamePath);
     }
 
-    public async Task<Manifest> GetUpdateManifest(Manifest manifest) {
+    public async Task<Manifest?> GetUpdateManifest(Manifest manifest) {
       var response = await _client.PostAsJsonAsync("getUpdateManifest", manifest);
       var json = await response.Content.ReadAsStringAsync();
       return JsonSerializer.Deserialize<Manifest>(json, ContentUtils.JsonSerializerOptions);

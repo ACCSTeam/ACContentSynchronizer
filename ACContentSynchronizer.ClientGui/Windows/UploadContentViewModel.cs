@@ -45,11 +45,13 @@ namespace ACContentSynchronizer.ClientGui.Windows {
       }
 
       var comparedManifest = await dataReceiver.GetUpdateManifest(manifest);
-      var updateManifest = new UpdateManifest() {
+      var updateManifest = new UpdateManifest {
         Manifest = manifest,
       };
 
-      await dataReceiver.UpdateContent(settings.AdminPassword, settings.GamePath, comparedManifest, updateManifest);
+      if (comparedManifest != null) {
+        await dataReceiver.UpdateContent(settings.AdminPassword, settings.GamePath, comparedManifest, updateManifest);
+      }
     }
   }
 }

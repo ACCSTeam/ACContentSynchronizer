@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACContentSynchronizer.Clien
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACContentSynchronizer.ClientGui", "ACContentSynchronizer.ClientGui\ACContentSynchronizer.ClientGui.csproj", "{3AD063D6-89D2-45B9-A53E-C38DEC18B5A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACContentSynchronizer.GrandChildForKill", "ACContentSynchronizer.GrandChildForKill\ACContentSynchronizer.GrandChildForKill.csproj", "{D11E6ACD-8FB7-40C2-AA85-31A8E950CAD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{3AD063D6-89D2-45B9-A53E-C38DEC18B5A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AD063D6-89D2-45B9-A53E-C38DEC18B5A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AD063D6-89D2-45B9-A53E-C38DEC18B5A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D11E6ACD-8FB7-40C2-AA85-31A8E950CAD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D11E6ACD-8FB7-40C2-AA85-31A8E950CAD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D11E6ACD-8FB7-40C2-AA85-31A8E950CAD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D11E6ACD-8FB7-40C2-AA85-31A8E950CAD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

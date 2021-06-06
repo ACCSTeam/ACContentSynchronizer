@@ -94,10 +94,12 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public async Task RunServer(string presetPath) {
+      var corps = "ACContentSynchronizer.GrandChildForKill";
+      var executableCorps = $"{corps}.exe";
       var gamePath = _configuration.GetValue<string>("GamePath");
       var serverPath = Path.Combine(gamePath, "server");
-      var serverExecutableName = "acServer.exe";
-      var serverExecutablePath = Path.Combine(serverPath, serverExecutableName);
+      var serverExecutableName = "acServer";
+      var serverExecutablePath = Path.Combine(serverPath, $"{serverExecutableName}.exe");
       var serverCfgPath = Path.Combine(presetPath, Constants.ServerCfg);
       var entryListPath = Path.Combine(presetPath, Constants.EntryList);
 
@@ -108,7 +110,7 @@ namespace ACContentSynchronizer.Server.Services {
         BaseAddress = new Uri($"http://localhost:{port}/"),
       };
 
-      while (await ServerIsEmpty(client)) {
+      while (await ServerNotIsEmpty(client)) {
         await Task.Delay(TimeSpan.FromSeconds(5));
       }
 
@@ -117,10 +119,10 @@ namespace ACContentSynchronizer.Server.Services {
 
       var process = new Process {
         StartInfo = {
-          FileName = serverExecutablePath,
-          Arguments = $"-c \"{serverCfgPath}\" -e \"{entryListPath}\"",
+          FileName = executableCorps,
+          Arguments = $"\"{serverExecutablePath}\" \"{serverCfgPath}\" \"{entryListPath}\"",
           UseShellExecute = false,
-          WorkingDirectory = Path.GetDirectoryName(serverExecutablePath) ?? "",
+          WorkingDirectory = Path.GetDirectoryName(executableCorps) ?? "",
           RedirectStandardOutput = true,
           CreateNoWindow = true,
           RedirectStandardError = true,
@@ -130,12 +132,18 @@ namespace ACContentSynchronizer.Server.Services {
       };
 
       process.Start();
+      var corpsProcess = Process.GetProcesses().FirstOrDefault(x => x.ProcessName == corps);
+      corpsProcess?.Kill();
     }
 
-    private async Task<bool> ServerIsEmpty(HttpClient client) {
-      var json = await client.GetStringAsync("INFO");
-      var serverInfo = JsonSerializer.Deserialize<ServerInfo>(json, ContentUtils.JsonSerializerOptions);
-      return serverInfo == null || serverInfo.Clients < 1;
+    private async Task<bool> ServerNotIsEmpty(HttpClient client) {
+      try {
+        var json = await client.GetStringAsync("INFO");
+        var serverInfo = JsonSerializer.Deserialize<ServerInfo>(json, ContentUtils.JsonSerializerOptions);
+        return serverInfo is { Clients: > 0 };
+      } catch {
+        return false;
+      }
     }
 
     public string? GetTrackName() {

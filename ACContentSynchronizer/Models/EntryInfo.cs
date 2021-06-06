@@ -10,6 +10,6 @@ namespace ACContentSynchronizer.Models {
     }
 
     public string Name => new DirectoryInfo(Path).Name;
-    public string Path { get; set; }
+    public string Path { get; set; } = "";
   }
 }

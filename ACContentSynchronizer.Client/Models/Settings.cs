@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ACContentSynchronizer.Client.Models {
   public class Settings {
-    private static Settings _instance;
+    private static Settings? _instance;
 
     public string GamePath { get; set; } = "";
 
@@ -28,7 +28,7 @@ namespace ACContentSynchronizer.Client.Models {
         return new Settings();
       }
       var json = File.ReadAllText(Constants.SettingPath);
-      return JsonSerializer.Deserialize<Settings>(json);
+      return JsonSerializer.Deserialize<Settings>(json) ?? new();
     }
   }
 }
