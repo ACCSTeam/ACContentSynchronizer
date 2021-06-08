@@ -1,5 +1,9 @@
-﻿using Avalonia;
+﻿using System;
+using System.Threading.Tasks;
+using ACContentSynchronizer.ClientGui.Models;
+using Avalonia;
 using Avalonia.ReactiveUI;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace ACContentSynchronizer.ClientGui {
   internal class Program {

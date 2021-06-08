@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -17,10 +18,16 @@ namespace ACContentSynchronizer.Client.Models {
       return _instance ??= Load();
     }
 
-    public async Task Save() {
+    public async Task SaveAsync() {
       var json = JsonSerializer.Serialize(this);
-      await FileUtils.CreateIfNotExists(Constants.SettingPath);
+      await FileUtils.CreateIfNotExistsAsync(Constants.SettingPath);
       await File.WriteAllTextAsync(Constants.SettingPath, json);
+    }
+
+    public void Save() {
+      var json = JsonSerializer.Serialize(this);
+      FileUtils.CreateIfNotExists(Constants.SettingPath);
+      File.WriteAllText(Constants.SettingPath, json);
     }
 
     private static Settings Load() {

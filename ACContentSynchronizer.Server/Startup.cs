@@ -1,6 +1,8 @@
+using ACContentSynchronizer.Server.Hubs;
 using ACContentSynchronizer.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,7 +18,11 @@ namespace ACContentSynchronizer.Server {
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services) {
+      services.AddSignalR();
       services.AddScoped<ServerConfigurationService>();
+      services.AddResponseCompression(options => {
+        options.Providers.Add<GzipCompressionProvider>();
+      });
 
       services.AddControllers().AddJsonOptions(options => {
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
@@ -40,7 +46,10 @@ namespace ACContentSynchronizer.Server {
 
       app.UseAuthorization();
 
-      app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+      app.UseEndpoints(endpoints => {
+        endpoints.MapControllers();
+        endpoints.MapHub<NotificationHub>("/notification");
+      });
     }
   }
 }

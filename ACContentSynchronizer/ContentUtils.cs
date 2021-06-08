@@ -113,9 +113,9 @@ namespace ACContentSynchronizer {
       File.Delete(Constants.ContentArchive);
     }
 
-    public static (List<string> cars, string? track) ApplyContent(string gamePath) {
+    public static void ApplyContent(string gamePath) {
       if (!Directory.Exists(gamePath)) {
-        return (new List<string>(), string.Empty);
+        return;
       }
 
       var downloadedCars = GetDownloadedEntries(Constants.CarsFolder);
@@ -141,13 +141,6 @@ namespace ACContentSynchronizer {
       }
 
       DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
-
-      return (downloadedCars
-          .Select(dir => new DirectoryInfo(dir).Name)
-          .ToList(),
-        !string.IsNullOrEmpty(downloadedTrack)
-          ? new DirectoryInfo(downloadedTrack).Name
-          : null);
     }
 
     private static void MoveContent(string entry, string contentPath) {

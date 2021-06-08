@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Models;
+using ACContentSynchronizer.Server.Hubs;
 using ACContentSynchronizer.Server.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 
 namespace ACContentSynchronizer.Server.Controllers {
@@ -12,11 +14,14 @@ namespace ACContentSynchronizer.Server.Controllers {
   public class SynchronizationController : ControllerBase {
     private readonly IConfiguration _configuration;
     private readonly ServerConfigurationService _serverConfiguration;
+    private readonly IHubContext<NotificationHub> _hub;
 
     public SynchronizationController(IConfiguration configuration,
-                                     ServerConfigurationService serverConfiguration) {
+                                     ServerConfigurationService serverConfiguration,
+                                     IHubContext<NotificationHub> hubContext) {
       _configuration = configuration;
       _serverConfiguration = serverConfiguration;
+      _hub = hubContext;
     }
 
     [HttpGet("getServerInformation")]
@@ -59,7 +64,9 @@ namespace ACContentSynchronizer.Server.Controllers {
     }
 
     [HttpPost("getUpdateManifest")]
-    public Manifest GetUpdatableEntries(Manifest manifest) {
+    public async Task<Manifest> GetUpdatableEntries(Manifest manifest) {
+      await _hub.Clients.All.SendAsync(HubMethods.Message.ToString(), "Обновлено");
+
       var gamePath = _configuration.GetValue<string>("GamePath");
       return ContentUtils.CompareContent(gamePath, manifest);
     }
@@ -67,12 +74,14 @@ namespace ACContentSynchronizer.Server.Controllers {
     [HttpPost("updateContent")]
     [DisableRequestSizeLimit]
     public async Task UpdateContent(UpdateManifest updateManifest, string adminPassword) {
+      await _hub.Clients.All.SendAsync(HubMethods.Message.ToString(), "Обновлено");
+
       var gamePath = _configuration.GetValue<string>("GamePath");
       _serverConfiguration.CheckAccess(adminPassword);
 
       await _serverConfiguration.GetArchive(updateManifest.Content);
       ContentUtils.UnpackContent();
-      var (cars, track) = ContentUtils.ApplyContent(gamePath);
+      ContentUtils.ApplyContent(gamePath);
 
       var presetPath = await _serverConfiguration.UpdateConfig(updateManifest.Manifest);
 

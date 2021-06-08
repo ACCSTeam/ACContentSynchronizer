@@ -32,6 +32,9 @@
                             <Button Content="R"
                                     Command="{Binding ElementName=ServersList, Path=DataContext.RemoveServer}"
                                     CommandParameter="{Binding }" />
+                            <Button Content="S"
+                                    Command="{Binding ElementName=ServersList, Path=DataContext.SubscribeNotifications}"
+                                    CommandParameter="{Binding }" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

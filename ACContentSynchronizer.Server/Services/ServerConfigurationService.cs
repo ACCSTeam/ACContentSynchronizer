@@ -35,7 +35,7 @@ namespace ACContentSynchronizer.Server.Services {
     public async Task GetArchive(byte[] data) {
       FileUtils.DeleteIfExists(Constants.ContentArchive);
       DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
-      await FileUtils.CreateIfNotExists(Constants.ContentArchive);
+      await FileUtils.CreateIfNotExistsAsync(Constants.ContentArchive);
       await File.WriteAllBytesAsync(Constants.ContentArchive, data);
     }
 
@@ -237,7 +237,7 @@ namespace ACContentSynchronizer.Server.Services {
 
       // File.Move(serverCfgPath, Path.Combine(backupPath, Constants.ServerCfg));
 
-      await FileUtils.CreateIfNotExists(cfgPath);
+      await FileUtils.CreateIfNotExistsAsync(cfgPath);
 
       foreach (var (section, values) in data) {
         config.Append($"[{section}]\n");

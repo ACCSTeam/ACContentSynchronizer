@@ -9,9 +9,15 @@ namespace ACContentSynchronizer {
       }
     }
 
-    public static async Task CreateIfNotExists(string path) {
+    public static async Task CreateIfNotExistsAsync(string path) {
       if (!File.Exists(path)) {
         await File.Create(path).DisposeAsync();
+      }
+    }
+
+    public static void CreateIfNotExists(string path) {
+      if (!File.Exists(path)) {
+        File.Create(path).Dispose();
       }
     }
   }
