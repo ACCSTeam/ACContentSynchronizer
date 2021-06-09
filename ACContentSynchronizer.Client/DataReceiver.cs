@@ -79,12 +79,11 @@ namespace ACContentSynchronizer.Client {
       content.Pack(Constants.Client);
       var contentArchive = Path.Combine(Constants.Client, Constants.ContentArchive);
       await using var stream = File.OpenRead(contentArchive);
-      await _client.SendAsync(new(HttpMethod.Post, $"updateContent?adminPassword={adminPassword}") {
-        Content = new StreamContent(stream),
-      });
+      await _client.PostAsync($"updateContent?adminPassword={adminPassword}", new StreamContent(stream));
     }
 
-    public async Task RefreshServer(Manifest manifest) {
+    public async Task RefreshServer(string adminPassword, Manifest manifest) {
+      await _client.PostAsJsonAsync($"refreshServer?adminPassword={adminPassword}", manifest);
     }
   }
 }

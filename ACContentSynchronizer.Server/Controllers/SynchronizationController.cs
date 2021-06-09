@@ -51,10 +51,10 @@ namespace ACContentSynchronizer.Server.Controllers {
     }
 
     [HttpGet("downloadContent")]
-    public async Task<FileResult> DownloadContent(string session) {
+    public async Task<FileStreamResult> DownloadContent(string session) {
       var path = Path.Combine(session, Constants.ContentArchive);
-      var content = await System.IO.File.ReadAllBytesAsync(path);
-      return new FileContentResult(content, Constants.ContentType);
+      await using var stream = System.IO.File.OpenRead(path);
+      return File(stream, Constants.ContentType);
     }
 
     [HttpGet("removeSession")]
@@ -71,9 +71,9 @@ namespace ACContentSynchronizer.Server.Controllers {
     [HttpPost("updateContent")]
     [DisableRequestSizeLimit]
     public async Task UpdateContent(string adminPassword) {
-      var gamePath = _configuration.GetValue<string>("GamePath");
       _serverConfiguration.CheckAccess(adminPassword);
 
+      var gamePath = _configuration.GetValue<string>("GamePath");
       await _serverConfiguration.GetArchive(Request.Body, HttpContext.Connection.Id);
       ContentUtils.UnpackContent(HttpContext.Connection.Id);
       ContentUtils.ApplyContent(gamePath, HttpContext.Connection.Id);
@@ -82,9 +82,10 @@ namespace ACContentSynchronizer.Server.Controllers {
     }
 
     [HttpPost("refreshServer")]
-    public async Task RefreshServer(Manifest manifest) {
-      var presetPath = await _serverConfiguration.UpdateConfig(manifest);
+    public async Task RefreshServer(Manifest manifest, string adminPassword) {
+      _serverConfiguration.CheckAccess(adminPassword);
 
+      var presetPath = await _serverConfiguration.UpdateConfig(manifest);
       if (!string.IsNullOrEmpty(presetPath)) {
         await _serverConfiguration.RunServer(presetPath);
       }

@@ -47,7 +47,7 @@ namespace ACContentSynchronizer.ClientGui.Windows {
       var comparedManifest = await dataReceiver.GetUpdateManifest(manifest);
       if (comparedManifest != null) {
         await dataReceiver.UpdateContent(settings.AdminPassword, settings.GamePath, comparedManifest);
-        await dataReceiver.RefreshServer(manifest);
+        await dataReceiver.RefreshServer(settings.AdminPassword, manifest);
       }
     }
   }

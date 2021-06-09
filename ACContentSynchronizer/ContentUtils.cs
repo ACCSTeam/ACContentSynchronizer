@@ -145,7 +145,7 @@ namespace ACContentSynchronizer {
         MoveContent(downloadedTrack, contentTrackPath);
       }
 
-      DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
+      DirectoryUtils.DeleteIfExists(Path.Combine(connectionId, Constants.DownloadsPath), true);
     }
 
     private static void MoveContent(string entry, string contentPath) {
