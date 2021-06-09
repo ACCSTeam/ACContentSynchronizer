@@ -9,11 +9,12 @@
         Title="Content Synchronizer"
         Background="#66000000"
         TransparencyLevelHint="AcrylicBlur"
-        Height="600"
-        Width="800"
+        Height="768"
+        Width="1024"
         MinHeight="600"
-        MinWidth="800">
+        MinWidth="800"
+        ExtendClientAreaToDecorationsHint="True">
 
-    <views:Layout />
+    <views:Layout IsHitTestVisible="False" />
 
 </Window>
