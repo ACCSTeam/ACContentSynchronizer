@@ -20,12 +20,6 @@ namespace ACContentSynchronizer.ClientGui.Windows {
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
-
-      if (File.Exists(Constants.SettingPath)) {
-        return;
-      }
-
-      SettingsWindow.Open(this);
     }
   }
 }
