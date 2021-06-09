@@ -15,6 +15,10 @@
         MinWidth="800"
         ExtendClientAreaToDecorationsHint="True">
 
-    <views:Layout IsHitTestVisible="False" />
+    <Grid RowDefinitions="30,*">
+        <Panel Background="#bb000000"
+               IsHitTestVisible="False"/>
+        <views:Layout Grid.Row="1" />
+    </Grid>
 
 </Window>
