@@ -9,7 +9,7 @@ namespace ACContentSynchronizer.ClientGui.Windows {
     private readonly SettingsWindowViewModel _vm;
 
     public SettingsWindow() {
-      DataContext = _vm = new SettingsWindowViewModel();
+      DataContext = _vm = new();
 
       InitializeComponent();
 #if DEBUG

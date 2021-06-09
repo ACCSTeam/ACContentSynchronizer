@@ -29,14 +29,15 @@ namespace ACContentSynchronizer.Server.Services {
         }
       }
 
-      throw new Exception("");
+      throw new("");
     }
 
-    public async Task GetArchive(byte[] data) {
+    public async Task GetArchive(Stream data, string connectionId) {
+      var sessionPath = Path.Combine(connectionId, Constants.ContentArchive);
       FileUtils.DeleteIfExists(Constants.ContentArchive);
-      DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
-      await FileUtils.CreateIfNotExistsAsync(Constants.ContentArchive);
-      await File.WriteAllBytesAsync(Constants.ContentArchive, data);
+      await FileUtils.CreateIfNotExistsAsync(sessionPath);
+      await using var stream = File.OpenWrite(sessionPath);
+      await data.CopyToAsync(stream);
     }
 
     public async Task<string?> UpdateConfig(Manifest manifest) {
@@ -107,7 +108,7 @@ namespace ACContentSynchronizer.Server.Services {
       var port = serverConfig["SERVER"]["HTTP_PORT"];
 
       var client = new HttpClient {
-        BaseAddress = new Uri($"http://localhost:{port}/"),
+        BaseAddress = new($"http://localhost:{port}/"),
       };
 
       while (await ServerNotIsEmpty(client)) {
@@ -227,15 +228,6 @@ namespace ACContentSynchronizer.Server.Services {
     private async Task SaveConfig(string path, string cfg, Dictionary<string, Dictionary<string, string>> data) {
       var cfgPath = Path.Combine(path, cfg);
       var config = new StringBuilder();
-
-      // var backupPath = Path.Combine(path, "backup");
-      // DirectoryUtils.CreateIfNotExists(backupPath);
-      //
-      // var now = DateTime.Now.ToString("yyyy-MM-dd_hh:mm:ss");
-      // backupPath = Path.Combine(backupPath, now);
-      // DirectoryUtils.CreateIfNotExists(backupPath);
-
-      // File.Move(serverCfgPath, Path.Combine(backupPath, Constants.ServerCfg));
 
       await FileUtils.CreateIfNotExistsAsync(cfgPath);
 

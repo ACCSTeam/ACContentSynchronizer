@@ -1,6 +1,6 @@
 namespace ACContentSynchronizer.Models {
   public class EntryManifest : EntryInfo {
-    public EntryManifest() : base() {
+    public EntryManifest() {
     }
 
     public EntryManifest(string path, long size) : base(path) {

@@ -7,7 +7,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
     private readonly ServersSelectorViewModel _vm;
 
     public ServersSelector() {
-      DataContext = _vm = new ServersSelectorViewModel();
+      DataContext = _vm = new();
       InitializeComponent();
     }
 

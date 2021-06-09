@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -13,6 +12,8 @@ using ReactiveUI;
 namespace ACContentSynchronizer.ClientGui.Views {
   public class ServersSelectorViewModel : ViewModelBase {
     private const string Pattern = @"(localhost|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\:?([0-9]{1,5})?";
+
+    private ServerEntry? _selectedServer;
     private string _server = "";
 
     public ServersSelectorViewModel() {
@@ -36,19 +37,10 @@ namespace ACContentSynchronizer.ClientGui.Views {
       Servers.AddRange(servers);
     }
 
-    private async Task ConnectToHubs(IEnumerable<ServerEntry> servers) {
-      foreach (var server in servers) {
-        await Hubs.NotificationHub<string, HubMethods>(server, HubMethods.Message,
-          s => { return Task.CompletedTask; });
-      }
-    }
-
     public string Server {
       get => _server;
       set => this.RaiseAndSetIfChanged(ref _server, value);
     }
-
-    private ServerEntry? _selectedServer;
 
     public ServerEntry? SelectedServer {
       get => _selectedServer;
@@ -57,10 +49,17 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     public AvaloniaList<ServerEntry> Servers { get; set; } = new();
 
+    private async Task ConnectToHubs(IEnumerable<ServerEntry> servers) {
+      foreach (var server in servers) {
+        await Hubs.NotificationHub<string, HubMethods>(server, HubMethods.Message,
+          s => { return Task.CompletedTask; });
+      }
+    }
+
     public async Task AddServer(string ip) {
       var regex = new Regex($"^{Pattern}$", RegexOptions.Compiled);
       if (!regex.IsMatch(ip) || Servers.Any(x => x.Ip == ip)) {
-        throw new Exception();
+        throw new();
       }
 
       var settings = Settings.Instance();

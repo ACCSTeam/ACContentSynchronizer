@@ -16,7 +16,7 @@ namespace ACContentSynchronizer.ClientGui.Windows {
       _instance ??= this;
     }
 
-    public static MainWindow Instance => _instance ??= new MainWindow();
+    public static MainWindow Instance => _instance ??= new();
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);

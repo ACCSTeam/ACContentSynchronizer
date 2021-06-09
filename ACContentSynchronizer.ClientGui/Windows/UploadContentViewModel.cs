@@ -41,16 +41,13 @@ namespace ACContentSynchronizer.ClientGui.Windows {
       };
 
       if (SelectedTrack != null) {
-        manifest.Track = new EntryManifest(SelectedTrack.Path, DirectoryUtils.Size(SelectedTrack.Path));
+        manifest.Track = new(SelectedTrack.Path, DirectoryUtils.Size(SelectedTrack.Path));
       }
 
       var comparedManifest = await dataReceiver.GetUpdateManifest(manifest);
-      var updateManifest = new UpdateManifest {
-        Manifest = manifest,
-      };
-
       if (comparedManifest != null) {
-        await dataReceiver.UpdateContent(settings.AdminPassword, settings.GamePath, comparedManifest, updateManifest);
+        await dataReceiver.UpdateContent(settings.AdminPassword, settings.GamePath, comparedManifest);
+        await dataReceiver.RefreshServer(manifest);
       }
     }
   }

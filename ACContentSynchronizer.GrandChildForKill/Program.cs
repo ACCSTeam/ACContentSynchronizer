@@ -3,8 +3,8 @@ using System.IO;
 using System.Text;
 
 namespace ACContentSynchronizer.GrandChildForKill {
-  class Program {
-    static void Main(string[] args) {
+  internal class Program {
+    private static void Main(string[] args) {
       var exePath = args[0];
       var cfgPath = args[1];
       var entryPath = args[2];

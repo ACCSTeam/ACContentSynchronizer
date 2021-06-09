@@ -8,7 +8,7 @@ namespace ACContentSynchronizer.ClientGui.Windows {
     private readonly DownloadContentWindowViewModel _vm;
 
     public DownloadContentWindow() {
-      DataContext = _vm = new DownloadContentWindowViewModel();
+      DataContext = _vm = new();
 
       InitializeComponent();
 #if DEBUG
