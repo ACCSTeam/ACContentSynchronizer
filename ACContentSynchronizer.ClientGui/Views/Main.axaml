@@ -17,19 +17,20 @@
         <Style Selector="Button">
             <Setter Property="Padding" Value="20 10" />
         </Style>
-        <Style Selector="Button.AccentButton">
-
-        </Style>
-        <Style Selector="Button:pointerover.AccentButton /template/ ContentPresenter">
+        <Style Selector="Button.AccentButton /template/ ContentPresenter">
             <Setter Property="Background" Value="#f00" />
+            <Setter Property="BorderBrush" Value="#f00" />
+            <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Transitions">
                 <Transitions>
-                    <styles:SolidColorBrushTransition Property="Background" Duration="0:0:0:1"/>
+                    <styles:SolidColorBrushTransition Property="Background" Duration="0:0:0:0.3"/>
+                    <styles:SolidColorBrushTransition Property="BorderBrush" Duration="0:0:0:0.3"/>
                 </Transitions>
             </Setter>
         </Style>
         <Style Selector="Button:pointerover.AccentButton /template/ ContentPresenter">
             <Setter Property="Background" Value="#a00" />
+            <Setter Property="BorderBrush" Value="#a00" />
         </Style>
         <Style Selector="StackPanel.FilePickerWrapper">
             <Setter Property="Margin" Value="20 0" />
@@ -40,10 +41,6 @@
         <Style Selector="Grid.FilePicker > Button /template/ ContentPresenter">
             <Setter Property="CornerRadius" Value="0 3 3 0" />
             <Setter Property="BorderThickness" Value="0 1 1 1" />
-            <Setter Property="BorderBrush" Value="#f00" />
-        </Style>
-        <Style Selector="Grid.FilePicker > Button:pointerover /template/ ContentPresenter">
-            <Setter Property="BorderBrush" Value="#a00" />
         </Style>
     </UserControl.Styles>
 
