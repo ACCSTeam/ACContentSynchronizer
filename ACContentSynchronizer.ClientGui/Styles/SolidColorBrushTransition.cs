@@ -6,10 +6,15 @@ using Avalonia.Animation.Animators;
 
 namespace ACContentSynchronizer.ClientGui.Styles {
   public class BrushAnimator : Animator<IBrush> {
-    public override SolidColorBrush Interpolate(double progress, IBrush oldIValue, IBrush newIValue) {
-      var oldValue = (SolidColorBrush) oldIValue;
-      var newValue = (SolidColorBrush) newIValue;
-      var color = new ColorAnimator().Interpolate(progress, oldValue.Color, newValue.Color);
+    public override SolidColorBrush Interpolate(double progress, IBrush oldValue, IBrush newValue) {
+      if (oldValue is not ISolidColorBrush oldBrush) {
+        throw new ArgumentException("Only instances of ISolidColorBrush are supported", nameof(oldValue));
+      }
+      if (newValue is not ISolidColorBrush newBrush) {
+        throw new ArgumentException("Only instances of ISolidColorBrush are supported", nameof(newValue));
+      }
+
+      var color = new ColorAnimator().Interpolate(progress, oldBrush.Color, newBrush.Color);
       return new(color);
     }
   }
