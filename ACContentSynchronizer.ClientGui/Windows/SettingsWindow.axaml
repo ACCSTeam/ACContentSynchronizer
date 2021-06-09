@@ -20,7 +20,7 @@
                     Click="SelectPath" />
         </Grid>
         <Button Click="Apply"
-                Content="Apply"/>
+                Content="Apply" />
     </StackPanel>
 
 </Window>

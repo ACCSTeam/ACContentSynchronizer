@@ -16,20 +16,10 @@
     <ItemGroup>
         <None Remove="content\**" />
         <None Remove="content.zip" />
-        <None Remove="Runner\**" />
     </ItemGroup>
 
     <ItemGroup>
         <Content Remove="content\**" />
-        <Content Remove="Runner\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Runner\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="Runner\**" />
     </ItemGroup>
 
 </Project>

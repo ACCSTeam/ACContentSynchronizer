@@ -18,6 +18,6 @@
         <ProgressBar Value="{Binding Progress}" />
         <Button Content="Close"
                 IsEnabled="{Binding CanClose}"
-                Click="Close"></Button>
+                Click="Close" />
     </StackPanel>
 </Window>

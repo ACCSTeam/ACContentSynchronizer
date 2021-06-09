@@ -120,7 +120,7 @@ namespace ACContentSynchronizer.Server.Services {
       ExecuteCommand(serverExecutablePath);
     }
 
-    static void ExecuteCommand(string command) {
+    private static void ExecuteCommand(string command) {
       ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command}\"") {
         CreateNoWindow = true,
         UseShellExecute = false,
