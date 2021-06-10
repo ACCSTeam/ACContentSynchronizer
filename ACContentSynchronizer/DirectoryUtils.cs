@@ -43,6 +43,15 @@ namespace ACContentSynchronizer {
       }
     }
 
+    public static void Move(string sourceDirName, string destDirName) {
+      if (Path.GetPathRoot(sourceDirName) != Path.GetPathRoot(destDirName)) {
+        Copy(sourceDirName, destDirName, true);
+        DeleteIfExists(sourceDirName, true);
+      } else {
+        Directory.Move(sourceDirName, destDirName);
+      }
+    }
+
     public static long Size(string dirName) {
       var dirInfo = new DirectoryInfo(dirName);
 

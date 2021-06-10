@@ -24,7 +24,7 @@ namespace ACContentSynchronizer {
       };
 
       if (!string.IsNullOrEmpty(trackPath)) {
-        manifest.Track = new EntryManifest(trackPath, DirectoryUtils.Size(trackPath));
+        manifest.Track = new(trackPath, DirectoryUtils.Size(trackPath));
       }
 
       return manifest;
@@ -77,11 +77,11 @@ namespace ACContentSynchronizer {
         .FirstOrDefault(dir => manifest.Track?.Name == new DirectoryInfo(dir).Name);
 
       foreach (var carPath in pathsOfCars) {
-        availableContent.Cars.Add(new EntryInfo(carPath));
+        availableContent.Cars.Add(new(carPath));
       }
 
       if (!string.IsNullOrEmpty(trackPath)) {
-        availableContent.Track = new EntryInfo(trackPath);
+        availableContent.Track = new(trackPath);
       }
 
       return availableContent;
@@ -102,24 +102,29 @@ namespace ACContentSynchronizer {
       );
     }
 
-    public static void UnpackContent() {
-      if (!File.Exists(Constants.ContentArchive)) {
+    public static void UnpackContent(string connectionId) {
+      var downloads = Path.Combine(connectionId, Constants.DownloadsPath);
+      var archive = Path.Combine(connectionId, Constants.ContentArchive);
+      DirectoryUtils.DeleteIfExists(downloads, true);
+
+      if (!File.Exists(archive)) {
         return;
       }
 
-      DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
-      Directory.CreateDirectory(Constants.DownloadsPath);
-      ZipFile.ExtractToDirectory(Constants.ContentArchive, Constants.DownloadsPath);
-      File.Delete(Constants.ContentArchive);
+      DirectoryUtils.DeleteIfExists(downloads, true);
+      Directory.CreateDirectory(downloads);
+      ZipFile.ExtractToDirectory(archive, downloads);
+      File.Delete(archive);
     }
 
-    public static void ApplyContent(string gamePath) {
+    public static void ApplyContent(string gamePath, string connectionId) {
       if (!Directory.Exists(gamePath)) {
         return;
       }
 
-      var downloadedCars = GetDownloadedEntries(Constants.CarsFolder);
-      var downloadedTrack = GetDownloadedEntries(Constants.TracksFolder).FirstOrDefault();
+      var downloadedCars = GetDownloadedEntries(Constants.CarsFolder, connectionId);
+      var downloadedTrack = GetDownloadedEntries(Constants.TracksFolder, connectionId)
+        .FirstOrDefault();
 
       var content = GetContentHierarchy(gamePath);
 
@@ -140,24 +145,19 @@ namespace ACContentSynchronizer {
         MoveContent(downloadedTrack, contentTrackPath);
       }
 
-      DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
+      DirectoryUtils.DeleteIfExists(Path.Combine(connectionId, Constants.DownloadsPath), true);
     }
 
     private static void MoveContent(string entry, string contentPath) {
       DirectoryUtils.DeleteIfExists(contentPath, true);
-      if (Path.GetPathRoot(entry) == Path.GetPathRoot(contentPath)) {
-        Directory.Move(entry, contentPath);
-      } else {
-        DirectoryUtils.Copy(entry, contentPath, true);
-        DirectoryUtils.DeleteIfExists(entry, true);
-      }
+      DirectoryUtils.Move(entry, contentPath);
     }
 
-    private static List<string> GetDownloadedEntries(string entryType) {
-      return Directory.GetDirectories(Path.Combine(Constants.DownloadsPath, entryType)).ToList();
+    private static IEnumerable<string> GetDownloadedEntries(string entryType, string connectionId) {
+      return Directory.GetDirectories(Path.Combine(connectionId, Constants.DownloadsPath, entryType)).ToList();
     }
 
-    public static (string CarsPath, string TracksPath) GetContentHierarchy(string path) {
+    private static (string CarsPath, string TracksPath) GetContentHierarchy(string path) {
       var contentPath = Path.Combine(path, Constants.ContentFolder);
       var contentCarsPath = Path.Combine(contentPath, Constants.CarsFolder);
       var contentTracksPath = Path.Combine(contentPath, Constants.TracksFolder);

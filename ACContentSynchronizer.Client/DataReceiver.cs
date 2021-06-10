@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -23,8 +21,8 @@ namespace ACContentSynchronizer.Client {
         throw new NullReferenceException(nameof(serverAddress));
       }
 
-      _client = new HttpClient {
-        BaseAddress = new Uri(serverAddress),
+      _client = new() {
+        BaseAddress = new(serverAddress),
         Timeout = Timeout.InfiniteTimeSpan,
       };
     }
@@ -55,7 +53,7 @@ namespace ACContentSynchronizer.Client {
 
       client.DownloadProgressChanged += (_, e) => OnDownload?.Invoke(e.ProgressPercentage);
       client.DownloadFileCompleted += (_, _) => OnComplete?.Invoke();
-      client.DownloadFileAsync(new Uri(server), Constants.ContentArchive);
+      client.DownloadFileAsync(new(server), Constants.ContentArchive);
     }
 
     public Task RemoveSession(string session) {
@@ -63,11 +61,11 @@ namespace ACContentSynchronizer.Client {
     }
 
     public void SaveData() {
-      ContentUtils.UnpackContent();
+      ContentUtils.UnpackContent(Constants.Client);
     }
 
     public void Apply(string gamePath) {
-      ContentUtils.ApplyContent(gamePath);
+      ContentUtils.ApplyContent(gamePath, Constants.Client);
     }
 
     public async Task<Manifest?> GetUpdateManifest(Manifest manifest) {
@@ -76,14 +74,16 @@ namespace ACContentSynchronizer.Client {
       return JsonSerializer.Deserialize<Manifest>(json, ContentUtils.JsonSerializerOptions);
     }
 
-    public async Task UpdateContent(string adminPassword, string gamePath, Manifest comparedManifest,UpdateManifest updateManifest) {
+    public async Task UpdateContent(string adminPassword, string gamePath, Manifest comparedManifest) {
       var content = ContentUtils.PrepareContent(gamePath, comparedManifest);
-      var session = "client";
-      content.Pack(session);
-      var contentArchive = Path.Combine(session, Constants.ContentArchive);
-      var data = await File.ReadAllBytesAsync(contentArchive);
-      updateManifest.Content = data;
-      await _client.PostAsJsonAsync($"updateContent?adminPassword={adminPassword}", updateManifest);
+      content.Pack(Constants.Client);
+      var contentArchive = Path.Combine(Constants.Client, Constants.ContentArchive);
+      await using var stream = File.OpenRead(contentArchive);
+      await _client.PostAsync($"updateContent?adminPassword={adminPassword}", new StreamContent(stream));
+    }
+
+    public async Task RefreshServer(string adminPassword, Manifest manifest) {
+      await _client.PostAsJsonAsync($"refreshServer?adminPassword={adminPassword}", manifest);
     }
   }
 }

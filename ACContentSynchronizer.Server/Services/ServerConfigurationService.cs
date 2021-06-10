@@ -29,14 +29,18 @@ namespace ACContentSynchronizer.Server.Services {
         }
       }
 
-      throw new Exception("");
+      throw new("");
     }
 
-    public async Task GetArchive(byte[] data) {
+    public async Task GetArchive(Stream data, string connectionId) {
+      DirectoryUtils.DeleteIfExists(connectionId, true);
+      DirectoryUtils.CreateIfNotExists(connectionId);
+      var sessionPath = Path.Combine(connectionId, Constants.ContentArchive);
       FileUtils.DeleteIfExists(Constants.ContentArchive);
-      DirectoryUtils.DeleteIfExists(Constants.DownloadsPath, true);
-      await FileUtils.CreateIfNotExistsAsync(Constants.ContentArchive);
-      await File.WriteAllBytesAsync(Constants.ContentArchive, data);
+      await FileUtils.CreateIfNotExistsAsync(sessionPath);
+      await using var stream = File.OpenWrite(sessionPath);
+      await data.CopyToAsync(stream);
+      stream.Close();
     }
 
     public async Task<string?> UpdateConfig(Manifest manifest) {
@@ -94,20 +98,16 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public async Task RunServer(string presetPath) {
-      var corps = "ACContentSynchronizer.GrandChildForKill";
-      var executableCorps = $"{corps}.exe";
       var gamePath = _configuration.GetValue<string>("GamePath");
       var serverPath = Path.Combine(gamePath, "server");
       var serverExecutableName = "acServer";
-      var serverExecutablePath = Path.Combine(serverPath, $"{serverExecutableName}.exe");
-      var serverCfgPath = Path.Combine(presetPath, Constants.ServerCfg);
-      var entryListPath = Path.Combine(presetPath, Constants.EntryList);
+      var serverExecutablePath = Path.Combine(serverPath, $"{serverExecutableName}.bat");
 
       var serverConfig = GetServerConfig(presetPath);
       var port = serverConfig["SERVER"]["HTTP_PORT"];
 
       var client = new HttpClient {
-        BaseAddress = new Uri($"http://localhost:{port}/"),
+        BaseAddress = new($"http://localhost:{port}/"),
       };
 
       while (await ServerNotIsEmpty(client)) {
@@ -117,23 +117,30 @@ namespace ACContentSynchronizer.Server.Services {
       var runningProcess = Process.GetProcesses().FirstOrDefault(x => x.ProcessName == serverExecutableName);
       runningProcess?.Kill();
 
-      var process = new Process {
-        StartInfo = {
-          FileName = executableCorps,
-          Arguments = $"\"{serverExecutablePath}\" \"{serverCfgPath}\" \"{entryListPath}\"",
-          UseShellExecute = false,
-          WorkingDirectory = Path.GetDirectoryName(executableCorps) ?? "",
-          RedirectStandardOutput = true,
-          CreateNoWindow = true,
-          RedirectStandardError = true,
-          StandardOutputEncoding = Encoding.UTF8,
-          StandardErrorEncoding = Encoding.UTF8,
-        },
+      ExecuteCommand(serverExecutablePath);
+    }
+
+    private static void ExecuteCommand(string command) {
+      ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command}\"") {
+        CreateNoWindow = true,
+        UseShellExecute = false,
+        RedirectStandardError = true,
+        RedirectStandardOutput = true,
+        WorkingDirectory = Directory.GetDirectoryRoot(command),
       };
 
-      process.Start();
-      var corpsProcess = Process.GetProcesses().FirstOrDefault(x => x.ProcessName == corps);
-      corpsProcess?.Kill();
+      var process = Process.Start(processInfo);
+      process?.WaitForExit();
+
+      var output = process?.StandardOutput.ReadToEnd();
+      var error = process?.StandardError.ReadToEnd();
+
+      var exitCode = process?.ExitCode;
+
+      Console.WriteLine("output>>" + (string.IsNullOrEmpty(output) ? "(none)" : output));
+      Console.WriteLine("error>>" + (string.IsNullOrEmpty(error) ? "(none)" : error));
+      Console.WriteLine("ExitCode: " + exitCode, "ExecuteCommand");
+      process?.Close();
     }
 
     private async Task<bool> ServerNotIsEmpty(HttpClient client) {
@@ -227,15 +234,6 @@ namespace ACContentSynchronizer.Server.Services {
     private async Task SaveConfig(string path, string cfg, Dictionary<string, Dictionary<string, string>> data) {
       var cfgPath = Path.Combine(path, cfg);
       var config = new StringBuilder();
-
-      // var backupPath = Path.Combine(path, "backup");
-      // DirectoryUtils.CreateIfNotExists(backupPath);
-      //
-      // var now = DateTime.Now.ToString("yyyy-MM-dd_hh:mm:ss");
-      // backupPath = Path.Combine(backupPath, now);
-      // DirectoryUtils.CreateIfNotExists(backupPath);
-
-      // File.Move(serverCfgPath, Path.Combine(backupPath, Constants.ServerCfg));
 
       await FileUtils.CreateIfNotExistsAsync(cfgPath);
 

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -36,7 +35,7 @@ namespace ACContentSynchronizer.Client.Models {
 
     private static Settings Load() {
       if (!File.Exists(Constants.SettingPath)) {
-        return new Settings();
+        return new();
       }
       var json = File.ReadAllText(Constants.SettingPath);
       return JsonSerializer.Deserialize<Settings>(json) ?? new();

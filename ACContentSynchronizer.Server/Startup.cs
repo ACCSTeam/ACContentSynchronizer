@@ -2,11 +2,9 @@ using ACContentSynchronizer.Server.Hubs;
 using ACContentSynchronizer.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace ACContentSynchronizer.Server {
   public class Startup {
@@ -20,16 +18,13 @@ namespace ACContentSynchronizer.Server {
     public void ConfigureServices(IServiceCollection services) {
       services.AddSignalR();
       services.AddScoped<ServerConfigurationService>();
-      services.AddResponseCompression(options => {
-        options.Providers.Add<GzipCompressionProvider>();
-      });
 
       services.AddControllers().AddJsonOptions(options => {
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
       });
 
       services.AddSwaggerGen(c => {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "ACContentSynchronizer.Server", Version = "v1" });
+        c.SwaggerDoc("v1", new() { Title = "ACContentSynchronizer.Server", Version = "v1" });
       });
     }
 
