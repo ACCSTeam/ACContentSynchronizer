@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:styles="clr-namespace:ACContentSynchronizer.ClientGui.Styles"
              xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Main">
@@ -17,24 +16,6 @@
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="FontStyle" Value="Italic" />
-        </Style>
-        <Style Selector="Button">
-            <Setter Property="Padding" Value="20 10" />
-        </Style>
-        <Style Selector="Button.AccentButton /template/ ContentPresenter">
-            <Setter Property="Background" Value="#f00" />
-            <Setter Property="BorderBrush" Value="#f00" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Transitions">
-                <Transitions>
-                    <styles:SolidColorBrushTransition Property="Background" Duration="0:0:0:0.3" />
-                    <styles:SolidColorBrushTransition Property="BorderBrush" Duration="0:0:0:0.3" />
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="Button:pointerover.AccentButton /template/ ContentPresenter">
-            <Setter Property="Background" Value="#a00" />
-            <Setter Property="BorderBrush" Value="#a00" />
         </Style>
         <Style Selector="StackPanel.FilePickerWrapper">
             <Setter Property="Margin" Value="20 0" />

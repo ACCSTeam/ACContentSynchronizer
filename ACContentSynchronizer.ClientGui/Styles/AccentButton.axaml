@@ -1,0 +1,26 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:styles="clr-namespace:ACContentSynchronizer.ClientGui.Styles">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <Button Classes="AccentButton"
+                    Content="Default"/>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="Button.AccentButton /template/ ContentPresenter">
+        <Setter Property="Background" Value="#f00" />
+        <Setter Property="BorderBrush" Value="#f00" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <styles:SolidColorBrushTransition Property="Background" Duration="0:0:0:0.3" />
+                <styles:SolidColorBrushTransition Property="BorderBrush" Duration="0:0:0:0.3" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="Button:pointerover.AccentButton /template/ ContentPresenter">
+        <Setter Property="Background" Value="#a00" />
+        <Setter Property="BorderBrush" Value="#a00" />
+    </Style>
+</Styles>
