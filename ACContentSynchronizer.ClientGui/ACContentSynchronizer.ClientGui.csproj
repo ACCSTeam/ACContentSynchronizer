@@ -21,6 +21,9 @@
         <DependentUpon>MainWindow.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\MainViewModel.cs">
+        <DependentUpon>Main.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\ACContentSynchronizer.Client\ACContentSynchronizer.Client.csproj" />

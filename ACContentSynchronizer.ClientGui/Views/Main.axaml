@@ -4,8 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:styles="clr-namespace:ACContentSynchronizer.ClientGui.Styles"
+             xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Main">
+
+    <Design.DataContext>
+        <views:MainViewModel />
+    </Design.DataContext>
 
     <UserControl.Styles>
         <Style Selector="StackPanel > TextBlock">
@@ -52,20 +57,27 @@
                 <TextBlock FontSize="40">ASSETTO CORSA</TextBlock>
                 <TextBlock FontSize="26">CONTENT SYNCHRONIZER</TextBlock>
             </StackPanel>
+            <!-- TODO: ЖЕЛАТЕЛЬНО ВЫНЕСТИ В ОТДЕЛЬНЫЙ КОНТРОЛ -->
             <StackPanel MaxWidth="600" Classes="FilePickerWrapper">
                 <Label>Path to Assetto Corsa</Label>
                 <Grid Classes="FilePicker" ColumnDefinitions="*,60">
-                    <TextBox Grid.Column="0" />
-                    <Button Grid.Column="1" Classes="AccentButton">
+                    <TextBox Grid.Column="0"
+                             Text="{Binding Path}"/>
+                    <Button Grid.Column="1" Classes="AccentButton"
+                            Command="{Binding GetPath}">
                         <avalonia:MaterialIcon Kind="Folder" />
                     </Button>
                 </Grid>
             </StackPanel>
             <Panel HorizontalAlignment="Center">
-                <Button Classes="AccentButton">
-                    Next
+                <Button Classes="AccentButton"
+                        Content="Next"
+                        Command="{Binding SaveAndContinue}">
                 </Button>
             </Panel>
+            <!-- TODO: ЧТО БЫ ВМЕСТО НЕГО ПОКАЗЫВАТЬ КНОПКУ ADD NEW SERVER OR LOOKS LIKE -->
+            <!-- TODO: ЛИБО МЕНЯТЬ ЭТО ПРЯМ ТУТ В ЗАВИСИМОСТИ ОТ СОСТОЯНИЯ -->
+            <!-- TODO: ПОЧВУ Я УЖЕ ПОДГОТОВИЛ В  ВИДЕ ПОЛЯ InitRun -->
         </StackPanel>
     </Panel>
 </UserControl>
