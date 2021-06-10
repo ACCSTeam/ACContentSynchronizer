@@ -7,7 +7,6 @@
         x:Class="ACContentSynchronizer.ClientGui.Windows.MainWindow"
         Icon="\Assets\ac-icon.ico"
         Title="Content Synchronizer"
-        Background="#66000000"
         TransparencyLevelHint="AcrylicBlur"
         Height="768"
         Width="1024"
@@ -15,10 +14,10 @@
         MinWidth="800"
         ExtendClientAreaToDecorationsHint="True">
 
-    <Grid RowDefinitions="30,*">
-        <Panel Background="#bb000000"
-               IsHitTestVisible="False"/>
-        <views:Layout Grid.Row="1" />
-    </Grid>
+    <Panel>
+        <Panel Background="#66000000"
+               IsHitTestVisible="False" />
+        <views:Layout />
+    </Panel>
 
 </Window>

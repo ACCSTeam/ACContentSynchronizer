@@ -5,8 +5,7 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:styles="clr-namespace:ACContentSynchronizer.ClientGui.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ACContentSynchronizer.ClientGui.Views.Main"
-             Background="#aa000000">
+             x:Class="ACContentSynchronizer.ClientGui.Views.Main">
 
     <UserControl.Styles>
         <Style Selector="StackPanel > TextBlock">
@@ -23,8 +22,8 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Transitions">
                 <Transitions>
-                    <styles:SolidColorBrushTransition Property="Background" Duration="0:0:0:0.3"/>
-                    <styles:SolidColorBrushTransition Property="BorderBrush" Duration="0:0:0:0.3"/>
+                    <styles:SolidColorBrushTransition Property="Background" Duration="0:0:0:0.3" />
+                    <styles:SolidColorBrushTransition Property="BorderBrush" Duration="0:0:0:0.3" />
                 </Transitions>
             </Setter>
         </Style>
@@ -44,25 +43,29 @@
         </Style>
     </UserControl.Styles>
 
-    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="100">
-        <StackPanel>
-            <Svg Width="102" Height="167" Path="/Assets/ac-logo.svg" />
-            <TextBlock FontSize="40">ASSETTO CORSA</TextBlock>
-            <TextBlock FontSize="26">CONTENT SYNCHRONIZER</TextBlock>
-        </StackPanel>
-        <StackPanel MaxWidth="600" Classes="FilePickerWrapper">
-            <Label>Path to Assetto Corsa</Label>
-            <Grid Classes="FilePicker" ColumnDefinitions="*,60">
-                <TextBox Grid.Column="0" />
-                <Button Grid.Column="1" Classes="AccentButton">
-                    <avalonia:MaterialIcon Kind="Folder" />
+    <Panel>
+        <Panel IsHitTestVisible="False"
+               Background="#aa000000" />
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="100">
+            <StackPanel>
+                <Svg Width="102" Height="167" Path="/Assets/ac-logo.svg" />
+                <TextBlock FontSize="40">ASSETTO CORSA</TextBlock>
+                <TextBlock FontSize="26">CONTENT SYNCHRONIZER</TextBlock>
+            </StackPanel>
+            <StackPanel MaxWidth="600" Classes="FilePickerWrapper">
+                <Label>Path to Assetto Corsa</Label>
+                <Grid Classes="FilePicker" ColumnDefinitions="*,60">
+                    <TextBox Grid.Column="0" />
+                    <Button Grid.Column="1" Classes="AccentButton">
+                        <avalonia:MaterialIcon Kind="Folder" />
+                    </Button>
+                </Grid>
+            </StackPanel>
+            <Panel HorizontalAlignment="Center">
+                <Button Classes="AccentButton">
+                    Next
                 </Button>
-            </Grid>
+            </Panel>
         </StackPanel>
-        <Panel HorizontalAlignment="Center">
-            <Button Classes="AccentButton">
-                Next
-            </Button>
-        </Panel>
-    </StackPanel>
+    </Panel>
 </UserControl>
