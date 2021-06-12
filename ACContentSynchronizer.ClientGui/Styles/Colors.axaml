@@ -9,7 +9,7 @@
     </Design.PreviewWith>
 
     <Styles.Resources>
-        <SolidColorBrush x:Key="UiColorTransparent">#ff000000</SolidColorBrush>
+        <SolidColorBrush x:Key="UiColorTransparent">#66000000</SolidColorBrush>
         <SolidColorBrush x:Key="UiColorTransparentDarker">#aa000000</SolidColorBrush>
         <SolidColorBrush x:Key="UiAccent">#f00</SolidColorBrush>
         <SolidColorBrush x:Key="UiAccentDarker">#a00</SolidColorBrush>

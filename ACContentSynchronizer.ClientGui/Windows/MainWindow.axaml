@@ -12,7 +12,7 @@
         Width="1024"
         MinHeight="600"
         MinWidth="800"
-        Background="#66000000"
+        Background="{StaticResource UiColorTransparent}"
         ExtendClientAreaToDecorationsHint="True">
 
     <views:Layout />
