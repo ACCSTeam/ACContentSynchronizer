@@ -25,7 +25,6 @@
         </Style>
         <Style Selector="Grid.FilePicker > Button /template/ ContentPresenter">
             <Setter Property="CornerRadius" Value="0 3 3 0" />
-            <Setter Property="BorderThickness" Value="0 1 1 1" />
         </Style>
     </UserControl.Styles>
 

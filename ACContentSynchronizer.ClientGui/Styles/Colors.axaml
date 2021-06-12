@@ -1,0 +1,17 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <Panel>
+                <Button Background="{StaticResource UiAccent}">Button</Button>
+            </Panel>
+        </Border>
+    </Design.PreviewWith>
+
+    <Styles.Resources>
+        <SolidColorBrush x:Key="UiColorTransparent">#ff000000</SolidColorBrush>
+        <SolidColorBrush x:Key="UiColorTransparentDarker">#aa000000</SolidColorBrush>
+        <SolidColorBrush x:Key="UiAccent">#f00</SolidColorBrush>
+        <SolidColorBrush x:Key="UiAccentDarker">#a00</SolidColorBrush>
+    </Styles.Resources>
+</Styles>
