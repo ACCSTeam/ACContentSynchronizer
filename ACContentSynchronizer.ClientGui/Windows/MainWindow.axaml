@@ -12,12 +12,9 @@
         Width="1024"
         MinHeight="600"
         MinWidth="800"
+        Background="#66000000"
         ExtendClientAreaToDecorationsHint="True">
 
-    <Panel>
-        <Panel Background="#66000000"
-               IsHitTestVisible="False" />
-        <views:Layout />
-    </Panel>
+    <views:Layout />
 
 </Window>
