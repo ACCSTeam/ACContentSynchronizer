@@ -3,12 +3,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
 using ACContentSynchronizer.Client.Models;
+using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.Models;
 using Avalonia.Collections;
+using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Windows {
   public class UploadContentViewModel : ViewModelBase {
+    private bool _canClose;
+    private double _progress;
+    private string _progressEntry = "";
+
     public UploadContentViewModel() {
       var settings = Settings.Instance();
       var carsDirectory = Path.Combine(settings.GamePath, Constants.ContentFolder, Constants.CarsFolder);
@@ -31,24 +37,53 @@ namespace ACContentSynchronizer.ClientGui.Windows {
 
     public EntryInfo? SelectedTrack { get; set; }
 
-    public string Http { get; set; } = "";
+    public bool CanClose {
+      get => _canClose;
+      set => this.RaiseAndSetIfChanged(ref _canClose, value);
+    }
 
-    public async Task UploadContent() {
-      var dataReceiver = new DataReceiver(Http);
-      var settings = Settings.Instance();
-      var manifest = new Manifest {
-        Cars = SelectedCars.Select(x => new EntryManifest(x.Path, DirectoryUtils.Size(x.Path))).ToList(),
-      };
+    public double Progress {
+      get => _progress;
+      set => this.RaiseAndSetIfChanged(ref _progress, value);
+    }
 
-      if (SelectedTrack != null) {
-        manifest.Track = new(SelectedTrack.Path, DirectoryUtils.Size(SelectedTrack.Path));
-      }
+    public string ProgressEntry {
+      get => _progressEntry;
+      set => this.RaiseAndSetIfChanged(ref _progressEntry, value);
+    }
 
-      var comparedManifest = await dataReceiver.GetUpdateManifest(manifest);
-      if (comparedManifest != null) {
-        await dataReceiver.UpdateContent(settings.AdminPassword, settings.GamePath, comparedManifest);
-        await dataReceiver.RefreshServer(settings.AdminPassword, manifest);
-      }
+    public ServerEntry Server { get; set; } = new();
+
+    public void UploadContent() {
+      Task.Factory.StartNew(async () => {
+        try {
+          CanClose = false;
+          var dataReceiver = new DataReceiver(Server.Http);
+          var settings = Settings.Instance();
+          var manifest = new Manifest {
+            Cars = SelectedCars.Select(x => new EntryManifest(x.Path, DirectoryUtils.Size(x.Path))).ToList(),
+          };
+
+          if (SelectedTrack != null) {
+            manifest.Track = new(SelectedTrack.Path, DirectoryUtils.Size(SelectedTrack.Path));
+          }
+
+          var comparedManifest = await dataReceiver.GetUpdateManifest(manifest);
+          if (comparedManifest != null) {
+            dataReceiver.OnPack += Pack;
+
+            await dataReceiver.UpdateContent(settings.AdminPassword, settings.GamePath, comparedManifest);
+            await dataReceiver.RefreshServer(settings.AdminPassword, manifest);
+          }
+        } finally {
+          CanClose = true;
+        }
+      });
+    }
+
+    private void Pack(double progress, string entry) {
+      Progress = progress;
+      ProgressEntry = entry;
     }
   }
 }

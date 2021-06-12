@@ -25,10 +25,10 @@
                             <TextBlock Text="{Binding Name }" />
                             <Button Content="C"
                                     Command="{Binding ElementName=ServersList, Path=DataContext.DownloadContent}"
-                                    CommandParameter="{Binding Http}" />
+                                    CommandParameter="{Binding}" />
                             <Button Content="U"
                                     Command="{Binding ElementName=ServersList, Path=DataContext.UploadContent}"
-                                    CommandParameter="{Binding Http}" />
+                                    CommandParameter="{Binding}" />
                             <Button Content="R"
                                     Command="{Binding ElementName=ServersList, Path=DataContext.RemoveServer}"
                                     CommandParameter="{Binding }" />

@@ -35,8 +35,11 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
+        <TextBlock Text="{Binding ProgressEntry}" />
+        <ProgressBar Value="{Binding Progress}" />
         <Panel HorizontalAlignment="Center">
             <Button Content="Upload"
+                    IsEnabled="{Binding CanClose}"
                     Command="{Binding UploadContent}" />
         </Panel>
     </StackPanel>

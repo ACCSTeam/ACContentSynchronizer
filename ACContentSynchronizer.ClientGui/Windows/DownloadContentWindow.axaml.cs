@@ -1,3 +1,4 @@
+using ACContentSynchronizer.ClientGui.Models;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -20,7 +21,7 @@ namespace ACContentSynchronizer.ClientGui.Windows {
       AvaloniaXamlLoader.Load(this);
     }
 
-    public static void Open(Window parent, string server) {
+    public static void Open(Window parent, ServerEntry server) {
       var wnd = new DownloadContentWindow();
       var unused = wnd._vm.GetDataFromServer(server);
       wnd.ShowDialog(parent);

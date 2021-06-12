@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
 using ACContentSynchronizer.Client.Models;
+using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using ReactiveUI;
 
@@ -30,10 +31,23 @@ namespace ACContentSynchronizer.ClientGui.Windows {
       set => this.RaiseAndSetIfChanged(ref _progress, value);
     }
 
-    public async Task GetDataFromServer(string server) {
+    private void SetProgress(double progress) {
+      Progress = progress;
+    }
+
+    private Task<string> SubscribeToProgress(ServerEntry server) {
+      return Hubs.NotificationHub<double, string, HubMethods>(server, HubMethods.PackProgress,
+        (progress, entry) => {
+          Progress = progress;
+          State = $"Packed {entry}";
+          return Task.CompletedTask;
+        });
+    }
+
+    public async Task GetDataFromServer(ServerEntry server) {
       try {
         var settings = Settings.Instance();
-        var dataReceiver = new DataReceiver(server);
+        var dataReceiver = new DataReceiver(server.Http);
 
         State = "Downloading manifest...";
         var manifest = await dataReceiver.DownloadManifest();
@@ -45,13 +59,15 @@ namespace ACContentSynchronizer.ClientGui.Windows {
 
           if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
             State = "Preparing content...";
-            var session = await dataReceiver.PrepareContent(comparedManifest);
+            var clientId = await SubscribeToProgress(server);
+            var session = await dataReceiver.PrepareContent(comparedManifest, clientId);
+            Progress = 0;
 
-            dataReceiver.OnDownload += progress => Progress = progress;
+            dataReceiver.OnProgress += SetProgress;
             dataReceiver.OnComplete += () => Task.Factory.StartNew(() => {
               try {
                 State = "Downloaded";
-                dataReceiver.RemoveSession(session);
+                dataReceiver.OnProgress -= SetProgress;
 
                 State = "Trying to save content...";
                 dataReceiver.SaveData();

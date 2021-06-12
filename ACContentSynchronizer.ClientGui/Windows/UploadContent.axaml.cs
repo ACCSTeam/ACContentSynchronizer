@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using ACContentSynchronizer.ClientGui.Models;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -20,9 +21,9 @@ namespace ACContentSynchronizer.ClientGui.Windows {
       AvaloniaXamlLoader.Load(this);
     }
 
-    public static void Open(Window parent, string http) {
+    public static void Open(Window parent, ServerEntry server) {
       var wnd = new UploadContentWindow();
-      wnd._vm.Http = http;
+      wnd._vm.Server = server;
       wnd.ShowDialog(parent);
     }
 

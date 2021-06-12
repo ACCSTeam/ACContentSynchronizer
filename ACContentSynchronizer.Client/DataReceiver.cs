@@ -12,6 +12,8 @@ namespace ACContentSynchronizer.Client {
   public class DataReceiver {
     public delegate void CompleteEvent();
 
+    public delegate void PackProgressEvent(double progress, string entry);
+
     public delegate void ProgressEvent(double progress);
 
     private readonly HttpClient _client;
@@ -27,7 +29,8 @@ namespace ACContentSynchronizer.Client {
       };
     }
 
-    public event ProgressEvent? OnDownload;
+    public event PackProgressEvent? OnPack;
+    public event ProgressEvent? OnProgress;
     public event CompleteEvent? OnComplete;
 
     public async Task<Manifest?> DownloadManifest() {
@@ -39,25 +42,23 @@ namespace ACContentSynchronizer.Client {
       return ContentUtils.CompareContent(gamePath, manifest);
     }
 
-    public async Task<string> PrepareContent(Manifest manifest) {
-      var result = await _client.PostAsJsonAsync("prepareContent", manifest);
+    public async Task<string> PrepareContent(Manifest manifest, string clientId) {
+      var result = await _client.PostAsJsonAsync($"prepareContent?client={clientId}", manifest);
       var session = await result.Content.ReadAsStringAsync();
       return session;
     }
 
     public void DownloadContent(string session) {
+      var archive = Path.Combine(Constants.Client, Constants.ContentArchive);
       var server = $"{_client.BaseAddress}downloadContent?session={session}";
       using var client = new WebClient();
+      FileUtils.DeleteIfExists(archive);
+      DirectoryUtils.CreateIfNotExists(Constants.Client);
 
-      OnDownload?.Invoke(-1);
-
-      client.DownloadProgressChanged += (_, e) => OnDownload?.Invoke(e.ProgressPercentage);
+      client.DownloadProgressChanged += (_, e) => OnProgress?.Invoke(e.ProgressPercentage);
       client.DownloadFileCompleted += (_, _) => OnComplete?.Invoke();
-      client.DownloadFileAsync(new(server), Constants.ContentArchive);
-    }
-
-    public Task RemoveSession(string session) {
-      return _client.GetAsync($"removeSession?session={session}");
+      // 81920
+      client.DownloadFileAsync(new(server), archive);
     }
 
     public void SaveData() {
@@ -76,10 +77,19 @@ namespace ACContentSynchronizer.Client {
 
     public async Task UpdateContent(string adminPassword, string gamePath, Manifest comparedManifest) {
       var content = ContentUtils.PrepareContent(gamePath, comparedManifest);
-      content.Pack(Constants.Client);
+      content.OnProgress += OnPackHandler;
+      await content.Pack(Constants.Client);
       var contentArchive = Path.Combine(Constants.Client, Constants.ContentArchive);
+
+      // 81920
       await using var stream = File.OpenRead(contentArchive);
       await _client.PostAsync($"updateContent?adminPassword={adminPassword}", new StreamContent(stream));
+
+      content.OnProgress -= OnPackHandler;
+    }
+
+    private void OnPackHandler(double progress, string entry) {
+      OnPack?.Invoke(progress, entry);
     }
 
     public async Task RefreshServer(string adminPassword, Manifest manifest) {

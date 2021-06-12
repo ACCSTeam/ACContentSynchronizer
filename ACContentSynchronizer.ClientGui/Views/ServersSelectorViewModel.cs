@@ -52,7 +52,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
     private async Task ConnectToHubs(IEnumerable<ServerEntry> servers) {
       foreach (var server in servers) {
         await Hubs.NotificationHub<string, HubMethods>(server, HubMethods.Message,
-          s => { return Task.CompletedTask; });
+          message => { return Task.CompletedTask; });
       }
     }
 
@@ -71,12 +71,12 @@ namespace ACContentSynchronizer.ClientGui.Views {
       });
     }
 
-    public void DownloadContent(string http) {
-      DownloadContentWindow.Open(MainWindow.Instance, http);
+    public void DownloadContent(ServerEntry server) {
+      DownloadContentWindow.Open(MainWindow.Instance, server);
     }
 
-    public void UploadContent(string http) {
-      UploadContentWindow.Open(MainWindow.Instance, http);
+    public void UploadContent(ServerEntry server) {
+      UploadContentWindow.Open(MainWindow.Instance, server);
     }
 
     public async Task RemoveServer(ServerEntry server) {

@@ -135,14 +135,18 @@ namespace ACContentSynchronizer {
         }
 
         var contentCarPath = Path.Combine(content.CarsPath, carName);
-        MoveContent(car, contentCarPath);
+        if (Directory.Exists(car)) {
+          MoveContent(car, contentCarPath);
+        }
       }
 
       if (!string.IsNullOrEmpty(downloadedTrack)) {
         var trackName = new DirectoryInfo(downloadedTrack).Name;
         var contentTrackPath = Path.Combine(content.TracksPath, trackName);
 
-        MoveContent(downloadedTrack, contentTrackPath);
+        if (Directory.Exists(downloadedTrack)) {
+          MoveContent(downloadedTrack, contentTrackPath);
+        }
       }
 
       DirectoryUtils.DeleteIfExists(Path.Combine(connectionId, Constants.DownloadsPath), true);
@@ -154,7 +158,10 @@ namespace ACContentSynchronizer {
     }
 
     private static IEnumerable<string> GetDownloadedEntries(string entryType, string connectionId) {
-      return Directory.GetDirectories(Path.Combine(connectionId, Constants.DownloadsPath, entryType)).ToList();
+      var path = Path.Combine(connectionId, Constants.DownloadsPath, entryType);
+      return Directory.Exists(path)
+        ? Directory.GetDirectories(path).ToList()
+        : new();
     }
 
     private static (string CarsPath, string TracksPath) GetContentHierarchy(string path) {
