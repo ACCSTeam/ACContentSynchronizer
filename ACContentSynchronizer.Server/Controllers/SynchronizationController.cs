@@ -55,9 +55,14 @@ namespace ACContentSynchronizer.Server.Controllers {
     }
 
     [HttpGet("downloadContent")]
-    public async Task DownloadContent(string session) {
+    public async Task DownloadContent(string session, string client) {
       var path = Path.Combine(session, Constants.ContentArchive);
       await using var fileStream = System.IO.File.OpenRead(path);
+
+      await _hub.Clients.Client(client)
+        .SendAsync(HubMethods.PackProgress
+          .ToString(), 0, $"content size {fileStream.Length}");
+
       Response.Headers["Content-Type"] = Constants.ContentType;
       Response.Headers["Content-Length"] = fileStream.Length.ToString();
       await fileStream.CopyToAsync(Response.Body);
@@ -74,11 +79,14 @@ namespace ACContentSynchronizer.Server.Controllers {
 
     [HttpPost("updateContent")]
     [DisableRequestSizeLimit]
-    public async Task UpdateContent(string adminPassword) {
+    public async Task UpdateContent(string adminPassword, string client) {
       _serverConfiguration.CheckAccess(adminPassword);
 
       var gamePath = _configuration.GetValue<string>("GamePath");
-      await _serverConfiguration.GetArchive(Request.Body, HttpContext.Connection.Id);
+      await _serverConfiguration.GetArchive(Request,
+        HttpContext.Connection.Id,
+        client);
+
       ContentUtils.UnpackContent(HttpContext.Connection.Id);
       ContentUtils.ApplyContent(gamePath, HttpContext.Connection.Id);
 

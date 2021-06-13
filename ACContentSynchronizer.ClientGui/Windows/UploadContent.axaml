@@ -35,7 +35,9 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
-        <TextBlock Text="{Binding ProgressEntry}" />
+        <TextBox Text="{Binding AdminPassword}" />
+        <TextBlock Text="{Binding ProgressMessage}"
+                   TextWrapping="Wrap" />
         <ProgressBar Value="{Binding Progress}" />
         <Panel HorizontalAlignment="Center">
             <Button Content="Upload"

@@ -19,19 +19,22 @@ namespace ACContentSynchronizer.ClientGui {
       return hub;
     }
 
-    public static async Task NotificationHub<T, TMethod>(ServerEntry entry, TMethod method, Func<T, Task> action)
+    public static async Task<string> NotificationHub<T, TMethod>(ServerEntry entry, TMethod method,
+                                                                 Func<T, Task> action)
       where TMethod : notnull {
       try {
-        if (StoredHubs.ContainsKey(entry.Ip)) {
-          return;
-        }
+        var hub = StoredHubs.ContainsKey(entry.Ip)
+          ? StoredHubs[entry.Ip]
+          : BuildHub(entry);
 
-        var hub = BuildHub(entry);
-
+        hub.Remove(method.ToString());
         hub.On(method.ToString(), action);
-        await hub.StartAsync();
+        if (hub.State == HubConnectionState.Disconnected) {
+          await hub.StartAsync();
+        }
+        return hub.ConnectionId;
       } catch {
-        // ignored
+        return string.Empty;
       }
     }
 

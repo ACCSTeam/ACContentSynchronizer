@@ -61,7 +61,6 @@ namespace ACContentSynchronizer.ClientGui.Windows {
             State = "Preparing content...";
             var clientId = await SubscribeToProgress(server);
             var session = await dataReceiver.PrepareContent(comparedManifest, clientId);
-            Progress = 0;
 
             dataReceiver.OnProgress += SetProgress;
             dataReceiver.OnComplete += () => Task.Factory.StartNew(() => {
@@ -84,7 +83,7 @@ namespace ACContentSynchronizer.ClientGui.Windows {
             });
 
             State = "Downloading content...";
-            dataReceiver.DownloadContent(session);
+            dataReceiver.DownloadContent(session, clientId);
           } else {
             State = "Content no need to update";
             CanClose = true;
