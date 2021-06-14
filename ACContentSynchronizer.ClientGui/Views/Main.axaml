@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:svg="clr-namespace:Avalonia.Svg;assembly=Avalonia.Svg"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="ACContentSynchronizer.ClientGui.Views.Main">
 
     <Design.DataContext>
@@ -25,40 +26,41 @@
         </Style>
         <Style Selector="Grid.FilePicker > Button /template/ ContentPresenter">
             <Setter Property="CornerRadius" Value="0 3 3 0" />
+            <!-- <Setter Property="BorderThickness" Value="0,1,1,1" /> -->
         </Style>
     </UserControl.Styles>
 
     <Panel>
         <Panel IsHitTestVisible="False"
-               Background="{StaticResource UiColorTransparentDarker}" />
+               Background="{StaticResource UiColorTransparentDark}" />
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="100">
             <StackPanel>
-                <Svg Width="102" Height="167" Path="/Assets/ac-logo.svg" />
+                <svg:Svg Width="102" Height="167" Path="/Assets/ac-logo.svg" />
                 <TextBlock FontSize="40">ASSETTO CORSA</TextBlock>
                 <TextBlock FontSize="26">CONTENT SYNCHRONIZER</TextBlock>
             </StackPanel>
-            <!-- TODO: ЖЕЛАТЕЛЬНО ВЫНЕСТИ В ОТДЕЛЬНЫЙ КОНТРОЛ -->
-            <StackPanel MaxWidth="600" Classes="FilePickerWrapper">
+            <StackPanel MaxWidth="600" Classes="FilePickerWrapper"
+                        IsVisible="{Binding InitRun}">
                 <Label>Path to Assetto Corsa</Label>
                 <Grid Classes="FilePicker" ColumnDefinitions="*,60">
                     <TextBox Grid.Column="0"
-                             Text="{Binding Path}"/>
+                             Text="{Binding Path}" />
                     <Button Grid.Column="1" Classes="AccentButton"
                             Command="{Binding GetPath}">
                         <avalonia:MaterialIcon Kind="Folder" />
                     </Button>
                 </Grid>
             </StackPanel>
-            <Panel HorizontalAlignment="Center">
-                <Button Classes="AccentButton"
-                        Content="Next"
-                        Command="{Binding SaveAndContinue}">
-                </Button>
-            </Panel>
-            <!-- TODO: ЧТО БЫ ВМЕСТО НЕГО ПОКАЗЫВАТЬ КНОПКУ ADD NEW SERVER OR LOOKS LIKE -->
-            <!-- TODO: ЛИБО МЕНЯТЬ ЭТО ПРЯМ ТУТ В ЗАВИСИМОСТИ ОТ СОСТОЯНИЯ -->
-            <!-- TODO: ПОЧВУ Я УЖЕ ПОДГОТОВИЛ В  ВИДЕ ПОЛЯ InitRun -->
+            <Button Classes="AccentButton"
+                    Content="Next"
+                    HorizontalAlignment="Center"
+                    IsVisible="{Binding InitRun}"
+                    Command="{Binding SaveAndContinue}" />
+            <Button Classes="AccentButton"
+                    Content="New Connection"
+                    HorizontalAlignment="Center"
+                    IsVisible="{Binding !InitRun}"
+                    Command="{Binding AddNewConnection}" />
         </StackPanel>
-        <ProgressBar/>
     </Panel>
 </UserControl>

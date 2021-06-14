@@ -21,13 +21,21 @@
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.6" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Update="Windows\MainWindow.axaml.cs">
-        <DependentUpon>MainWindow.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Views\MainViewModel.cs">
+        <Compile Update="Windows\StatusBar.axaml.cs">
+            <DependentUpon>StatusBar.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Windows\MainWindow.axaml.cs">
+            <DependentUpon>MainWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\MainViewModel.cs">
         <DependentUpon>Main.axaml</DependentUpon>
+          <SubType>Code</SubType>
       </Compile>
+        <Compile Update="Views\SideBarViewModel.cs">
+          <DependentUpon>Sidebar.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\ACContentSynchronizer.Client\ACContentSynchronizer.Client.csproj" />

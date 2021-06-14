@@ -1,21 +1,26 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Views {
-  public class Layout : UserControl {
-    public Layout() {
+  public class StatusBar : UserControl {
+    private static StatusBar? _instance;
+
+    public static StatusBar Instance => _instance ??= new();
+
+    public StatusBar() {
       InitializeComponent();
+
+      _instance = this;
     }
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
     }
 
-    private void ToggleSideBar(object? sender, RoutedEventArgs e) {
-      Sidebar.Instance.Toggle();
+    public void AddTask() {
+
     }
   }
 }
-

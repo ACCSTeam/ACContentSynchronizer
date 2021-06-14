@@ -12,5 +12,7 @@
         <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/Colors.axaml" />
         <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/Resources.axaml" />
         <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/AccentButton.axaml" />
+        <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/TransparentButton.axaml" />
+        <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/SidebarButton.axaml" />
     </Application.Styles>
 </Application>

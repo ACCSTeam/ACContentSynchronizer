@@ -9,26 +9,17 @@
     </Design.PreviewWith>
 
     <Style Selector="Button.AccentButton">
-        <Setter Property="BorderBrush" Value="#00f" />
-        <Setter Property="BorderThickness" Value="3" />
-        <Setter Property="Transitions">
-            <Transitions>
-                <styles:SolidColorBrushTransition Property="BorderBrush" Duration="0:0:0:0.3" />
-            </Transitions>
-        </Setter>
+
     </Style>
     <Style Selector="Button.AccentButton /template/ ContentPresenter">
         <Setter Property="Background" Value="{StaticResource UiAccent}" />
         <Setter Property="Transitions">
             <Transitions>
-                <styles:SolidColorBrushTransition Property="BorderBrush" Duration="0:0:0:0.3" />
                 <styles:SolidColorBrushTransition Property="Background" Duration="0:0:0:0.3" />
             </Transitions>
         </Setter>
     </Style>
     <Style Selector="Button:pointerover.AccentButton /template/ ContentPresenter">
-        <Setter Property="BorderThickness" Value="3" />
-        <Setter Property="BorderBrush" Value="#0f0" />
-        <Setter Property="Background" Value="{StaticResource UiAccentDarker}" />
+        <Setter Property="Background" Value="{StaticResource UiAccentDark}" />
     </Style>
 </Styles>

@@ -50,7 +50,10 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public async Task GetPath() {
-      Path = await new OpenFolderDialog().ShowAsync(MainWindow.Instance);
+      var path = await new OpenFolderDialog().ShowAsync(MainWindow.Instance);
+      if (!string.IsNullOrEmpty(path)) {
+        Path = path;
+      }
     }
 
     public async Task SaveAndContinue() {
@@ -61,6 +64,11 @@ namespace ACContentSynchronizer.ClientGui.Views {
       settings.SteamId = SteamId;
 
       await settings.SaveAsync();
+      InitRun = false;
+    }
+
+    public async Task AddNewConnection() {
+      InitRun = true;
     }
   }
 }

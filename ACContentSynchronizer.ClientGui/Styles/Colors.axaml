@@ -10,8 +10,9 @@
 
     <Styles.Resources>
         <SolidColorBrush x:Key="UiColorTransparent">#66000000</SolidColorBrush>
-        <SolidColorBrush x:Key="UiColorTransparentDarker">#aa000000</SolidColorBrush>
+        <SolidColorBrush x:Key="UiColorTransparentDark">#aa000000</SolidColorBrush>
         <SolidColorBrush x:Key="UiAccent">#f00</SolidColorBrush>
-        <SolidColorBrush x:Key="UiAccentDarker">#a00</SolidColorBrush>
+        <SolidColorBrush x:Key="UiAccentDark">#a00</SolidColorBrush>
+        <SolidColorBrush x:Key="UiGrayLight">#8A6C686C</SolidColorBrush>
     </Styles.Resources>
 </Styles>

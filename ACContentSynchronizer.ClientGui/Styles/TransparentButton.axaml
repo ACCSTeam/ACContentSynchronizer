@@ -1,0 +1,19 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:styles="clr-namespace:ACContentSynchronizer.ClientGui.Styles"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <Button Classes="AccentButton"
+                    Content="Default" />
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="Button.TransparentButton">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="Button.TransparentButton /template/ ContentPresenter">
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+</Styles>

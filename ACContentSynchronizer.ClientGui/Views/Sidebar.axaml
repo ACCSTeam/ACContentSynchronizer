@@ -2,8 +2,72 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Sidebar">
-    Welcome to Avalonia!
-</UserControl>
 
+    <Design.DataContext>
+        <views:SideBarViewModel />
+    </Design.DataContext>
+
+    <UserControl.Styles>
+        <Style Selector="ListBox">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <Style Selector="ListBox > ListBoxItem">
+            <Setter Property="Height" Value="60" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*,60,60" Width="{Binding Size}">
+        <Button Grid.Row="0"
+                Classes="TransparentButton"
+                HorizontalAlignment="Stretch"
+                Command="{Binding Toggle}">
+            <avalonia:MaterialIcon Kind="ViewHeadline"
+                                   FontSize="24" />
+        </Button>
+        <ListBox Grid.Row="1"
+                 Items="{Binding Servers}"
+                 HorizontalAlignment="Stretch">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="0,0,0,1"
+                            BorderBrush="{StaticResource UiGrayLight}">
+                        <Grid ColumnDefinitions="*,60,60">
+                            <TextBlock Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       Margin="20"
+                                       Text="{Binding Name}" />
+                            <avalonia:MaterialIcon Grid.Column="1"
+                                                   Kind="Wifi" />
+                            <Button Grid.Column="2"
+                                    Classes="TransparentButton SidebarButton">
+                                <avalonia:MaterialIcon Kind="Delete" />
+                            </Button>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <components:SidebarButton Grid.Row="2"
+                                  Label="Add new"
+                                  IsMinimized="{Binding IsMinimized}"
+                                  Command="{Binding AddServer}">
+            <avalonia:MaterialIcon Kind="Plus" />
+        </components:SidebarButton>
+        <components:SidebarButton Grid.Row="3"
+                                  Label="Settings"
+                                  IsMinimized="{Binding IsMinimized}"
+                                  Command="{Binding AddServer}">
+            <avalonia:MaterialIcon Kind="Tune" />
+        </components:SidebarButton>
+    </Grid>
+</UserControl>
