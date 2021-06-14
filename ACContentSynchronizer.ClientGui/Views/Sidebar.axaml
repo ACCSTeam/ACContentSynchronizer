@@ -31,7 +31,7 @@
                 Classes="TransparentButton"
                 HorizontalAlignment="Stretch"
                 Command="{Binding Toggle}">
-            <avalonia:MaterialIcon Kind="ViewHeadline"
+            <avalonia:MaterialIcon Kind="Menu"
                                    FontSize="24" />
         </Button>
         <ListBox Grid.Row="1"
@@ -57,16 +57,30 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Popup Grid.Row="2"
+               Width="300"
+               PlacementMode="AnchorAndGravity"
+               IsOpen="{Binding AddServerDialog}">
+            <StackPanel Spacing="5">
+                <TextBlock Text="IP address" />
+                <TextBox Text="" />
+                <TextBlock Text="Password" />
+                <TextBox Text="" />
+                <Button Content="Save"
+                        Classes="TransparentButton"
+                        Command="{Binding AddServer}" />
+            </StackPanel>
+        </Popup>
         <components:SidebarButton Grid.Row="2"
                                   Label="Add new"
                                   IsMinimized="{Binding IsMinimized}"
-                                  Command="{Binding AddServer}">
+                                  Command="{Binding OpenAddServerDialog}">
             <avalonia:MaterialIcon Kind="Plus" />
         </components:SidebarButton>
         <components:SidebarButton Grid.Row="3"
                                   Label="Settings"
                                   IsMinimized="{Binding IsMinimized}"
-                                  Command="{Binding AddServer}">
+                                  Command="{Binding OpenAddServerDialog}">
             <avalonia:MaterialIcon Kind="Tune" />
         </components:SidebarButton>
     </Grid>

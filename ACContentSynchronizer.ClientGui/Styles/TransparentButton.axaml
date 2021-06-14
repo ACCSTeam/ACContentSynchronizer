@@ -4,7 +4,7 @@
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia">
     <Design.PreviewWith>
         <Border Padding="20">
-            <Button Classes="AccentButton"
+            <Button Classes="TransparentButton"
                     Content="Default" />
         </Border>
     </Design.PreviewWith>

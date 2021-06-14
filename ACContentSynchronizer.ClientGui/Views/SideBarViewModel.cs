@@ -41,11 +41,21 @@ namespace ACContentSynchronizer.ClientGui.Views {
       set => this.RaiseAndSetIfChanged(ref _settingsContent, value);
     }
 
-
     public AvaloniaList<ServerEntry> Servers { get; set; } = new();
+
+    private bool _addServerDialog;
+
+    public bool AddServerDialog {
+      get => _addServerDialog;
+      set => this.RaiseAndSetIfChanged(ref _addServerDialog, value);
+    }
 
     public void Toggle() {
       IsMinimized = !IsMinimized;
+    }
+
+    public void OpenAddServerDialog() {
+      AddServerDialog = !AddServerDialog;
     }
 
     public void AddServer() {
