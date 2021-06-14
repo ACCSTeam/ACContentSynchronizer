@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,14 +9,20 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Models;
+using ACContentSynchronizer.Server.Hubs;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 
 namespace ACContentSynchronizer.Server.Services {
   public class ServerConfigurationService {
     private readonly IConfiguration _configuration;
+    private readonly IHubContext<NotificationHub> _hub;
 
-    public ServerConfigurationService(IConfiguration configuration) {
+    public ServerConfigurationService(IConfiguration configuration,
+                                      IHubContext<NotificationHub> hub) {
       _configuration = configuration;
+      _hub = hub;
     }
 
     public void CheckAccess(string password) {
@@ -32,15 +39,37 @@ namespace ACContentSynchronizer.Server.Services {
       throw new("");
     }
 
-    public async Task GetArchive(Stream data, string connectionId) {
+    public async Task GetArchive(HttpRequest request, string connectionId, string client) {
       DirectoryUtils.DeleteIfExists(connectionId, true);
       DirectoryUtils.CreateIfNotExists(connectionId);
+
       var sessionPath = Path.Combine(connectionId, Constants.ContentArchive);
-      FileUtils.DeleteIfExists(Constants.ContentArchive);
+      var data = request.Body;
+      var length = request.ContentLength ?? 0;
+
       await FileUtils.CreateIfNotExistsAsync(sessionPath);
       await using var stream = File.OpenWrite(sessionPath);
-      await data.CopyToAsync(stream);
+
+      byte[] buffer = ArrayPool<byte>.Shared.Rent(Constants.BufferSize);
+      try {
+        while (true) {
+          var bytesRead = await data.ReadAsync(new(buffer)).ConfigureAwait(false);
+          if (bytesRead == 0) {
+            break;
+          }
+          await stream.WriteAsync(new(buffer, 0, bytesRead)).ConfigureAwait(false);
+          SendProgress(client, length, stream.Length);
+        }
+      } finally {
+        ArrayPool<byte>.Shared.Return(buffer);
+      }
+
       stream.Close();
+    }
+
+    private void SendProgress(string client, long length, long read) {
+      var progress = (double) read / length * 100;
+      _hub.Clients.Client(client).SendAsync(HubMethods.Progress.ToString(), progress);
     }
 
     public async Task<string?> UpdateConfig(Manifest manifest) {
@@ -121,26 +150,28 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     private static void ExecuteCommand(string command) {
-      ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command}\"") {
-        CreateNoWindow = true,
-        UseShellExecute = false,
-        RedirectStandardError = true,
-        RedirectStandardOutput = true,
-        WorkingDirectory = Directory.GetDirectoryRoot(command),
-      };
+      Task.Factory.StartNew(() => {
+        ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command}\"") {
+          CreateNoWindow = true,
+          UseShellExecute = false,
+          RedirectStandardError = true,
+          RedirectStandardOutput = true,
+          WorkingDirectory = Directory.GetDirectoryRoot(command),
+        };
 
-      var process = Process.Start(processInfo);
-      process?.WaitForExit();
+        var process = Process.Start(processInfo);
+        process?.WaitForExit();
 
-      var output = process?.StandardOutput.ReadToEnd();
-      var error = process?.StandardError.ReadToEnd();
+        var output = process?.StandardOutput.ReadToEnd();
+        var error = process?.StandardError.ReadToEnd();
 
-      var exitCode = process?.ExitCode;
+        var exitCode = process?.ExitCode;
 
-      Console.WriteLine("output>>" + (string.IsNullOrEmpty(output) ? "(none)" : output));
-      Console.WriteLine("error>>" + (string.IsNullOrEmpty(error) ? "(none)" : error));
-      Console.WriteLine("ExitCode: " + exitCode, "ExecuteCommand");
-      process?.Close();
+        Console.WriteLine("output>>" + (string.IsNullOrEmpty(output) ? "(none)" : output));
+        Console.WriteLine("error>>" + (string.IsNullOrEmpty(error) ? "(none)" : error));
+        Console.WriteLine("ExitCode: " + exitCode, "ExecuteCommand");
+        process?.Close();
+      });
     }
 
     private async Task<bool> ServerNotIsEmpty(HttpClient client) {

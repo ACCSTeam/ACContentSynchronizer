@@ -11,5 +11,6 @@ namespace ACContentSynchronizer {
     public const string ServerCfg = "server_cfg.ini";
     public const string EntryList = "entry_list.ini";
     public const string SettingPath = "settings.json";
+    public const int BufferSize = 81920;
   }
 }
