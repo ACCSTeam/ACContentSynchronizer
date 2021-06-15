@@ -1,9 +1,5 @@
-using ACContentSynchronizer.ClientGui.Windows;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class Main : UserControl {
@@ -20,4 +16,3 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
   }
 }
-

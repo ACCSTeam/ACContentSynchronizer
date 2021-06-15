@@ -36,6 +36,9 @@
         <Compile Update="Views\SideBarViewModel.cs">
           <DependentUpon>Sidebar.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Components\AddNewServerViewModel.cs">
+          <DependentUpon>AddNewServer.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\ACContentSynchronizer.Client\ACContentSynchronizer.Client.csproj" />

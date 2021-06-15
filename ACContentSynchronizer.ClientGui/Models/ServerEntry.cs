@@ -16,5 +16,7 @@
       get => _name ?? Ip;
       set => _name = value;
     }
+
+    public string Password { get; set; } = "";
   }
 }

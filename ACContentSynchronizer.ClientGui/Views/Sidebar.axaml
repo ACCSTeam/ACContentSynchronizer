@@ -57,20 +57,6 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Popup Grid.Row="2"
-               Width="300"
-               PlacementMode="AnchorAndGravity"
-               IsOpen="{Binding AddServerDialog}">
-            <StackPanel Spacing="5">
-                <TextBlock Text="IP address" />
-                <TextBox Text="" />
-                <TextBlock Text="Password" />
-                <TextBox Text="" />
-                <Button Content="Save"
-                        Classes="TransparentButton"
-                        Command="{Binding AddServer}" />
-            </StackPanel>
-        </Popup>
         <components:SidebarButton Grid.Row="2"
                                   Label="Add new"
                                   IsMinimized="{Binding IsMinimized}"

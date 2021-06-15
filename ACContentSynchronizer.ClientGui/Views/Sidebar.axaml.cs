@@ -1,29 +1,23 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class Sidebar : UserControl {
-    private readonly SideBarViewModel _vm;
     private static Sidebar? _instance;
-
-    public static Sidebar Instance => _instance ??= new();
+    public readonly SideBarViewModel Vm;
 
     public Sidebar() {
-      DataContext = _vm = new();
+      DataContext = Vm = new();
 
       InitializeComponent();
 
       _instance = this;
     }
 
+    public static Sidebar Instance => _instance ??= new();
+
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
-    }
-
-    public void Toggle() {
-      _vm.Size = _vm.IsMinimized ? 300 : 60;
-      _vm.IsMinimized = !_vm.IsMinimized;
     }
   }
 }

@@ -1,8 +1,7 @@
-using Avalonia.Animation;
-using Avalonia.Media;
 using System;
-using System.Reactive.Linq;
+using Avalonia.Animation;
 using Avalonia.Animation.Animators;
+using Avalonia.Media;
 
 namespace ACContentSynchronizer.ClientGui.Styles {
   public class BrushAnimator : Animator<IBrush> {

@@ -1,4 +1,5 @@
-using System.IO;
+using ACContentSynchronizer.ClientGui.ViewModels;
+using ACContentSynchronizer.ClientGui.Views;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;

@@ -11,13 +11,12 @@
                 <ControlTemplate>
                     <Button Height="60"
                             Background="{StaticResource UiGrayLight}"
+                            Padding="0"
                             Classes="TransparentButton"
-                            HorizontalAlignment="Stretch"
                             Command="{TemplateBinding Command}">
                         <Grid ColumnDefinitions="60,*"
                               HorizontalAlignment="Center">
                             <ContentPresenter Grid.Column="0"
-                                              HorizontalContentAlignment="Center"
                                               Content="{TemplateBinding  Content}" />
                             <Panel Grid.Column="1"
                                    VerticalAlignment="Center">

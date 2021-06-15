@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using ACContentSynchronizer.ClientGui.Components;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using Avalonia.Collections;
@@ -8,14 +8,20 @@ using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class SideBarViewModel : ViewModelBase {
+    private bool _addServerDialog;
+
+    private bool _isMinimized;
+
+    private object _newContent = "Add new";
+
+    private object _settingsContent = "Settings";
+
     private int _size = 300;
 
     public int Size {
       get => _size;
       set => this.RaiseAndSetIfChanged(ref _size, value);
     }
-
-    private bool _isMinimized;
 
     public bool IsMinimized {
       get => _isMinimized;
@@ -27,14 +33,10 @@ namespace ACContentSynchronizer.ClientGui.Views {
       }
     }
 
-    private object _newContent = "Add new";
-
     public object NewContent {
       get => _newContent;
       set => this.RaiseAndSetIfChanged(ref _newContent, value);
     }
-
-    private object _settingsContent = "Settings";
 
     public object SettingsContent {
       get => _settingsContent;
@@ -42,8 +44,6 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public AvaloniaList<ServerEntry> Servers { get; set; } = new();
-
-    private bool _addServerDialog;
 
     public bool AddServerDialog {
       get => _addServerDialog;
@@ -55,13 +55,13 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public void OpenAddServerDialog() {
-      AddServerDialog = !AddServerDialog;
+      Modal.Open<AddNewServer>();
     }
 
     public void AddServer() {
       Servers.Add(new() {
         Ip =
-          $"{Servers.Count}.{Servers.Count}.{Servers.Count}.{Servers.Count}:{Servers.Count}{Servers.Count}{Servers.Count}{Servers.Count}"
+          $"{Servers.Count}.{Servers.Count}.{Servers.Count}.{Servers.Count}:{Servers.Count}{Servers.Count}{Servers.Count}{Servers.Count}",
       });
     }
   }

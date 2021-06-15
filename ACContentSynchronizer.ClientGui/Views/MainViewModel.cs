@@ -7,6 +7,14 @@ using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class MainViewModel : ViewModelBase {
+    private bool _initRun;
+
+    private string _path = "";
+
+    private string _playerName = "Player";
+
+    private long _steamId;
+
     public MainViewModel() {
       var settings = Settings.Instance();
       if (!string.IsNullOrEmpty(settings.GamePath)
@@ -21,28 +29,20 @@ namespace ACContentSynchronizer.ClientGui.Views {
       SteamId = settings.SteamId;
     }
 
-    private bool _initRun;
-
     public bool InitRun {
       get => _initRun;
       set => this.RaiseAndSetIfChanged(ref _initRun, value);
     }
-
-    private string _path = "";
 
     public string Path {
       get => _path;
       set => this.RaiseAndSetIfChanged(ref _path, value);
     }
 
-    private string _playerName = "Player";
-
     public string PlayerName {
       get => _playerName;
       set => this.RaiseAndSetIfChanged(ref _playerName, value);
     }
-
-    private long _steamId;
 
     public long SteamId {
       get => _steamId;
@@ -67,7 +67,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
       InitRun = false;
     }
 
-    public async Task AddNewConnection() {
+    public void AddNewConnection() {
       InitRun = true;
     }
   }
