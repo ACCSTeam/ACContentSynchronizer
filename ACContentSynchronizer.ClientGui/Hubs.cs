@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.Client.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace ACContentSynchronizer.ClientGui {

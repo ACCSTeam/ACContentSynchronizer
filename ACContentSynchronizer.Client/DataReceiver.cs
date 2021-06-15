@@ -81,5 +81,9 @@ namespace ACContentSynchronizer.Client {
     public async Task RefreshServer(string adminPassword, Manifest manifest) {
       await Client.PostAsJsonAsync($"refreshServer?adminPassword={adminPassword}", manifest);
     }
+
+    public Task<string> GetServerInfo() {
+      return Client.GetStringAsync("getServerInfo");
+    }
   }
 }

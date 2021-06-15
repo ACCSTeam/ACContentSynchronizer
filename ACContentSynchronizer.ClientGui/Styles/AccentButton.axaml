@@ -8,9 +8,7 @@
         </Border>
     </Design.PreviewWith>
 
-    <Style Selector="Button.AccentButton">
-
-    </Style>
+    <Style Selector="Button.AccentButton" />
     <Style Selector="Button.AccentButton /template/ ContentPresenter">
         <Setter Property="Background" Value="{StaticResource UiAccent}" />
         <Setter Property="Transitions">

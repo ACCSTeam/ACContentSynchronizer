@@ -104,5 +104,10 @@ namespace ACContentSynchronizer.Server.Controllers {
 
       await _hub.Clients.All.SendAsync(HubMethods.Message.ToString(), "Server rebooted");
     }
+
+    [HttpGet("getServerInfo")]
+    public string? GetServerInfo() {
+      return _serverConfiguration.GetServerName();
+    }
   }
 }

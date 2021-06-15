@@ -191,6 +191,13 @@ namespace ACContentSynchronizer.Server.Services {
         : null;
     }
 
+    public string? GetServerName() {
+      var serverConfig = GetServerPath();
+      return !string.IsNullOrEmpty(serverConfig)
+        ? GetStringValue(serverConfig, "SERVER", "NAME")
+        : null;
+    }
+
     public string[] GetCars() {
       var serverConfig = GetServerPath();
       if (string.IsNullOrEmpty(serverConfig)) {

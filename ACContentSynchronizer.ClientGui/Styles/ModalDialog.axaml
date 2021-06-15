@@ -11,13 +11,19 @@
         <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
         <Setter Property="SystemDecorations" Value="BorderOnly" />
         <Setter Property="WindowStartupLocation" Value="CenterOwner" />
-        <Setter Property="Height" Value="200" />
+        <Setter Property="Background" Value="{StaticResource UiColorTransparentDark}" />
         <Setter Property="Width" Value="356" />
+        <Setter Property="SizeToContent" Value="Height" />
+        <Setter Property="ShowInTaskbar" Value="False" />
     </Style>
 
     <Style Selector="Window.ModalDialog > Border">
         <Setter Property="BorderBrush" Value="{StaticResource UiAccentTransparent}" />
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="Padding" Value="20" />
+    </Style>
+
+    <Style Selector="Window.ModalDialog Button">
+        <Setter Property="Background" Value="{StaticResource UiGrayLight}" />
     </Style>
 </Styles>

@@ -13,13 +13,11 @@ namespace ACContentSynchronizer.Client.Models {
 
     public long SteamId { get; set; }
 
-    public string AdminPassword { get; set; } = "";
+    public bool SidebarMinimized { get; set; }
 
-    public List<string> Servers { get; set; } = new();
+    public List<ServerEntry> Servers { get; set; } = new();
 
-    public static Settings Instance() {
-      return _instance ??= Load();
-    }
+    public static Settings Instance => _instance ??= Load();
 
     public async Task SaveAsync() {
       var json = JsonSerializer.Serialize(this);

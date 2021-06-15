@@ -1,3 +1,6 @@
+using ACContentSynchronizer.Client.Models;
+using ACContentSynchronizer.ClientGui.Modals;
+using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Windows;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -12,6 +15,13 @@ namespace ACContentSynchronizer.ClientGui {
     public override void OnFrameworkInitializationCompleted() {
       if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
         desktop.MainWindow = MainWindow.Instance;
+      }
+
+      var settings = Settings.Instance;
+      if (string.IsNullOrEmpty(settings.GamePath)
+          || string.IsNullOrEmpty(settings.PlayerName)
+          || settings.SteamId == 0) {
+        Modal.Open<InitRun>().ConfigureAwait(false);
       }
 
       base.OnFrameworkInitializationCompleted();

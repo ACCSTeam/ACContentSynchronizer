@@ -1,4 +1,6 @@
-﻿namespace ACContentSynchronizer.ClientGui.Models {
+﻿using System.Runtime.Serialization;
+
+namespace ACContentSynchronizer.Client.Models {
   public class ServerEntry {
     private string? _name;
 
@@ -10,6 +12,8 @@
     }
 
     public string Ip { get; set; } = "";
+
+    [IgnoreDataMember]
     public string Http => $"http://{Ip}";
 
     public string Name {

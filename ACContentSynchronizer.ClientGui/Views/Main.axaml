@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
              xmlns:svg="clr-namespace:Avalonia.Svg;assembly=Avalonia.Svg"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
@@ -18,16 +17,6 @@
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="FontStyle" Value="Italic" />
         </Style>
-        <Style Selector="StackPanel.FilePickerWrapper">
-            <Setter Property="Margin" Value="20 0" />
-        </Style>
-        <Style Selector="Grid.FilePicker > TextBox /template/ Border">
-            <Setter Property="CornerRadius" Value="3 0 0 3" />
-        </Style>
-        <Style Selector="Grid.FilePicker > Button /template/ ContentPresenter">
-            <Setter Property="CornerRadius" Value="0 3 3 0" />
-            <!-- <Setter Property="BorderThickness" Value="0,1,1,1" /> -->
-        </Style>
     </UserControl.Styles>
 
     <Panel>
@@ -39,27 +28,9 @@
                 <TextBlock FontSize="40">ASSETTO CORSA</TextBlock>
                 <TextBlock FontSize="26">CONTENT SYNCHRONIZER</TextBlock>
             </StackPanel>
-            <StackPanel MaxWidth="600" Classes="FilePickerWrapper"
-                        IsVisible="{Binding InitRun}">
-                <Label>Path to Assetto Corsa</Label>
-                <Grid Classes="FilePicker" ColumnDefinitions="*,60">
-                    <TextBox Grid.Column="0"
-                             Text="{Binding Path}" />
-                    <Button Grid.Column="1" Classes="AccentButton"
-                            Command="{Binding GetPath}">
-                        <avalonia:MaterialIcon Kind="Folder" />
-                    </Button>
-                </Grid>
-            </StackPanel>
-            <Button Classes="AccentButton"
-                    Content="Next"
-                    HorizontalAlignment="Center"
-                    IsVisible="{Binding InitRun}"
-                    Command="{Binding SaveAndContinue}" />
             <Button Classes="AccentButton"
                     Content="New Connection"
                     HorizontalAlignment="Center"
-                    IsVisible="{Binding !InitRun}"
                     Command="{Binding AddNewConnection}" />
         </StackPanel>
     </Panel>

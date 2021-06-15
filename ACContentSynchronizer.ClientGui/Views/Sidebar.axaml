@@ -22,34 +22,48 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <Style Selector="ListBox > ListBoxItem:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource UiAccentTransparent}" />
+        </Style>
+
+        <Style Selector="ListBox > ListBoxItem:selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource UiAccentDark}" />
         </Style>
     </UserControl.Styles>
 
     <Grid RowDefinitions="Auto,*,60,60" Width="{Binding Size}">
         <Button Grid.Row="0"
                 Classes="TransparentButton"
+                Height="30"
                 HorizontalAlignment="Stretch"
                 Command="{Binding Toggle}">
-            <avalonia:MaterialIcon Kind="Menu"
+            <avalonia:MaterialIcon Kind="ViewList"
                                    FontSize="24" />
         </Button>
         <ListBox Grid.Row="1"
+                 Name="Servers"
                  Items="{Binding Servers}"
                  HorizontalAlignment="Stretch">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="0,0,0,1"
                             BorderBrush="{StaticResource UiGrayLight}">
-                        <Grid ColumnDefinitions="*,60,60">
+                        <Grid ColumnDefinitions="Auto,60,60">
                             <TextBlock Grid.Column="0"
                                        VerticalAlignment="Center"
                                        Margin="20"
+                                       Width="{Binding ElementName=Servers, Path=DataContext.LabelWidth}"
                                        Text="{Binding Name}" />
                             <avalonia:MaterialIcon Grid.Column="1"
-                                                   Kind="Wifi" />
+                                                   Kind="Wifi"
+                                                   IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}" />
                             <Button Grid.Column="2"
-                                    Classes="TransparentButton SidebarButton">
+                                    Classes="TransparentButton SidebarButton"
+                                    IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}"
+                                    Command="{Binding ElementName=Servers, Path=DataContext.Remove}"
+                                    CommandParameter="{Binding }">
                                 <avalonia:MaterialIcon Kind="Delete" />
                             </Button>
                         </Grid>

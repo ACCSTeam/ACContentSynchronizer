@@ -1,0 +1,29 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:modals="clr-namespace:ACContentSynchronizer.ClientGui.Modals"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ACContentSynchronizer.ClientGui.Modals.Toast"
+        Classes="Toast"
+        Title="Toast">
+    <Design.DataContext>
+        <modals:ToastViewModel />
+    </Design.DataContext>
+
+    <Panel>
+        <Button Click="Close">
+            <avalonia:MaterialIcon HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Height="15"
+                                   Width="15"
+                                   Kind="Close" />
+        </Button>
+        <Border>
+
+            <TextBlock TextWrapping="Wrap"
+                       Text="{Binding Message}" />
+        </Border>
+    </Panel>
+</Window>

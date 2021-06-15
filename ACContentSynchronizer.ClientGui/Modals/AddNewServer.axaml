@@ -2,15 +2,15 @@
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
               xmlns:models="clr-namespace:ACContentSynchronizer.ClientGui.Models"
-              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-              x:Class="ACContentSynchronizer.ClientGui.Components.AddNewServer"
+              xmlns:modals="clr-namespace:ACContentSynchronizer.ClientGui.Modals"
+              mc:Ignorable="d" d:DesignWidth="356" d:DesignHeight="200"
+              x:Class="ACContentSynchronizer.ClientGui.Modals.AddNewServer"
               Classes="ModalDialog"
               Title="AddNewServer">
 
     <Design.DataContext>
-        <components:AddNewServerViewModel />
+        <modals:AddNewServerViewModel />
     </Design.DataContext>
 
     <Border>
@@ -19,9 +19,16 @@
             <TextBox Text="{Binding Ip}" />
             <TextBlock Text="Password" />
             <TextBox Text="{Binding Password}" />
-            <Button Content="Save"
-                    Classes="TransparentButton"
-                    Command="{Binding Save}" />
+            <Grid ColumnDefinitions="*,10,*">
+                <Button Grid.Column="0"
+                        Content="Save"
+                        Classes="TransparentButton"
+                        Command="{Binding Save}" />
+                <Button Grid.Column="2"
+                        Content="Close"
+                        Classes="TransparentButton"
+                        Command="{Binding Close}" />
+            </Grid>
         </StackPanel>
     </Border>
 </models:Modal>

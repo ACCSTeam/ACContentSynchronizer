@@ -36,8 +36,18 @@
         <Compile Update="Views\SideBarViewModel.cs">
           <DependentUpon>Sidebar.axaml</DependentUpon>
         </Compile>
-        <Compile Update="Components\AddNewServerViewModel.cs">
+        <Compile Update="Modals\AddNewServer.axaml.cs">
           <DependentUpon>AddNewServer.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Modals\AddNewServerViewModel.cs">
+          <DependentUpon>AddNewServer.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Modals\InitRunViewModel.cs">
+          <DependentUpon>InitRun.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Modals\ToastViewModel.cs">
+          <DependentUpon>Toast.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
