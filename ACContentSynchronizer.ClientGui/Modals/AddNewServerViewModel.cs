@@ -3,15 +3,14 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
 using ACContentSynchronizer.Client.Models;
-using ACContentSynchronizer.ClientGui.ViewModels;
+using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Views;
 using Avalonia.Data;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
-  public class AddNewServerViewModel : ViewModelBase {
+  public class AddNewServerViewModel : ModalViewModel<AddNewServer> {
     private Regex _addressRegex = new($"^{Constants.Pattern}$");
-    public AddNewServer Instance { get; init; } = null!;
 
     private string _ip = "";
 
@@ -39,19 +38,17 @@ namespace ACContentSynchronizer.ClientGui.Modals {
         Password = Password,
       };
 
-      var dataReceiver = new DataReceiver(serverEntry.Http);
       try {
+        using var dataReceiver = new DataReceiver(serverEntry.Http);
         serverEntry.Name = await dataReceiver.GetServerInfo();
-
+      } catch (HttpRequestException e) {
+        if (e.StatusCode == null) {
+          Toast.Open("Cant connect to server");
+        }
+      } finally {
         Sidebar.Instance.Vm.Servers.Add(serverEntry);
         Instance.Close();
-      } catch (HttpRequestException) {
-        Toast.Open("Cant connect to server");
       }
-    }
-
-    public void Close() {
-      Instance.Close();
     }
   }
 }

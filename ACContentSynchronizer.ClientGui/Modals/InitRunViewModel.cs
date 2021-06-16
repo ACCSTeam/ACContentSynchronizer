@@ -1,18 +1,19 @@
 ﻿using System.Threading.Tasks;
 using ACContentSynchronizer.Client.Models;
-using ACContentSynchronizer.ClientGui.ViewModels;
+using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Windows;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
-  public class InitRunViewModel : ViewModelBase {
-    public InitRunViewModel() {
+  public class InitRunViewModel : ModalViewModel<InitRun> {
+    public InitRunViewModel(InitRun instance) {
       var settings = Settings.Instance;
       Path = settings.GamePath;
       PlayerName = settings.PlayerName;
       SteamId = settings.SteamId;
+      Instance = instance;
     }
 
     private string _path = "";
@@ -55,6 +56,7 @@ namespace ACContentSynchronizer.ClientGui.Modals {
       settings.SteamId = SteamId;
 
       await settings.SaveAsync();
+      Close();
     }
   }
 }

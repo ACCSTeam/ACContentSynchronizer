@@ -10,13 +10,14 @@ using Avalonia.Threading;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
   public class Toast : Window {
-    public readonly ToastViewModel Vm;
+    private readonly ToastViewModel _vm;
 
     public Toast() {
+      DataContext = _vm = new();
     }
 
     public Toast(string message) {
-      DataContext = Vm = new(message);
+      DataContext = _vm = new(message);
       InitializeComponent();
 #if DEBUG
       this.AttachDevTools();
@@ -44,7 +45,7 @@ namespace ACContentSynchronizer.ClientGui.Modals {
       var bounds = toast.Screens.Primary.Bounds;
       var x = bounds.Width - ToastWidth - 30;
       var lastToast = ToastsActivated.OrderByDescending(t => t.Position.Y).FirstOrDefault();
-      var prevY = (int) (lastToast?.Position.Y + lastToast?.Height ?? 0);
+      var prevY = (int) ((lastToast?.Position.Y + lastToast?.Height) ?? 0);
       var y = prevY + 20;
       toast.Position = new(x, y);
 

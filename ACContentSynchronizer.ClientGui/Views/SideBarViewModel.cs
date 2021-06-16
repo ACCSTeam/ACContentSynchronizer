@@ -18,9 +18,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
       IsMinimized = settings.SidebarMinimized;
     }
 
-    private bool _addServerDialog;
-
-    private bool _isMinimized;
+   private bool _isMinimized;
 
     private object _newContent = "Add new";
 
@@ -65,11 +63,16 @@ namespace ACContentSynchronizer.ClientGui.Views {
       set => this.RaiseAndSetIfChanged(ref _settingsContent, value);
     }
 
-    public AvaloniaList<ServerEntry> Servers { get; set; } = new();
+    public AvaloniaList<ServerEntry> Servers { get; set; }
 
-    public bool AddServerDialog {
-      get => _addServerDialog;
-      set => this.RaiseAndSetIfChanged(ref _addServerDialog, value);
+    private ServerEntry _selectedServer = new();
+
+    public ServerEntry SelectedServer {
+      get => _selectedServer;
+      set {
+        Layout.Instance.SelectServer(value);
+        this.RaiseAndSetIfChanged(ref _selectedServer, value);
+      }
     }
 
     public void Toggle() {

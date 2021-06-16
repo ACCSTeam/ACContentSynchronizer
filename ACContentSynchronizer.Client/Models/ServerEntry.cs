@@ -11,7 +11,7 @@ namespace ACContentSynchronizer.Client.Models {
       Ip = ip;
     }
 
-    public string Ip { get; set; } = "";
+    public string Ip { get; set; } = "localhost";
 
     [IgnoreDataMember]
     public string Http => $"http://{Ip}";

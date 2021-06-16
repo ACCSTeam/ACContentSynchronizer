@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using ACContentSynchronizer.Models;
 
 namespace ACContentSynchronizer.Client {
-  public class DataReceiver {
+  public class DataReceiver : IDisposable{
     public delegate void CompleteEvent();
 
     public delegate void PackProgressEvent(double progress, string entry);
@@ -84,6 +84,11 @@ namespace ACContentSynchronizer.Client {
 
     public Task<string> GetServerInfo() {
       return Client.GetStringAsync("getServerInfo");
+    }
+
+    public void Dispose()
+    {
+      Client.Dispose();
     }
   }
 }

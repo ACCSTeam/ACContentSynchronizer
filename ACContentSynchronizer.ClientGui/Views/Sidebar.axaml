@@ -44,29 +44,38 @@
         </Button>
         <ListBox Grid.Row="1"
                  Name="Servers"
+                 HorizontalAlignment="Stretch"
                  Items="{Binding Servers}"
-                 HorizontalAlignment="Stretch">
+                 SelectedItem="{Binding SelectedServer}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="0,0,0,1"
                             BorderBrush="{StaticResource UiGrayLight}">
-                        <Grid ColumnDefinitions="Auto,60,60">
-                            <TextBlock Grid.Column="0"
-                                       VerticalAlignment="Center"
-                                       Margin="20"
-                                       Width="{Binding ElementName=Servers, Path=DataContext.LabelWidth}"
-                                       Text="{Binding Name}" />
-                            <avalonia:MaterialIcon Grid.Column="1"
-                                                   Kind="Wifi"
-                                                   IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}" />
-                            <Button Grid.Column="2"
-                                    Classes="TransparentButton SidebarButton"
-                                    IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}"
-                                    Command="{Binding ElementName=Servers, Path=DataContext.Remove}"
-                                    CommandParameter="{Binding }">
-                                <avalonia:MaterialIcon Kind="Delete" />
-                            </Button>
-                        </Grid>
+                        <Panel>
+                            <ToolTip Tip="{Binding Name}"
+                                     Placement="Right" />
+
+                            <Grid ColumnDefinitions="Auto,60,60"
+                                  ToolTip.Tip="{Binding Name}"
+                                  ToolTip.Placement="Right">
+                                <TextBlock Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           Margin="20"
+                                           Width="{Binding ElementName=Servers, Path=DataContext.LabelWidth}"
+                                           Text="{Binding Name}" />
+                                <avalonia:MaterialIcon Grid.Column="1"
+                                                       Kind="Wifi"
+                                                       IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}" />
+                                <Button Grid.Column="2"
+                                        Classes="TransparentButton SidebarButton"
+                                        IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}"
+                                        Command="{Binding ElementName=Servers, Path=DataContext.Remove}"
+                                        CommandParameter="{Binding }">
+                                    <avalonia:MaterialIcon Kind="Delete" />
+                                </Button>
+                            </Grid>
+                        </Panel>
                     </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
