@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
@@ -65,9 +66,27 @@ namespace ACContentSynchronizer.Models {
       foreach (var file in files) {
         var entry = archive.CreateEntry(Path.Combine(type, file.FullName.Replace(path + @"\", "")));
         var entryStream = entry.Open();
-        await using var fileStream = File.Open(file.FullName, FileMode.Open);
-        await fileStream.CopyToAsync(entryStream);
+
+        await GrantAccess(async () => {
+          await using var fileStream = File.Open(file.FullName, FileMode.Open);
+          await fileStream.CopyToAsync(entryStream);
+        }, TimeSpan.FromMinutes(1));
       }
+    }
+
+    private async Task GrantAccess(Func<Task> action, TimeSpan timeout) {
+      var time = Stopwatch.StartNew();
+      while (time.ElapsedMilliseconds < timeout.Milliseconds) {
+        try {
+          await action();
+          return;
+        } catch (IOException e) {
+          if (e.HResult != -2147024864) {
+            throw;
+          }
+        }
+      }
+      throw new("Failed perform action within allotted time.");
     }
   }
 }

@@ -15,6 +15,10 @@ namespace ACContentSynchronizer.ClientGui.Components {
 
     public AvaloniaList<StatusBarEntry>? Source { get; set; }
 
+    public void Dispose() {
+      _vm?.Dispose();
+    }
+
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
     }
@@ -27,11 +31,6 @@ namespace ACContentSynchronizer.ClientGui.Components {
     private void Cancel(object? sender, RoutedEventArgs e) {
       _vm?.Task.Cancel();
       Source?.Remove(this);
-    }
-
-    public void Dispose()
-    {
-      _vm?.Dispose();
     }
   }
 }

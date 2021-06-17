@@ -9,7 +9,10 @@ namespace ACContentSynchronizer.ClientGui.Components {
       Task.Run();
     }
 
-    internal TaskViewModel Task { get; set; }
+    public StatusBarEntryViewModel() {
+    }
+
+    internal TaskViewModel Task { get; set; } = null!;
 
     public void Dispose() {
       Task.Dispose();

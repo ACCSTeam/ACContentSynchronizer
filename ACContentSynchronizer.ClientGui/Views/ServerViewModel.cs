@@ -12,7 +12,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
       set => this.RaiseAndSetIfChanged(ref _serverEntry, value);
     }
 
-    private void ValidateContent() {
+    public void ValidateContent() {
       StatusBar.Instance.AddTask(new ValidationTask(ServerEntry));
     }
   }
