@@ -89,7 +89,7 @@ namespace ACContentSynchronizer.Server.Services {
           var variants = Directory.GetDirectories(trackPath);
 
           if (variants.Any()) {
-            serverConfig["SERVER"]["CONFIG_TRACK"] = variants.First();
+            serverConfig["SERVER"]["CONFIG_TRACK"] = new DirectoryInfo(variants.First()).Name;
           }
         }
 
