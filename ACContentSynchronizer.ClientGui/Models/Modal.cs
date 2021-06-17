@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.ClientGui.Windows;
 using Avalonia;
 using Avalonia.Controls;
@@ -15,7 +14,7 @@ namespace ACContentSynchronizer.ClientGui.Models {
 
     public static async Task Open<T, TInput>(TInput? vm) where T : Modal, new()
       where TInput : ModalViewModel<T> {
-      var modal = (T)Activator.CreateInstance(typeof(T), vm)!;
+      var modal = (T) Activator.CreateInstance(typeof(T), vm)!;
       await modal.ShowDialog(MainWindow.Instance);
     }
 

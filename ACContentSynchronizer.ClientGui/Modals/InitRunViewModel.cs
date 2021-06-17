@@ -8,6 +8,12 @@ using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
   public class InitRunViewModel : ModalViewModel<InitRun> {
+    private string _path = "";
+
+    private string _playerName = "Player";
+
+    private long _steamId;
+
     public InitRunViewModel(InitRun instance) {
       var settings = Settings.Instance;
       Path = settings.GamePath;
@@ -15,12 +21,6 @@ namespace ACContentSynchronizer.ClientGui.Modals {
       SteamId = settings.SteamId;
       Instance = instance;
     }
-
-    private string _path = "";
-
-    private string _playerName = "Player";
-
-    private long _steamId;
 
     public string Path {
       get => _path;

@@ -10,6 +10,8 @@ using Avalonia.Threading;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
   public class Toast : Window {
+    private const int ToastWidth = 300;
+    private const int ActiveToastCount = 3;
     private readonly ToastViewModel _vm;
 
     public Toast() {
@@ -24,10 +26,12 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 #endif
     }
 
+    private static List<Toast> ToastsActivated { get; set; } = new();
+
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
 
-      Task.Factory.StartNew(async () => {
+      Task.Run(async () => {
         await Task.Delay(TimeSpan.FromSeconds(10));
         await Dispatcher.UIThread.InvokeAsync(CloseInternal);
       });
@@ -44,8 +48,12 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 
       var bounds = toast.Screens.Primary.Bounds;
       var x = bounds.Width - ToastWidth - 30;
+
       var lastToast = ToastsActivated.OrderByDescending(t => t.Position.Y).FirstOrDefault();
-      var prevY = (int) ((lastToast?.Position.Y + lastToast?.Height) ?? 0);
+      var prevY = (int) (lastToast != null
+        ? lastToast.Position.Y + lastToast.Height
+        : 0);
+
       var y = prevY + 20;
       toast.Position = new(x, y);
 
@@ -62,9 +70,5 @@ namespace ACContentSynchronizer.ClientGui.Modals {
       Close();
       ToastsActivated.Remove(this);
     }
-
-    private const int ToastWidth = 300;
-    private const int ActiveToastCount = 3;
-    private static List<Toast> ToastsActivated { get; set; } = new();
   }
 }

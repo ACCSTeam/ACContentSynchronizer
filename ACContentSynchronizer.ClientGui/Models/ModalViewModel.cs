@@ -1,5 +1,4 @@
 using ACContentSynchronizer.ClientGui.ViewModels;
-using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Models {
   public class ModalViewModel<T> : ViewModelBase where T : Modal {

@@ -52,8 +52,11 @@
         <Compile Update="Views\ServerViewModel.cs">
           <DependentUpon>Server.axaml</DependentUpon>
         </Compile>
-        <Compile Update="Modals\DownloadViewModel.cs">
-          <DependentUpon>DownloadModal.axaml</DependentUpon>
+        <Compile Update="Views\StatusBarViewModel.cs">
+          <DependentUpon>StatusBar.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Components\StatusBarEntryViewModel.cs">
+          <DependentUpon>StatusBarEntry.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>

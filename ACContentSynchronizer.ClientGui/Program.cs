@@ -15,6 +15,8 @@ namespace ACContentSynchronizer.ClientGui {
     public static AppBuilder BuildAvaloniaApp() {
       return AppBuilder.Configure<App>()
         .UsePlatformDetect()
+        .With(new Win32PlatformOptions { OverlayPopups = false })
+        .With(new AvaloniaNativePlatformOptions { OverlayPopups = false })
         .LogToTrace()
         .UseReactiveUI();
     }

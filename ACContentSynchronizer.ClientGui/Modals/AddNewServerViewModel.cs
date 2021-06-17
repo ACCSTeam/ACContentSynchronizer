@@ -10,9 +10,11 @@ using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
   public class AddNewServerViewModel : ModalViewModel<AddNewServer> {
-    private Regex _addressRegex = new($"^{Constants.Pattern}$");
+    private readonly Regex _addressRegex = new($"^{Constants.Pattern}$");
 
     private string _ip = "";
+
+    private string _password = "";
 
     public string Ip {
       get => _ip;
@@ -24,8 +26,6 @@ namespace ACContentSynchronizer.ClientGui.Modals {
         this.RaiseAndSetIfChanged(ref _ip, value);
       }
     }
-
-    private string _password = "";
 
     public string Password {
       get => _password;
@@ -46,7 +46,7 @@ namespace ACContentSynchronizer.ClientGui.Modals {
           Toast.Open("Cant connect to server");
         }
       } finally {
-        Sidebar.Instance.Vm.Servers.Add(serverEntry);
+        Sidebar.Instance.Add(serverEntry);
         Instance.Close();
       }
     }

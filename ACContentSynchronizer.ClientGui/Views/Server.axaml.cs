@@ -1,5 +1,4 @@
 using ACContentSynchronizer.Client.Models;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
@@ -8,13 +7,13 @@ namespace ACContentSynchronizer.ClientGui.Views {
     private static Server? _instance;
     private readonly ServerViewModel _vm;
 
-    public static Server Instance => _instance ??= new();
-
     public Server() {
       DataContext = _vm = new();
       InitializeComponent();
       _instance = this;
     }
+
+    public static Server Instance => _instance ??= new();
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);

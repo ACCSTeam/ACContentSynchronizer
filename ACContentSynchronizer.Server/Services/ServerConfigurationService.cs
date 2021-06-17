@@ -150,7 +150,7 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     private static void ExecuteCommand(string command) {
-      Task.Factory.StartNew(() => {
+      Task.Run(() => {
         ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command}\"") {
           CreateNoWindow = true,
           UseShellExecute = false,

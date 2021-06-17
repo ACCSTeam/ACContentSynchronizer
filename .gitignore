@@ -9,3 +9,4 @@ downloads/
 Runner/
 *.zip
 appsettings.*.json
+pvs-output

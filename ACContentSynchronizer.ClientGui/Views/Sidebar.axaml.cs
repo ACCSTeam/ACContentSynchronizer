@@ -1,13 +1,15 @@
+using System.Threading.Tasks;
+using ACContentSynchronizer.Client.Models;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class Sidebar : UserControl {
     private static Sidebar? _instance;
-    public readonly SideBarViewModel Vm;
+    private readonly SideBarViewModel _vm;
 
     public Sidebar() {
-      DataContext = Vm = new();
+      DataContext = _vm = new();
 
       InitializeComponent();
 
@@ -18,6 +20,14 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
+    }
+
+    public Task Open() {
+      return _vm.OpenAddServerDialog();
+    }
+
+    public void Add(ServerEntry server) {
+      _vm.Servers.Add(server);
     }
   }
 }

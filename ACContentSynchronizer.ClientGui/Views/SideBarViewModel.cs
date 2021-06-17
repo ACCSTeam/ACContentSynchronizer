@@ -11,6 +11,18 @@ using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class SideBarViewModel : ViewModelBase {
+    private bool _isMinimized;
+
+    private int _labelWidth;
+
+    private object _newContent = "Add new";
+
+    private ServerEntry _selectedServer = new();
+
+    private object _settingsContent = "Settings";
+
+    private int _size = 300;
+
     public SideBarViewModel() {
       var settings = Settings.Instance;
 
@@ -18,20 +30,10 @@ namespace ACContentSynchronizer.ClientGui.Views {
       IsMinimized = settings.SidebarMinimized;
     }
 
-   private bool _isMinimized;
-
-    private object _newContent = "Add new";
-
-    private object _settingsContent = "Settings";
-
-    private int _size = 300;
-
     public int Size {
       get => _size;
       set => this.RaiseAndSetIfChanged(ref _size, value);
     }
-
-    private int _labelWidth;
 
     public int LabelWidth {
       get => _labelWidth;
@@ -64,8 +66,6 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public AvaloniaList<ServerEntry> Servers { get; set; }
-
-    private ServerEntry _selectedServer = new();
 
     public ServerEntry SelectedServer {
       get => _selectedServer;

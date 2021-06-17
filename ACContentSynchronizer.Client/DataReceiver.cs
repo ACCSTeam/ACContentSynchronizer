@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using ACContentSynchronizer.Models;
 
 namespace ACContentSynchronizer.Client {
-  public class DataReceiver : IDisposable{
+  public class DataReceiver : IDisposable {
     public delegate void CompleteEvent();
 
     public delegate void PackProgressEvent(double progress, string entry);
@@ -27,6 +27,10 @@ namespace ACContentSynchronizer.Client {
         BaseAddress = new(serverAddress),
         Timeout = Timeout.InfiniteTimeSpan,
       };
+    }
+
+    public void Dispose() {
+      Client.Dispose();
     }
 
     public event PackProgressEvent? OnPack;
@@ -84,11 +88,6 @@ namespace ACContentSynchronizer.Client {
 
     public Task<string> GetServerInfo() {
       return Client.GetStringAsync("getServerInfo");
-    }
-
-    public void Dispose()
-    {
-      Client.Dispose();
     }
   }
 }

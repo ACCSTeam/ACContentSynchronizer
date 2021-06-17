@@ -1,7 +1,4 @@
-using System.Threading.Tasks;
-using ACContentSynchronizer.Client;
 using ACContentSynchronizer.Client.Models;
-using ACContentSynchronizer.ClientGui.Modals;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using ReactiveUI;
@@ -15,10 +12,8 @@ namespace ACContentSynchronizer.ClientGui.Views {
       set => this.RaiseAndSetIfChanged(ref _serverEntry, value);
     }
 
-    public async Task ValidateContent() {
-      await Modal.Open<DownloadModal, DownloadViewModel>(new () {
-        ServerEntry = ServerEntry,
-      });
+    private void ValidateContent() {
+      StatusBar.Instance.AddTask(new ValidationTask(ServerEntry));
     }
   }
 }
