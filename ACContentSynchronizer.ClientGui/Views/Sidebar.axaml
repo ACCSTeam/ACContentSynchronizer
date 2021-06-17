@@ -13,10 +13,6 @@
     </Design.DataContext>
 
     <UserControl.Styles>
-        <Style Selector="ListBox">
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-
         <Style Selector="ListBox > ListBoxItem">
             <Setter Property="Height" Value="60" />
             <Setter Property="VerticalAlignment" Value="Center" />
