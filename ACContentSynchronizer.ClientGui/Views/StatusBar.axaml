@@ -19,8 +19,8 @@
                         Orientation="Horizontal"
                         Spacing="20" >
                 <TextBlock VerticalAlignment="Center"
-                    Text="{Binding Last.State}"/>
-                <ProgressBar Value="{Binding Last.Progress}"/>
+                    Text="{Binding State}"/>
+                <ProgressBar Value="{Binding Progress}"/>
             </StackPanel>
         </Button>
         <Popup Name="StatusPopup"

@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
 using ACContentSynchronizer.Client.Models;
-using ACContentSynchronizer.ClientGui.Modals;
 
 namespace ACContentSynchronizer.ClientGui.Models {
   public class ValidationTask : TaskViewModel {
@@ -16,15 +15,24 @@ namespace ACContentSynchronizer.ClientGui.Models {
     private Task? Worker { get; set; }
     private ServerEntry ServerEntry { get; set; }
 
-    private void SetProgress(double progress) {
+    private event ExceptionHandler? OnException;
+
+    private void SetProgress(double progress, CancellationToken token) {
+      token.ThrowIfCancellationRequested();
       Progress = progress;
     }
 
-    private Task<string> SubscribeToProgress(ServerEntry server) {
+    private Task<string> SubscribeToProgress(ServerEntry server, CancellationToken token) {
       return Hubs.NotificationHub<double, string, HubMethods>(server, HubMethods.PackProgress,
         (progress, entry) => {
-          Progress = progress;
-          State = $"Packed {entry}";
+          try {
+            token.ThrowIfCancellationRequested();
+            Progress = progress;
+            State = $"Packed {entry}";
+          } catch (Exception e) {
+            OnException?.Invoke(e);
+          }
+
           return Task.CompletedTask;
         });
     }
@@ -32,43 +40,59 @@ namespace ACContentSynchronizer.ClientGui.Models {
     public override void Run() {
       Canceller = new();
       Worker = Task.Run(async () => {
+        var dataReceiver = new DataReceiver(ServerEntry.Http);
+        var session = "";
         try {
           Canceller.Token.ThrowIfCancellationRequested();
           var settings = Settings.Instance;
-          var dataReceiver = new DataReceiver(ServerEntry.Http);
 
+          Canceller.Token.ThrowIfCancellationRequested();
           State = "Downloading manifest...";
-          Canceller.Token.ThrowIfCancellationRequested();
           var manifest = await dataReceiver.DownloadManifest();
-          State = "Manifest downloaded";
           Canceller.Token.ThrowIfCancellationRequested();
+          State = "Manifest downloaded";
 
           if (manifest != null) {
-            State = "Content comparing";
             Canceller.Token.ThrowIfCancellationRequested();
+            State = "Content comparing";
             var comparedManifest = dataReceiver.CompareContent(settings.GamePath, manifest);
 
             if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
+              Canceller.Token.ThrowIfCancellationRequested();
               State = "Preparing content...";
-              var clientId = await SubscribeToProgress(ServerEntry);
-              var session = await dataReceiver.PrepareContent(comparedManifest, clientId);
 
-              dataReceiver.OnProgress += SetProgress;
+              var clientId = await SubscribeToProgress(ServerEntry, Canceller.Token);
+              session = await dataReceiver.PrepareContent(comparedManifest);
+
+              OnException += exception => {
+                if (exception is not OperationCanceledException) {
+                  return;
+                }
+
+                if (!string.IsNullOrEmpty(session)) {
+                  dataReceiver.CancelPreparing(session);
+                }
+              };
+
+              Canceller.Token.ThrowIfCancellationRequested();
+              State = "Pack content...";
+              await dataReceiver.PackContent(session, clientId);
+
+              dataReceiver.OnProgress += progress => SetProgress(progress, Canceller.Token);
               dataReceiver.OnComplete += () => Task.Run(() => {
                 try {
+                  Canceller.Token.ThrowIfCancellationRequested();
                   State = "Downloaded";
-                  Canceller.Token.ThrowIfCancellationRequested();
-                  dataReceiver.OnProgress -= SetProgress;
 
+                  Canceller.Token.ThrowIfCancellationRequested();
                   State = "Trying to save content...";
+                  dataReceiver.SaveData(session);
                   Canceller.Token.ThrowIfCancellationRequested();
-                  dataReceiver.SaveData();
                   State = "Content saved";
-                  Canceller.Token.ThrowIfCancellationRequested();
 
-                  State = "Applying changes...";
                   Canceller.Token.ThrowIfCancellationRequested();
-                  dataReceiver.Apply(settings.GamePath);
+                  State = "Applying changes...";
+                  dataReceiver.Apply(settings.GamePath, session);
                   State = "Done!";
                   Canceller.Token.ThrowIfCancellationRequested();
                 } catch (Exception e) {
@@ -76,17 +100,18 @@ namespace ACContentSynchronizer.ClientGui.Models {
                 }
               });
 
-              State = "Downloading content...";
               Canceller.Token.ThrowIfCancellationRequested();
+              State = "Downloading content...";
               dataReceiver.DownloadContent(session, clientId);
             } else {
               State = "Content no need to update";
             }
           }
         } catch (OperationCanceledException) {
-          Worker?.Dispose();
-          Worker = null;
-          Toast.Open("Task canceled");
+          State = "Task canceled";
+          if (!string.IsNullOrEmpty(session)) {
+            await dataReceiver.CancelPreparing(session);
+          }
         } catch (Exception e) {
           State = $"ERROR: {e.Message}";
         }
@@ -95,12 +120,13 @@ namespace ACContentSynchronizer.ClientGui.Models {
 
     public override void Cancel() {
       Canceller.Cancel();
-      Canceller.Dispose();
     }
 
     public override void Dispose() {
       Canceller.Dispose();
       Worker?.Dispose();
     }
+
+    private delegate void ExceptionHandler(Exception e);
   }
 }

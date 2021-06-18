@@ -7,16 +7,16 @@ using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Components {
   public class StatusBarEntry : UserControl, IDisposable {
-    private StatusBarEntryViewModel? _vm;
-    public StatusBarEntryViewModel? ViewModel => _vm;
     public StatusBarEntry() {
       InitializeComponent();
     }
 
+    public StatusBarEntryViewModel? ViewModel { get; private set; }
+
     public AvaloniaList<StatusBarEntry>? Source { get; set; }
 
     public void Dispose() {
-      _vm?.Dispose();
+      ViewModel?.Dispose();
     }
 
     private void InitializeComponent() {
@@ -24,12 +24,12 @@ namespace ACContentSynchronizer.ClientGui.Components {
     }
 
     public void Run(TaskViewModel task, AvaloniaList<StatusBarEntry> source) {
-      DataContext = _vm = new(task);
+      DataContext = ViewModel = new(task);
       Source = source;
     }
 
     private void Cancel(object? sender, RoutedEventArgs e) {
-      _vm?.Task.Cancel();
+      ViewModel?.Task.Cancel();
       Source?.Remove(this);
     }
   }

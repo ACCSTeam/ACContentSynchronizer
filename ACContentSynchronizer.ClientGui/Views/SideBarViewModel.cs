@@ -94,5 +94,9 @@ namespace ACContentSynchronizer.ClientGui.Views {
       settings.Servers = Servers.ToList();
       return settings.SaveAsync();
     }
+
+    public async Task OpenSettings() {
+      await Modal.Open<InitRun>();
+    }
   }
 }

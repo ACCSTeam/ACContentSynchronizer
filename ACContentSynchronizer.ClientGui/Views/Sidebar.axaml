@@ -85,7 +85,7 @@
         <components:SidebarButton Grid.Row="3"
                                   Label="Settings"
                                   IsMinimized="{Binding IsMinimized}"
-                                  Command="{Binding OpenAddServerDialog}">
+                                  Command="{Binding OpenSettings}">
             <avalonia:MaterialIcon Kind="Tune" />
         </components:SidebarButton>
     </Grid>

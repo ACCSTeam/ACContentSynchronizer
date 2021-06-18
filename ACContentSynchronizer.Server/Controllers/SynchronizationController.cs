@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Models;
 using ACContentSynchronizer.Server.Hubs;
@@ -41,17 +42,34 @@ namespace ACContentSynchronizer.Server.Controllers {
     }
 
     [HttpPost("prepareContent")]
-    public async Task<string> PrepareContent(Manifest manifest, string client) {
+    public async Task<string> PrepareContent(Manifest manifest) {
       await _hub.Clients.All.SendAsync(HubMethods.Message.ToString(), "Content uploaded");
       var gamePath = _configuration.GetValue<string>("GamePath");
 
       var content = ContentUtils.PrepareContent(gamePath, manifest);
-      Response.Headers.Add("session", HttpContext.Connection.Id);
+      content.Session = HttpContext.Connection.Id;
+      ProcessedContent.AvailableContents.Add(content);
+
+      return HttpContext.Connection.Id;
+    }
+
+    [HttpGet("packContent")]
+    public async Task PackContent(string session, string client) {
+      var content = ProcessedContent.AvailableContents.FirstOrDefault(x => x.Session == session);
+
+      if (content == null) {
+        return;
+      }
+
       content.OnProgress += async (progress, entry) => {
         await _hub.Clients.Client(client).SendAsync(HubMethods.PackProgress.ToString(), progress, entry);
       };
       await content.Pack(HttpContext.Connection.Id);
-      return HttpContext.Connection.Id;
+    }
+
+    [HttpGet("cancelPack")]
+    public void CancelPack(string session) {
+      ProcessedContent.AvailableContents.FirstOrDefault(x => x.Session == session)?.AbortPacking();
     }
 
     [HttpGet("downloadContent")]

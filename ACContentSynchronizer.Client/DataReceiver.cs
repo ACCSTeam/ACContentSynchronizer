@@ -46,30 +46,38 @@ namespace ACContentSynchronizer.Client {
       return ContentUtils.CompareContent(gamePath, manifest);
     }
 
-    public async Task<string> PrepareContent(Manifest manifest, string clientId) {
-      var result = await Client.PostAsJsonAsync($"prepareContent?client={clientId}", manifest);
+    public async Task<string> PrepareContent(Manifest manifest) {
+      var result = await Client.PostAsJsonAsync("prepareContent", manifest);
       var session = await result.Content.ReadAsStringAsync();
       return session;
     }
 
+    public Task PackContent(string session, string clientId) {
+      return Client.GetAsync($"packContent?session={session}&client={clientId}");
+    }
+
+    public Task CancelPreparing(string session) {
+      return Client.GetAsync($"cancelPack?session={session}");
+    }
+
     public void DownloadContent(string session, string clientId) {
-      var archive = Path.Combine(Constants.Client, Constants.ContentArchive);
+      var archive = Path.Combine(session, Constants.ContentArchive);
       var server = $"{Client.BaseAddress}downloadContent?session={session}&client={clientId}";
       using var client = new WebClient();
       FileUtils.DeleteIfExists(archive);
-      DirectoryUtils.CreateIfNotExists(Constants.Client);
+      DirectoryUtils.CreateIfNotExists(session);
 
       client.DownloadProgressChanged += (_, e) => OnProgress?.Invoke(e.ProgressPercentage);
       client.DownloadFileCompleted += (_, _) => OnComplete?.Invoke();
       client.DownloadFileAsync(new(server), archive);
     }
 
-    public void SaveData() {
-      ContentUtils.UnpackContent(Constants.Client);
+    public void SaveData(string session) {
+      ContentUtils.UnpackContent(session);
     }
 
-    public void Apply(string gamePath) {
-      ContentUtils.ApplyContent(gamePath, Constants.Client);
+    public void Apply(string gamePath, string session) {
+      ContentUtils.ApplyContent(gamePath, session);
     }
 
     public async Task<Manifest?> GetUpdateManifest(Manifest manifest) {

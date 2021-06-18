@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ACContentSynchronizer.Models {
   public class AvailableContent {
     public delegate void ProgressEvent(double progress, string entry);
 
+    private CancellationTokenSource Canceller { get; set; } = new();
     public List<EntryInfo> Cars { get; set; } = new();
     public EntryInfo? Track { get; set; }
+    public string Session { get; set; } = "";
 
     public event ProgressEvent? OnProgress;
 
@@ -33,9 +36,15 @@ namespace ACContentSynchronizer.Models {
           await AddToArchive(contentArchive, Track.Path, Constants.TracksFolder);
           CalculateProgress(entriesPassed, Track.Name);
         }
+      } catch (Exception) {
+        DirectoryUtils.DeleteIfExists(session, true);
       } finally {
         GC.Collect();
       }
+    }
+
+    public void AbortPacking() {
+      Canceller.Cancel();
     }
 
     private int CalculateProgress(int entriesPassed, string entry) {
@@ -64,19 +73,25 @@ namespace ACContentSynchronizer.Models {
     private async Task AddFromDirectory(ZipArchive archive, DirectoryInfo directory, string path, string type) {
       var files = directory.GetFiles();
       foreach (var file in files) {
-        var entry = archive.CreateEntry(Path.Combine(type, file.FullName.Replace(path + @"\", "")));
-        var entryStream = entry.Open();
+        try {
+          Canceller.Token.ThrowIfCancellationRequested();
+          var entry = archive.CreateEntry(Path.Combine(type, file.FullName.Replace(path + @"\", "")));
+          var entryStream = entry.Open();
 
-        await GrantAccess(async () => {
-          await using var fileStream = File.Open(file.FullName, FileMode.Open);
-          await fileStream.CopyToAsync(entryStream);
-        }, TimeSpan.FromMinutes(1));
+          await GrantAccess(async () => {
+            await using var fileStream = File.Open(file.FullName, FileMode.Open);
+            await fileStream.CopyToAsync(entryStream);
+          }, TimeSpan.FromMinutes(1));
+        } catch (Exception e) {
+          Console.WriteLine(e);
+          throw;
+        }
       }
     }
 
     private async Task GrantAccess(Func<Task> action, TimeSpan timeout) {
       var time = Stopwatch.StartNew();
-      while (time.ElapsedMilliseconds < timeout.Milliseconds) {
+      while (time.ElapsedMilliseconds < timeout.TotalMilliseconds) {
         try {
           await action();
           return;
