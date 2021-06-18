@@ -10,16 +10,17 @@
         <components:StatusBarEntryViewModel />
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="*,10,Auto">
-        <StackPanel Grid.Column="0">
+    <Grid ColumnDefinitions="*,80">
+        <StackPanel Grid.Column="0"
+                    Spacing="5">
             <TextBlock Text="{Binding Task.State}" />
             <ProgressBar Value="{Binding Task.Progress}" />
         </StackPanel>
         <Button Padding="5"
-                Grid.Column="2"
-                Click="Cancel">
-            Cancel
-        </Button>
+                HorizontalAlignment="Right"
+                Grid.Column="1"
+                Content="Close"
+                Click="Cancel" />
     </Grid>
 
 </UserControl>

@@ -1,5 +1,7 @@
 using ACContentSynchronizer.ClientGui.Models;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Views {
@@ -22,6 +24,11 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     public void AddTask(TaskViewModel task) {
       _vm.AddTask(task);
+      _vm.Last = task;
+    }
+
+    private void OpenPopup(object? sender, RoutedEventArgs e) {
+      this.FindControl<Popup>("StatusPopup").IsOpen = true;
     }
   }
 }

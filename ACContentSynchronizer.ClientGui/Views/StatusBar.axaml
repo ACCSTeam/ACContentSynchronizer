@@ -10,18 +10,28 @@
         <views:StatusBarViewModel />
     </Design.DataContext>
 
-    <Panel VerticalAlignment="Center">
-        <Popup PlacementAnchor="Top"
+    <Panel VerticalAlignment="Stretch">
+        <Button Classes="TransparentButton"
+                VerticalAlignment="Stretch"
+                Padding="0"
+                Click="OpenPopup">
+            <StackPanel Margin="20,0"
+                        Orientation="Horizontal"
+                        Spacing="20" >
+                <TextBlock VerticalAlignment="Center"
+                    Text="{Binding Last.State}"/>
+                <ProgressBar Value="{Binding Last.Progress}"/>
+            </StackPanel>
+        </Button>
+        <Popup Name="StatusPopup"
+               PlacementAnchor="TopRight"
                Width="300"
                Height="150"
-               IsOpen="{Binding IsOpen}">
-            <ListBox VirtualizationMode="None"
-                     Items="{Binding Tasks}" />
+               IsLightDismissEnabled="True">
+            <Panel Background="{StaticResource UiGrayLight}">
+                <ListBox VirtualizationMode="None"
+                         Items="{Binding Tasks}" />
+            </Panel>
         </Popup>
-        <Button Classes="TransparentButton"
-                HorizontalAlignment="Right"
-                Command="{Binding Toggle}">
-            <ProgressBar Margin="20,0" />
-        </Button>
     </Panel>
 </UserControl>

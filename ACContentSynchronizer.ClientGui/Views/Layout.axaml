@@ -10,13 +10,13 @@
         <views:Sidebar Grid.Column="0" />
         <Grid Grid.Column="1"
               RowDefinitions="*, 30">
+            <ContentPresenter Grid.Row="1"
+                              Content="{x:Static views:StatusBar.Instance}" />
             <Carousel Grid.Row="0"
                       Name="Carousel">
                 <views:Main />
                 <views:Server />
             </Carousel>
-            <ContentPresenter Grid.Row="1"
-                              Content="{x:Static views:StatusBar.Instance}" />
         </Grid>
     </Grid>
 </UserControl>

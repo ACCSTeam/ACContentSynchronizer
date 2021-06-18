@@ -8,7 +8,7 @@ using Avalonia.Markup.Xaml;
 namespace ACContentSynchronizer.ClientGui.Components {
   public class StatusBarEntry : UserControl, IDisposable {
     private StatusBarEntryViewModel? _vm;
-
+    public StatusBarEntryViewModel? ViewModel => _vm;
     public StatusBarEntry() {
       InitializeComponent();
     }
