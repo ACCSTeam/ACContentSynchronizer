@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -32,10 +33,13 @@ namespace ACContentSynchronizer.ClientGui.Modals {
       set => this.RaiseAndSetIfChanged(ref _password, value);
     }
 
+    public DateTime DateTime { get; set; } = DateTime.Now;
+
     public async Task Save() {
       var serverEntry = new ServerEntry {
         Ip = Ip,
         Password = Password,
+        DateTime = DateTime,
       };
 
       try {

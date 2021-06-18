@@ -36,13 +36,14 @@
                   Grid.Column="0"
                   Grid.ColumnSpan="3"
                   Orientation="Horizontal"
-                  Spacing="10">
+                  Spacing="10"
+                  HorizontalAlignment="Right">
         <Button Classes="AccentButton"
                 Content="Join" />
         <Button Classes="AccentButton"
                 Content="Refresh" />
         <Button Classes="AccentButton"
-                Content="Validate content"
+                Content="Update content"
                 Command="{Binding ValidateContent}" />
         <Button Classes="AccentButton"
                 Content="Upload content" />

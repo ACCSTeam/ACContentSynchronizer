@@ -1,4 +1,5 @@
 using ACContentSynchronizer.Client.Models;
+using ACContentSynchronizer.ClientGui.Models;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 

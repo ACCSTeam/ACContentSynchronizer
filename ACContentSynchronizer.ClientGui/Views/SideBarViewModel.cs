@@ -84,6 +84,15 @@ namespace ACContentSynchronizer.ClientGui.Views {
       await SaveServersState();
     }
 
+    public async Task EditServerDialog(ServerEntry server) {
+      await Modal.Open<AddNewServer, AddNewServerViewModel>(new AddNewServerViewModel() {
+        Ip = server.Ip,
+        Password = server.Password,
+        DateTime = server.DateTime
+      });
+      await SaveServersState();
+    }
+
     public Task Remove(ServerEntry server) {
       Servers.Remove(server);
       return SaveServersState();

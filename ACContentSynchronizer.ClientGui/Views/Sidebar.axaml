@@ -60,9 +60,13 @@
                            Margin="20"
                            Width="{Binding ElementName=Servers, Path=DataContext.LabelWidth}"
                            Text="{Binding Name}" />
-                <avalonia:MaterialIcon Grid.Column="1"
-                                       Kind="Wifi"
-                                       IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}" />
+                <Button Grid.Column="1"
+                        Classes="TransparentButton SidebarButton"
+                        IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}"
+                        Command="{Binding ElementName=Servers, Path=DataContext.EditServerDialog}"
+                        CommandParameter="{Binding }">
+                  <avalonia:MaterialIcon Kind="Edit" />
+                </Button>
                 <Button Grid.Column="2"
                         Classes="TransparentButton SidebarButton"
                         IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}"

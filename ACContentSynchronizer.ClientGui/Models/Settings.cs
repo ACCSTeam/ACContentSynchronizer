@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ACContentSynchronizer.Client.Models {
+namespace ACContentSynchronizer.ClientGui.Models {
   public class Settings {
     private static Settings? _instance;
 
