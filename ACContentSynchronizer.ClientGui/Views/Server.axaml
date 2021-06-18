@@ -13,18 +13,28 @@
   <Panel>
     <Panel IsHitTestVisible="False"
            Background="{StaticResource UiColorTransparentDark}" />
-    <Grid RowDefinitions="*,*,60"
-          ColumnDefinitions="*,*"
+    <Grid RowDefinitions="*,10,*,10,60"
+          ColumnDefinitions="*,30,*"
           Margin="20,50,20,20">
       <ListBox Grid.Row="0"
-               Grid.Column="0" />
+               Grid.Column="0"
+               Items="{Binding Cars}"
+               SelectedItem="{Binding SelectedCar}">
+        <ListBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding Name}" />
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
       <Image Grid.Row="0"
-             Grid.Column="1" />
-      <Image Grid.Row="1"
-             Grid.Column="1" />
-      <StackPanel Grid.Row="2"
+             Grid.Column="2"
+             Source="{Binding SelectedCar.Preview}" />
+      <Image Grid.Row="2"
+             Grid.Column="2"
+             Source="{Binding Track.Preview}" />
+      <StackPanel Grid.Row="4"
                   Grid.Column="0"
-                  Grid.ColumnSpan="2"
+                  Grid.ColumnSpan="3"
                   Orientation="Horizontal"
                   Spacing="10">
         <Button Classes="AccentButton"

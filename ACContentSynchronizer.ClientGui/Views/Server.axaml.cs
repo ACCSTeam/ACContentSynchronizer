@@ -1,12 +1,15 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
 using ACContentSynchronizer.Client.Models;
+using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.Models;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class Server : UserControl {
@@ -31,10 +34,11 @@ namespace ACContentSynchronizer.ClientGui.Views {
         using var dataReceiver = new DataReceiver(serverEntry.Http);
         var info = await dataReceiver.GetServerInfo();
         if (info != null) {
-          _vm.Cars = info.Cars.Select(x => new Entry {
+          _vm.Cars = new(info.Cars.Select(x => new Entry {
             DirectoryName = x,
             Name = GetCarName(x),
-          }).ToList();
+            Preview = GetCarPreview(x),
+          }));
 
           _vm.Track = new() {
             DirectoryName = info.Track,
@@ -45,14 +49,12 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     private string GetCarName(string entry) {
-      var settings = Settings.Instance;
-      var carsFolder = Path.Combine(settings.GamePath, Constants.ContentFolder, Constants.CarsFolder);
-      var carFolder = Directory.GetDirectories(carsFolder).FirstOrDefault(x => x == entry);
-      if (string.IsNullOrEmpty(carFolder)) {
+      var carDirectory = GetCarDirectory(entry);
+      if (string.IsNullOrEmpty(carDirectory)) {
         return entry;
       }
 
-      var carDataPath = Path.Combine(carFolder, "ui", "ui_car.json");
+      var carDataPath = Path.Combine(carDirectory, "ui", "ui_car.json");
       if (!File.Exists(carDataPath)) {
         return entry;
       }
@@ -62,6 +64,30 @@ namespace ACContentSynchronizer.ClientGui.Views {
       return car != null
         ? car.Name
         : entry;
+    }
+
+    private Bitmap? GetCarPreview(string entry) {
+      var carDirectory = GetCarDirectory(entry);
+      if (string.IsNullOrEmpty(carDirectory)) {
+        return null;
+      }
+
+      var carSkinsDirectory = Path.Combine(carDirectory, "skins");
+      if (!Directory.Exists(carSkinsDirectory)) {
+        return null;
+      }
+
+      var skins = Directory.GetDirectories(carSkinsDirectory);
+      var rnd = new Random();
+      var skin = skins[rnd.Next(0, skins.Length)];
+      return new(Path.Combine(skin, "preview.jpg"));
+    }
+
+    private string? GetCarDirectory(string entry) {
+      var settings = Settings.Instance;
+      var carsFolder = Path.Combine(settings.GamePath, Constants.ContentFolder, Constants.CarsFolder);
+      var directories = Directory.GetDirectories(carsFolder);
+      return directories.FirstOrDefault(x => new DirectoryInfo(x).Name == entry);
     }
 
     private string GetTrackName(string entry) {
