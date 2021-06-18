@@ -122,17 +122,20 @@ namespace ACContentSynchronizer.Server.Controllers {
     public async Task RefreshServer(Manifest manifest, string adminPassword) {
       _serverConfiguration.CheckAccess(adminPassword);
 
-      var presetPath = await _serverConfiguration.UpdateConfig(manifest);
-      if (!string.IsNullOrEmpty(presetPath)) {
-        await _serverConfiguration.RunServer(presetPath);
-      }
+      await _serverConfiguration.UpdateConfig(manifest);
+      await _serverConfiguration.RunServer();
 
       await _hub.Clients.All.SendAsync(HubMethods.Message.ToString(), "Server rebooted");
     }
 
-    [HttpGet("getServerInfo")]
-    public string? GetServerInfo() {
+    [HttpGet("getServerName")]
+    public string? GetServerName() {
       return _serverConfiguration.GetServerName();
+    }
+
+    [HttpGet("getServerInfo")]
+    public Task<string> GetServerInfo() {
+      return _serverConfiguration.GetServerInfo();
     }
   }
 }

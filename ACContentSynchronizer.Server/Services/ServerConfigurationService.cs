@@ -72,7 +72,7 @@ namespace ACContentSynchronizer.Server.Services {
       _hub.Clients.Client(client).SendAsync(HubMethods.Progress.ToString(), progress);
     }
 
-    public async Task<string?> UpdateConfig(Manifest manifest) {
+    public async Task UpdateConfig(Manifest manifest) {
       var presetPath = GetServerPath();
 
       if (!string.IsNullOrEmpty(presetPath)) {
@@ -122,24 +122,15 @@ namespace ACContentSynchronizer.Server.Services {
         await SaveConfig(presetPath, Constants.EntryList, entryList);
         await SaveConfig(presetPath, Constants.ServerCfg, serverConfig);
       }
-
-      return presetPath;
     }
 
-    public async Task RunServer(string presetPath) {
+    public async Task RunServer() {
       var gamePath = _configuration.GetValue<string>("GamePath");
       var serverPath = Path.Combine(gamePath, "server");
       var serverExecutableName = "acServer";
       var serverExecutablePath = Path.Combine(serverPath, $"{serverExecutableName}.bat");
 
-      var serverConfig = GetServerConfig(presetPath);
-      var port = serverConfig["SERVER"]["HTTP_PORT"];
-
-      var client = new HttpClient {
-        BaseAddress = new($"http://localhost:{port}/"),
-      };
-
-      while (await ServerNotIsEmpty(client)) {
+      while (await ServerNotIsEmpty()) {
         await Task.Delay(TimeSpan.FromSeconds(5));
       }
 
@@ -174,14 +165,33 @@ namespace ACContentSynchronizer.Server.Services {
       });
     }
 
-    private async Task<bool> ServerNotIsEmpty(HttpClient client) {
+    public Task<string> GetServerInfo() {
+      var client = GetServerClient();
+      return client.GetStringAsync("/INFO");
+    }
+
+    private async Task<bool> ServerNotIsEmpty() {
       try {
+        var client = GetServerClient();
         var json = await client.GetStringAsync("INFO");
         var serverInfo = JsonSerializer.Deserialize<ServerInfo>(json, ContentUtils.JsonSerializerOptions);
         return serverInfo is { Clients: > 0 };
       } catch {
         return false;
       }
+    }
+
+    private HttpClient GetServerClient() {
+      var serverConfig = GetServerPath();
+      var port = !string.IsNullOrEmpty(serverConfig)
+        ? GetStringValue(serverConfig, "SERVER", "HTTP_PORT")
+        : "8081";
+
+      var client = new HttpClient {
+        BaseAddress = new($"http://localhost:{port}/"),
+      };
+
+      return client;
     }
 
     public string? GetTrackName() {

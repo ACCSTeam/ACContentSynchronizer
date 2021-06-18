@@ -40,7 +40,7 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 
       try {
         using var dataReceiver = new DataReceiver(serverEntry.Http);
-        serverEntry.Name = await dataReceiver.GetServerInfo();
+        serverEntry.Name = await dataReceiver.GetServerName();
       } catch (HttpRequestException e) {
         if (e.StatusCode == null) {
           Toast.Open("Cant connect to server");

@@ -94,8 +94,13 @@ namespace ACContentSynchronizer.Client {
       await Client.PostAsJsonAsync($"refreshServer?adminPassword={adminPassword}", manifest);
     }
 
-    public Task<string> GetServerInfo() {
-      return Client.GetStringAsync("getServerInfo");
+    public async Task<ServerInfo?> GetServerInfo() {
+      var json = await Client.GetStringAsync("getServerInfo");
+      return JsonSerializer.Deserialize<ServerInfo>(json, ContentUtils.JsonSerializerOptions);
+    }
+
+    public Task<string> GetServerName() {
+      return Client.GetStringAsync("getServerName");
     }
   }
 }

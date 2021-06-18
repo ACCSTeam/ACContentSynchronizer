@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ACContentSynchronizer.Client.Models;
 using ACContentSynchronizer.ClientGui.Tasks;
 using ACContentSynchronizer.ClientGui.ViewModels;
@@ -11,6 +12,9 @@ namespace ACContentSynchronizer.ClientGui.Views {
       get => _serverEntry;
       set => this.RaiseAndSetIfChanged(ref _serverEntry, value);
     }
+
+    public List<Entry> Cars { get; set; } = new();
+    public Entry Track { get; set; } = new();
 
     public void ValidateContent() {
       StatusBar.Instance.AddTask(new ValidationTask(ServerEntry));
