@@ -7,31 +7,31 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="ACContentSynchronizer.ClientGui.Views.Main">
 
-    <Design.DataContext>
-        <views:MainViewModel />
-    </Design.DataContext>
+  <Design.DataContext>
+    <views:MainViewModel />
+  </Design.DataContext>
 
-    <UserControl.Styles>
-        <Style Selector="StackPanel > TextBlock">
-            <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="FontStyle" Value="Italic" />
-        </Style>
-    </UserControl.Styles>
+  <UserControl.Styles>
+    <Style Selector="StackPanel > TextBlock">
+      <Setter Property="TextAlignment" Value="Center" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="FontStyle" Value="Italic" />
+    </Style>
+  </UserControl.Styles>
 
-    <Panel>
-        <Panel IsHitTestVisible="False"
-               Background="{StaticResource UiColorTransparentDark}" />
-        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="100">
-            <StackPanel>
-                <svg:Svg Width="102" Height="167" Path="/Assets/ac-logo.svg" />
-                <TextBlock FontSize="40">ASSETTO CORSA</TextBlock>
-                <TextBlock FontSize="26">CONTENT SYNCHRONIZER</TextBlock>
-            </StackPanel>
-            <Button Classes="AccentButton"
-                    Content="New Connection"
-                    HorizontalAlignment="Center"
-                    Command="{Binding AddNewConnection}" />
-        </StackPanel>
-    </Panel>
+  <Panel>
+    <Panel IsHitTestVisible="False"
+           Background="{StaticResource UiColorTransparentDark}" />
+    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="100">
+      <StackPanel>
+        <svg:Svg Width="102" Height="167" Path="/Assets/ac-logo.svg" />
+        <TextBlock FontSize="40">ASSETTO CORSA</TextBlock>
+        <TextBlock FontSize="26">CONTENT SYNCHRONIZER</TextBlock>
+      </StackPanel>
+      <Button Classes="AccentButton"
+              Content="New Connection"
+              HorizontalAlignment="Center"
+              Command="{Binding AddNewConnection}" />
+    </StackPanel>
+  </Panel>
 </UserControl>

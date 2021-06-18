@@ -65,11 +65,18 @@ namespace ACContentSynchronizer.Server.Controllers {
         await _hub.Clients.Client(client).SendAsync(HubMethods.PackProgress.ToString(), progress, entry);
       };
       await content.Pack(HttpContext.Connection.Id);
+      ProcessedContent.AvailableContents.Remove(content);
     }
 
     [HttpGet("cancelPack")]
     public void CancelPack(string session) {
-      ProcessedContent.AvailableContents.FirstOrDefault(x => x.Session == session)?.AbortPacking();
+      var content = ProcessedContent.AvailableContents.FirstOrDefault(x => x.Session == session);
+      if (content == null) {
+        return;
+      }
+
+      content.AbortPacking();
+      ProcessedContent.AvailableContents.Remove(content);
     }
 
     [HttpGet("downloadContent")]

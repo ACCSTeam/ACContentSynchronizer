@@ -26,7 +26,7 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 #endif
     }
 
-    private static List<Toast> ToastsActivated { get; set; } = new();
+    private static List<Toast> ToastsActivated { get; } = new();
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);

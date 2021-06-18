@@ -1,29 +1,29 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.PreviewWith>
-        <Border Padding="20">
-            <!-- Add Controls for Previewer Here -->
-        </Border>
-    </Design.PreviewWith>
+  <Design.PreviewWith>
+    <Border Padding="20">
+      <!-- Add Controls for Previewer Here -->
+    </Border>
+  </Design.PreviewWith>
 
-    <Style Selector="Window.ModalDialog">
-        <Setter Property="CanResize" Value="False" />
-        <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
-        <Setter Property="SystemDecorations" Value="BorderOnly" />
-        <Setter Property="WindowStartupLocation" Value="CenterOwner" />
-        <Setter Property="Background" Value="{StaticResource UiColorTransparentDark}" />
-        <Setter Property="Width" Value="356" />
-        <Setter Property="SizeToContent" Value="Height" />
-        <Setter Property="ShowInTaskbar" Value="False" />
-    </Style>
+  <Style Selector="Window.ModalDialog">
+    <Setter Property="CanResize" Value="False" />
+    <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
+    <Setter Property="SystemDecorations" Value="BorderOnly" />
+    <Setter Property="WindowStartupLocation" Value="CenterOwner" />
+    <Setter Property="Background" Value="{StaticResource UiColorTransparentDark}" />
+    <Setter Property="Width" Value="356" />
+    <Setter Property="SizeToContent" Value="Height" />
+    <Setter Property="ShowInTaskbar" Value="False" />
+  </Style>
 
-    <Style Selector="Window.ModalDialog > Border">
-        <Setter Property="BorderBrush" Value="{StaticResource UiAccentTransparent}" />
-        <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="Padding" Value="20" />
-    </Style>
+  <Style Selector="Window.ModalDialog > Border">
+    <Setter Property="BorderBrush" Value="{StaticResource UiAccentTransparent}" />
+    <Setter Property="BorderThickness" Value="2" />
+    <Setter Property="Padding" Value="20" />
+  </Style>
 
-    <Style Selector="Window.ModalDialog Button">
-        <Setter Property="Background" Value="{StaticResource UiGrayLight}" />
-    </Style>
+  <Style Selector="Window.ModalDialog Button">
+    <Setter Property="Background" Value="{StaticResource UiGrayLight}" />
+  </Style>
 </Styles>

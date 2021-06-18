@@ -8,22 +8,22 @@
         x:Class="ACContentSynchronizer.ClientGui.Modals.Toast"
         Classes="Toast"
         Title="Toast">
-    <Design.DataContext>
-        <modals:ToastViewModel />
-    </Design.DataContext>
+  <Design.DataContext>
+    <modals:ToastViewModel />
+  </Design.DataContext>
 
-    <Panel>
-        <Button Click="Close">
-            <avalonia:MaterialIcon HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Height="15"
-                                   Width="15"
-                                   Kind="Close" />
-        </Button>
-        <Border>
+  <Panel>
+    <Button Click="Close">
+      <avalonia:MaterialIcon HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             Height="15"
+                             Width="15"
+                             Kind="Close" />
+    </Button>
+    <Border>
 
-            <TextBlock TextWrapping="Wrap"
-                       Text="{Binding Message}" />
-        </Border>
-    </Panel>
+      <TextBlock TextWrapping="Wrap"
+                 Text="{Binding Message}" />
+    </Border>
+  </Panel>
 </Window>

@@ -5,28 +5,28 @@
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Components.SidebarButton">
-    <UserControl.Styles>
-        <Style Selector="components|SidebarButton">
-            <Setter Property="Template">
-                <ControlTemplate>
-                    <Button Height="60"
-                            Background="{StaticResource UiGrayLight}"
-                            Padding="0"
-                            Classes="TransparentButton"
-                            Command="{TemplateBinding Command}">
-                        <Grid ColumnDefinitions="60,*"
-                              HorizontalAlignment="Center">
-                            <ContentPresenter Grid.Column="0"
-                                              Content="{TemplateBinding  Content}" />
-                            <Panel Grid.Column="1"
-                                   VerticalAlignment="Center">
-                                <ContentPresenter Content="{TemplateBinding Label}"
-                                                  IsVisible="{TemplateBinding IsMinimized}" />
-                            </Panel>
-                        </Grid>
-                    </Button>
-                </ControlTemplate>
-            </Setter>
-        </Style>
-    </UserControl.Styles>
+  <UserControl.Styles>
+    <Style Selector="components|SidebarButton">
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Button Height="60"
+                  Background="{StaticResource UiGrayLight}"
+                  Padding="0"
+                  Classes="TransparentButton"
+                  Command="{TemplateBinding Command}">
+            <Grid ColumnDefinitions="60,*"
+                  HorizontalAlignment="Center">
+              <ContentPresenter Grid.Column="0"
+                                Content="{TemplateBinding  Content}" />
+              <Panel Grid.Column="1"
+                     VerticalAlignment="Center">
+                <ContentPresenter Content="{TemplateBinding Label}"
+                                  IsVisible="{TemplateBinding IsMinimized}" />
+              </Panel>
+            </Grid>
+          </Button>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+  </UserControl.Styles>
 </UserControl>

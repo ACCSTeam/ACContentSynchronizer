@@ -1,45 +1,45 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.PreviewWith>
-        <Border Padding="20">
-            <!-- Add Controls for Previewer Here -->
-        </Border>
-    </Design.PreviewWith>
+  <Design.PreviewWith>
+    <Border Padding="20">
+      <!-- Add Controls for Previewer Here -->
+    </Border>
+  </Design.PreviewWith>
 
-    <Styles>
-        <Style Selector="Window.Toast">
-            <Setter Property="CanResize" Value="False" />
-            <Setter Property="SystemDecorations" Value="None" />
-            <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
-            <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="SizeToContent" Value="Height" />
-            <Setter Property="Topmost" Value="True" />
-            <Setter Property="ShowInTaskbar" Value="False" />
-        </Style>
+  <Styles>
+    <Style Selector="Window.Toast">
+      <Setter Property="CanResize" Value="False" />
+      <Setter Property="SystemDecorations" Value="None" />
+      <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
+      <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="SizeToContent" Value="Height" />
+      <Setter Property="Topmost" Value="True" />
+      <Setter Property="ShowInTaskbar" Value="False" />
+    </Style>
 
-        <Style Selector="Window.Toast Button">
-            <Setter Property="Height" Value="20" />
-            <Setter Property="Width" Value="20" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="HorizontalAlignment" Value="Right" />
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
+    <Style Selector="Window.Toast Button">
+      <Setter Property="Height" Value="20" />
+      <Setter Property="Width" Value="20" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+      <Setter Property="HorizontalAlignment" Value="Right" />
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
 
-        <Style Selector="Window.Toast Button /template/ ContentPresenter">
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="CornerRadius" Value="0" />
-        </Style>
+    <Style Selector="Window.Toast Button /template/ ContentPresenter">
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="CornerRadius" Value="0" />
+    </Style>
 
-        <Style Selector="Window.Toast Button:pointerover">
-            <Setter Property="Background" Value="{StaticResource UiColorTransparent}" />
-        </Style>
+    <Style Selector="Window.Toast Button:pointerover">
+      <Setter Property="Background" Value="{StaticResource UiColorTransparent}" />
+    </Style>
 
-        <Style Selector="Window.Toast Border">
-            <Setter Property="Padding" Value="20" />
-            <Setter Property="BorderBrush" Value="{StaticResource UiGrayLight}" />
-            <Setter Property="BorderThickness" Value="1" />
-        </Style>
-    </Styles>
+    <Style Selector="Window.Toast Border">
+      <Setter Property="Padding" Value="20" />
+      <Setter Property="BorderBrush" Value="{StaticResource UiGrayLight}" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+  </Styles>
 </Styles>

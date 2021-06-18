@@ -6,32 +6,32 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="30"
              x:Class="ACContentSynchronizer.ClientGui.Views.StatusBar">
 
-    <Design.DataContext>
-        <views:StatusBarViewModel />
-    </Design.DataContext>
+  <Design.DataContext>
+    <views:StatusBarViewModel />
+  </Design.DataContext>
 
-    <Panel VerticalAlignment="Stretch">
-        <Button Classes="TransparentButton"
-                VerticalAlignment="Stretch"
-                Padding="0"
-                Click="OpenPopup">
-            <StackPanel Margin="20,0"
-                        Orientation="Horizontal"
-                        Spacing="20" >
-                <TextBlock VerticalAlignment="Center"
-                    Text="{Binding State}"/>
-                <ProgressBar Value="{Binding Progress}"/>
-            </StackPanel>
-        </Button>
-        <Popup Name="StatusPopup"
-               PlacementAnchor="TopRight"
-               Width="300"
-               Height="150"
-               IsLightDismissEnabled="True">
-            <Panel Background="{StaticResource UiGrayLight}">
-                <ListBox VirtualizationMode="None"
-                         Items="{Binding Tasks}" />
-            </Panel>
-        </Popup>
-    </Panel>
+  <Panel VerticalAlignment="Stretch">
+    <Button Classes="TransparentButton"
+            VerticalAlignment="Stretch"
+            Padding="0"
+            Click="OpenPopup">
+      <StackPanel Margin="20,0"
+                  Orientation="Horizontal"
+                  Spacing="20">
+        <TextBlock VerticalAlignment="Center"
+                   Text="{Binding State}" />
+        <ProgressBar Value="{Binding Progress}" />
+      </StackPanel>
+    </Button>
+    <Popup Name="StatusPopup"
+           PlacementAnchor="TopRight"
+           Width="300"
+           Height="150"
+           IsLightDismissEnabled="True">
+      <Panel Background="{StaticResource UiGrayLight}">
+        <ListBox VirtualizationMode="None"
+                 Items="{Binding Tasks}" />
+      </Panel>
+    </Popup>
+  </Panel>
 </UserControl>

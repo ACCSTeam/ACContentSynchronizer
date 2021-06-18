@@ -9,26 +9,26 @@
               Classes="ModalDialog"
               Title="AddNewServer">
 
-    <Design.DataContext>
-        <modals:AddNewServerViewModel />
-    </Design.DataContext>
+  <Design.DataContext>
+    <modals:AddNewServerViewModel />
+  </Design.DataContext>
 
-    <Border>
-        <StackPanel Spacing="5">
-            <TextBlock Text="IP address" />
-            <TextBox Text="{Binding Ip}" />
-            <TextBlock Text="Password" />
-            <TextBox Text="{Binding Password}" />
-            <Grid ColumnDefinitions="*,10,*">
-                <Button Grid.Column="0"
-                        Content="Save"
-                        Classes="TransparentButton"
-                        Command="{Binding Save}" />
-                <Button Grid.Column="2"
-                        Content="Close"
-                        Classes="TransparentButton"
-                        Command="{Binding Close}" />
-            </Grid>
-        </StackPanel>
-    </Border>
+  <Border>
+    <StackPanel Spacing="5">
+      <TextBlock Text="IP address" />
+      <TextBox Text="{Binding Ip}" />
+      <TextBlock Text="Password" />
+      <TextBox Text="{Binding Password}" />
+      <Grid ColumnDefinitions="*,10,*">
+        <Button Grid.Column="0"
+                Content="Save"
+                Classes="TransparentButton"
+                Command="{Binding Save}" />
+        <Button Grid.Column="2"
+                Content="Close"
+                Classes="TransparentButton"
+                Command="{Binding Close}" />
+      </Grid>
+    </StackPanel>
+  </Border>
 </models:Modal>

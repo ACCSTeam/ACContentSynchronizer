@@ -6,21 +6,21 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Components.StatusBarEntry">
 
-    <Design.DataContext>
-        <components:StatusBarEntryViewModel />
-    </Design.DataContext>
+  <Design.DataContext>
+    <components:StatusBarEntryViewModel />
+  </Design.DataContext>
 
-    <Grid ColumnDefinitions="*,80">
-        <StackPanel Grid.Column="0"
-                    Spacing="5">
-            <TextBlock Text="{Binding Task.State}" />
-            <ProgressBar Value="{Binding Task.Progress}" />
-        </StackPanel>
-        <Button Padding="5"
-                HorizontalAlignment="Right"
-                Grid.Column="1"
-                Content="Close"
-                Click="Cancel" />
-    </Grid>
+  <Grid ColumnDefinitions="*,80">
+    <StackPanel Grid.Column="0"
+                Spacing="5">
+      <TextBlock Text="{Binding Task.State}" />
+      <ProgressBar Value="{Binding Task.Progress}" />
+    </StackPanel>
+    <Button Padding="5"
+            HorizontalAlignment="Right"
+            Grid.Column="1"
+            Content="Close"
+            Click="Cancel" />
+  </Grid>
 
 </UserControl>

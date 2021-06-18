@@ -1,23 +1,23 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:styles="clr-namespace:ACContentSynchronizer.ClientGui.Styles">
-    <Design.PreviewWith>
-        <Border Padding="20">
-            <Button Classes="AccentButton"
-                    Content="Default" />
-        </Border>
-    </Design.PreviewWith>
+  <Design.PreviewWith>
+    <Border Padding="20">
+      <Button Classes="AccentButton"
+              Content="Default" />
+    </Border>
+  </Design.PreviewWith>
 
-    <Style Selector="Button.AccentButton" />
-    <Style Selector="Button.AccentButton /template/ ContentPresenter">
-        <Setter Property="Background" Value="{StaticResource UiAccent}" />
-        <Setter Property="Transitions">
-            <Transitions>
-                <styles:SolidColorBrushTransition Property="Background" Duration="0:0:0:0.3" />
-            </Transitions>
-        </Setter>
-    </Style>
-    <Style Selector="Button:pointerover.AccentButton /template/ ContentPresenter">
-        <Setter Property="Background" Value="{StaticResource UiAccentDark}" />
-    </Style>
+  <Style Selector="Button.AccentButton" />
+  <Style Selector="Button.AccentButton /template/ ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource UiAccent}" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <styles:SolidColorBrushTransition Property="Background" Duration="0:0:0:0.3" />
+      </Transitions>
+    </Setter>
+  </Style>
+  <Style Selector="Button:pointerover.AccentButton /template/ ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource UiAccentDark}" />
+  </Style>
 </Styles>

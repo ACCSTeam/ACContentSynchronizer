@@ -4,8 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
 using ACContentSynchronizer.Client.Models;
+using ACContentSynchronizer.ClientGui.Models;
 
-namespace ACContentSynchronizer.ClientGui.Models {
+namespace ACContentSynchronizer.ClientGui.Tasks {
   public class ValidationTask : TaskViewModel {
     public ValidationTask(ServerEntry serverEntry) {
       ServerEntry = serverEntry;
@@ -13,7 +14,7 @@ namespace ACContentSynchronizer.ClientGui.Models {
 
     private CancellationTokenSource Canceller { get; set; } = new();
     private Task? Worker { get; set; }
-    private ServerEntry ServerEntry { get; set; }
+    private ServerEntry ServerEntry { get; }
 
     private event ExceptionHandler? OnException;
 

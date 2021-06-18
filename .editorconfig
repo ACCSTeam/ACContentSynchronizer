@@ -65,7 +65,7 @@ resharper_csharp_keep_blank_lines_in_declarations = 1
 [{*.htm, *.html, *.sht, *.shtm, *.shtml}]
 ij_html_space_inside_empty_tag = false
 
-[*.{appxmanifest, build, dtd, fs, fsi, fsscript, fsx, ml, mli, nuspec, resw, resx, vb, xaml, xamlx, xoml, xsd}]
+[*.{appxmanifest, build, dtd, fs, fsi, fsscript, fsx, ml, mli, nuspec, resw, resx, vb, xamlx, xoml, xsd}]
 indent_style = space
 indent_size = 2
 tab_width = 2
@@ -78,3 +78,8 @@ tab_width = 2
 [{*.cql, *.ddl, *.sql}]
 indent_style = space
 indent_size = 2
+
+[*.{axaml,  xaml}]
+indent_style = space
+indent_size = 2
+end_of_line = lf

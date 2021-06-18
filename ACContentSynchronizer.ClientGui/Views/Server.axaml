@@ -6,37 +6,37 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Server">
 
-    <Design.DataContext>
-        <views:ServerViewModel />
-    </Design.DataContext>
+  <Design.DataContext>
+    <views:ServerViewModel />
+  </Design.DataContext>
 
-    <Panel>
-        <Panel IsHitTestVisible="False"
-               Background="{StaticResource UiColorTransparentDark}" />
-        <Grid RowDefinitions="*,*,60"
-              ColumnDefinitions="*,*"
-              Margin="20,50,20,20">
-            <ListBox Grid.Row="0"
-                     Grid.Column="0" />
-            <Image Grid.Row="0"
-                   Grid.Column="1" />
-            <Image Grid.Row="1"
-                   Grid.Column="1" />
-            <StackPanel Grid.Row="2"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Orientation="Horizontal"
-                        Spacing="10">
-                <Button Classes="AccentButton"
-                        Content="Join" />
-                <Button Classes="AccentButton"
-                        Content="Refresh" />
-                <Button Classes="AccentButton"
-                        Content="Validate content"
-                        Command="{Binding ValidateContent}" />
-                <Button Classes="AccentButton"
-                        Content="Upload content" />
-            </StackPanel>
-        </Grid>
-    </Panel>
+  <Panel>
+    <Panel IsHitTestVisible="False"
+           Background="{StaticResource UiColorTransparentDark}" />
+    <Grid RowDefinitions="*,*,60"
+          ColumnDefinitions="*,*"
+          Margin="20,50,20,20">
+      <ListBox Grid.Row="0"
+               Grid.Column="0" />
+      <Image Grid.Row="0"
+             Grid.Column="1" />
+      <Image Grid.Row="1"
+             Grid.Column="1" />
+      <StackPanel Grid.Row="2"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
+                  Orientation="Horizontal"
+                  Spacing="10">
+        <Button Classes="AccentButton"
+                Content="Join" />
+        <Button Classes="AccentButton"
+                Content="Refresh" />
+        <Button Classes="AccentButton"
+                Content="Validate content"
+                Command="{Binding ValidateContent}" />
+        <Button Classes="AccentButton"
+                Content="Upload content" />
+      </StackPanel>
+    </Grid>
+  </Panel>
 </UserControl>

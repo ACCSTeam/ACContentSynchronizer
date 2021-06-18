@@ -10,7 +10,7 @@ namespace ACContentSynchronizer.Models {
   public class AvailableContent {
     public delegate void ProgressEvent(double progress, string entry);
 
-    private CancellationTokenSource Canceller { get; set; } = new();
+    private CancellationTokenSource Canceller { get; } = new();
     public List<EntryInfo> Cars { get; set; } = new();
     public EntryInfo? Track { get; set; }
     public string Session { get; set; } = "";

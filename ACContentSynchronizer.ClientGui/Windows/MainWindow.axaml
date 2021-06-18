@@ -15,6 +15,6 @@
         Background="{StaticResource UiColorTransparent}"
         ExtendClientAreaToDecorationsHint="True">
 
-    <views:Layout />
+  <views:Layout />
 
 </Window>

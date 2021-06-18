@@ -8,85 +8,85 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Sidebar">
 
-    <Design.DataContext>
-        <views:SideBarViewModel />
-    </Design.DataContext>
+  <Design.DataContext>
+    <views:SideBarViewModel />
+  </Design.DataContext>
 
-    <UserControl.Styles>
-        <Style Selector="ListBox > ListBoxItem">
-            <Setter Property="Height" Value="60" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="Padding" Value="0" />
-        </Style>
+  <UserControl.Styles>
+    <Style Selector="ListBox > ListBoxItem">
+      <Setter Property="Height" Value="60" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
 
-        <Style Selector="ListBox > ListBoxItem:pressed /template/ ContentPresenter">
-            <Setter Property="Background" Value="{StaticResource UiAccentTransparent}" />
-        </Style>
+    <Style Selector="ListBox > ListBoxItem:pressed /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource UiAccentTransparent}" />
+    </Style>
 
-        <Style Selector="ListBox > ListBoxItem:selected /template/ ContentPresenter">
-            <Setter Property="Background" Value="{StaticResource UiAccentDark}" />
-        </Style>
-    </UserControl.Styles>
+    <Style Selector="ListBox > ListBoxItem:selected /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource UiAccentDark}" />
+    </Style>
+  </UserControl.Styles>
 
-    <Grid RowDefinitions="Auto,*,60,60" Width="{Binding Size}">
-        <Button Grid.Row="0"
-                Classes="TransparentButton"
-                Height="30"
-                HorizontalAlignment="Stretch"
-                Command="{Binding Toggle}">
-            <avalonia:MaterialIcon Kind="ViewList"
-                                   FontSize="24" />
-        </Button>
-        <ListBox Grid.Row="1"
-                 Name="Servers"
-                 HorizontalAlignment="Stretch"
-                 Items="{Binding Servers}"
-                 SelectedItem="{Binding SelectedServer}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderThickness="0,0,0,1"
-                            BorderBrush="{StaticResource UiGrayLight}">
-                        <Panel>
-                            <ToolTip Tip="{Binding Name}"
-                                     Placement="Right" />
+  <Grid RowDefinitions="Auto,*,60,60" Width="{Binding Size}">
+    <Button Grid.Row="0"
+            Classes="TransparentButton"
+            Height="30"
+            HorizontalAlignment="Stretch"
+            Command="{Binding Toggle}">
+      <avalonia:MaterialIcon Kind="ViewList"
+                             FontSize="24" />
+    </Button>
+    <ListBox Grid.Row="1"
+             Name="Servers"
+             HorizontalAlignment="Stretch"
+             Items="{Binding Servers}"
+             SelectedItem="{Binding SelectedServer}">
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <Border BorderThickness="0,0,0,1"
+                  BorderBrush="{StaticResource UiGrayLight}">
+            <Panel>
+              <ToolTip Tip="{Binding Name}"
+                       Placement="Right" />
 
-                            <Grid ColumnDefinitions="Auto,60,60"
-                                  ToolTip.Tip="{Binding Name}"
-                                  ToolTip.Placement="Right">
-                                <TextBlock Grid.Column="0"
-                                           VerticalAlignment="Center"
-                                           TextWrapping="Wrap"
-                                           Margin="20"
-                                           Width="{Binding ElementName=Servers, Path=DataContext.LabelWidth}"
-                                           Text="{Binding Name}" />
-                                <avalonia:MaterialIcon Grid.Column="1"
-                                                       Kind="Wifi"
-                                                       IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}" />
-                                <Button Grid.Column="2"
-                                        Classes="TransparentButton SidebarButton"
-                                        IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}"
-                                        Command="{Binding ElementName=Servers, Path=DataContext.Remove}"
-                                        CommandParameter="{Binding }">
-                                    <avalonia:MaterialIcon Kind="Delete" />
-                                </Button>
-                            </Grid>
-                        </Panel>
-                    </Border>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <components:SidebarButton Grid.Row="2"
-                                  Label="Add new"
-                                  IsMinimized="{Binding IsMinimized}"
-                                  Command="{Binding OpenAddServerDialog}">
-            <avalonia:MaterialIcon Kind="Plus" />
-        </components:SidebarButton>
-        <components:SidebarButton Grid.Row="3"
-                                  Label="Settings"
-                                  IsMinimized="{Binding IsMinimized}"
-                                  Command="{Binding OpenSettings}">
-            <avalonia:MaterialIcon Kind="Tune" />
-        </components:SidebarButton>
-    </Grid>
+              <Grid ColumnDefinitions="Auto,60,60"
+                    ToolTip.Tip="{Binding Name}"
+                    ToolTip.Placement="Right">
+                <TextBlock Grid.Column="0"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"
+                           Margin="20"
+                           Width="{Binding ElementName=Servers, Path=DataContext.LabelWidth}"
+                           Text="{Binding Name}" />
+                <avalonia:MaterialIcon Grid.Column="1"
+                                       Kind="Wifi"
+                                       IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}" />
+                <Button Grid.Column="2"
+                        Classes="TransparentButton SidebarButton"
+                        IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}"
+                        Command="{Binding ElementName=Servers, Path=DataContext.Remove}"
+                        CommandParameter="{Binding }">
+                  <avalonia:MaterialIcon Kind="Delete" />
+                </Button>
+              </Grid>
+            </Panel>
+          </Border>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <components:SidebarButton Grid.Row="2"
+                              Label="Add new"
+                              IsMinimized="{Binding IsMinimized}"
+                              Command="{Binding OpenAddServerDialog}">
+      <avalonia:MaterialIcon Kind="Plus" />
+    </components:SidebarButton>
+    <components:SidebarButton Grid.Row="3"
+                              Label="Settings"
+                              IsMinimized="{Binding IsMinimized}"
+                              Command="{Binding OpenSettings}">
+      <avalonia:MaterialIcon Kind="Tune" />
+    </components:SidebarButton>
+  </Grid>
 </UserControl>
