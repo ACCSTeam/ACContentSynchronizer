@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
-using ACContentSynchronizer.Client.Models;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Views;
 using Avalonia.Data;

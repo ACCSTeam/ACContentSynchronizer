@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using ACContentSynchronizer.Client.Models;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Windows;
 using Avalonia.Collections;

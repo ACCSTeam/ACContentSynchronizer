@@ -11,13 +11,12 @@ namespace ACContentSynchronizer.ClientGui.Modals {
       };
       InitializeComponent();
     }
+
     public AddNewServer(AddNewServerViewModel vm) {
       DataContext = _vm = vm;
       _vm.Instance = this;
-        InitializeComponent();
+      InitializeComponent();
     }
-
-
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);

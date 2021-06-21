@@ -1,4 +1,3 @@
-using ACContentSynchronizer.Client.Models;
 using ACContentSynchronizer.ClientGui.Modals;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Windows;

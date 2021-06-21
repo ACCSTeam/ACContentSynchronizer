@@ -5,11 +5,10 @@ using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Models {
   public class ServerEntry : ViewModelBase {
+    private string _ip = "localhost";
     private string? _name;
 
     public DateTime DateTime { get; set; } = DateTime.Now;
-
-    private string _ip = "localhost";
 
     public string Ip {
       get => _ip;

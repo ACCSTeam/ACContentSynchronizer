@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
-using ACContentSynchronizer.Client.Models;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.Models;
 using Avalonia.Controls;

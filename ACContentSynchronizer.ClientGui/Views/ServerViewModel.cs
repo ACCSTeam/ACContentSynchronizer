@@ -1,4 +1,3 @@
-using ACContentSynchronizer.Client.Models;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Tasks;
 using ACContentSynchronizer.ClientGui.ViewModels;

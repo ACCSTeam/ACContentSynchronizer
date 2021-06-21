@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using ACContentSynchronizer.Client.Models;
 using ACContentSynchronizer.ClientGui.Modals;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
@@ -85,10 +84,10 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public async Task EditServerDialog(ServerEntry server) {
-      await Modal.Open<AddNewServer, AddNewServerViewModel>(new AddNewServerViewModel() {
+      await Modal.Open<AddNewServer, AddNewServerViewModel>(new() {
         Ip = server.Ip,
         Password = server.Password,
-        DateTime = server.DateTime
+        DateTime = server.DateTime,
       });
       await SaveServersState();
     }
