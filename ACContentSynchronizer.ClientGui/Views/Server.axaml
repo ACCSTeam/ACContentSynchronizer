@@ -22,7 +22,8 @@
                SelectedItem="{Binding SelectedCar}">
         <ListBox.ItemTemplate>
           <DataTemplate>
-            <TextBlock Text="{Binding Name}" />
+            <TextBlock Text="{Binding Name}"
+                       IsEnabled="{Binding IsEnabled}" />
           </DataTemplate>
         </ListBox.ItemTemplate>
       </ListBox>
@@ -39,14 +40,17 @@
                   Spacing="10"
                   HorizontalAlignment="Right">
         <Button Classes="AccentButton"
-                Content="Join" />
+                Content="Join"
+                Command="{Binding Join}"/>
         <Button Classes="AccentButton"
-                Content="Refresh" />
+                Content="Refresh"
+                Command="{Binding Refresh}"/>
         <Button Classes="AccentButton"
                 Content="Update content"
                 Command="{Binding ValidateContent}" />
         <Button Classes="AccentButton"
-                Content="Upload content" />
+                Content="Upload content"
+                Command="{Binding UploadContent}"/>
       </StackPanel>
     </Grid>
   </Panel>

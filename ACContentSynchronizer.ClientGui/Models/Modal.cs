@@ -23,6 +23,11 @@ namespace ACContentSynchronizer.ClientGui.Models {
       await modal.ShowDialog(MainWindow.Instance);
     }
 
+    public static async Task<TResult> Open<T, TResult>() where T : Modal, new() {
+      var modal = new T();
+      return await modal.ShowDialog<TResult>(MainWindow.Instance);
+    }
+
     public static async Task Edit<T>() where T : Modal, new() {
       var modal = new T();
       await modal.ShowDialog(MainWindow.Instance);

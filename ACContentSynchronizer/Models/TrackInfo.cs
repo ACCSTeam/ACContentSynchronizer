@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ACContentSynchronizer.Models {
@@ -31,5 +32,15 @@ namespace ACContentSynchronizer.Models {
     public string Url { get; set; } = "";
 
     public string LocalPath { get; set; } = "";
+
+    public static TrackInfo? FromJson(string json) {
+      try {
+        return JsonSerializer.Deserialize<TrackInfo>(json, ContentUtils.JsonSerializerOptions);
+      } catch {
+        return new() {
+          Name = "error",
+        };
+      }
+    }
   }
 }

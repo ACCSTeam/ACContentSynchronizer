@@ -175,5 +175,86 @@ namespace ACContentSynchronizer {
 
       return (contentCarsPath, contentTracksPath);
     }
+
+    public static string GetCarName(string entry, string gamePath) {
+      var carDirectory = GetCarDirectory(entry, gamePath);
+      if (string.IsNullOrEmpty(carDirectory)) {
+        return entry;
+      }
+
+      var carDataPath = Path.Combine(carDirectory, "ui", "ui_car.json");
+      if (!File.Exists(carDataPath)) {
+        return entry;
+      }
+
+      var json = File.ReadAllText(carDataPath);
+      var car = JsonSerializer.Deserialize<CarInfo>(json, JsonSerializerOptions);
+      return car != null
+        ? car.Name
+        : entry;
+    }
+
+    public static List<string> GetCarSkins(string entry, string gamePath) {
+      var carDirectory = GetCarDirectory(entry, gamePath);
+      if (string.IsNullOrEmpty(carDirectory)
+          || !Directory.Exists(carDirectory)) {
+        return new();
+      }
+
+      var skinsDirectory = Path.Combine(carDirectory, "skins");
+      if (!Directory.Exists(skinsDirectory)) {
+        return new();
+      }
+
+      return Directory.GetDirectories(skinsDirectory)
+        .Select(x => new DirectoryInfo(x).Name)
+        .ToList();
+    }
+
+    public static string? GetCarDirectory(string entry, string gamePath) {
+      var carsFolder = Path.Combine(gamePath, Constants.ContentFolder, Constants.CarsFolder);
+      var directories = Directory.GetDirectories(carsFolder);
+      return directories.FirstOrDefault(x => new DirectoryInfo(x).Name == entry);
+    }
+
+    public static List<string> GetTrackName(string entry, string gamePath) {
+      var data = "ui_track.json";
+      var variations = GetTrackDirectories(entry, gamePath);
+
+      if (!variations.Any()) {
+        return new();
+      }
+
+      return variations.Select(x => {
+        var variation = Path.Combine(x, data);
+        var json = File.ReadAllText(variation);
+        return TrackInfo.FromJson(json)?.Name ?? DirectoryUtils.Name(x);
+      }).ToList();
+    }
+
+    public static List<string> GetTrackDirectories(string entry, string gamePath) {
+      var (ui, data) = ("ui", "ui_track.json");
+      var trackName = entry.Split('-');
+
+      if (trackName.Length > 0) {
+        var tracksFolder = Path.Combine(gamePath, Constants.ContentFolder, Constants.TracksFolder);
+        var trackDirectory = Path.Combine(tracksFolder, trackName[0]);
+        if (Directory.Exists(trackDirectory)) {
+          return trackName.Length > 1
+            ? new() { Path.Combine(trackDirectory, ui, trackName[1], data) }
+            : GetFirst(trackDirectory, ui, data);
+        }
+      }
+
+      return new();
+    }
+
+    private static List<string> GetFirst(string trackDirectory, string ui, string data) {
+      var uiPath = Path.Combine(trackDirectory, ui);
+      var dataPath = Path.Combine(uiPath, data);
+      return File.Exists(dataPath)
+        ? new() { uiPath }
+        : Directory.GetDirectories(uiPath).ToList();
+    }
   }
 }

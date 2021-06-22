@@ -49,7 +49,7 @@ namespace ACContentSynchronizer.ClientGui.Modals {
           Toast.Open("Cant connect to server");
         }
       } finally {
-        Sidebar.Instance.Add(serverEntry);
+        Sidebar.Instance.Save(serverEntry);
         Instance.Close();
       }
     }

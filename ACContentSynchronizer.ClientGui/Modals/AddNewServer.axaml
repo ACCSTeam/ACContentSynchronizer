@@ -22,7 +22,7 @@
       <Grid ColumnDefinitions="*,10,*">
         <Button Grid.Column="0"
                 Content="Save"
-                Classes="TransparentButton"
+                Classes="AccentButton TransparentButton"
                 Command="{Binding Save}" />
         <Button Grid.Column="2"
                 Content="Close"

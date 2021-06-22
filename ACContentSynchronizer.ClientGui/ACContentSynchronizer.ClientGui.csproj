@@ -58,6 +58,9 @@
         <Compile Update="Components\StatusBarEntryViewModel.cs">
           <DependentUpon>StatusBarEntry.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Modals\UploadViewModel.cs">
+          <DependentUpon>UploadModal.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\ACContentSynchronizer.Client\ACContentSynchronizer.Client.csproj" />

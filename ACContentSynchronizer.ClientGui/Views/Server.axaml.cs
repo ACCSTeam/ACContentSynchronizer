@@ -1,11 +1,9 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
 using ACContentSynchronizer.ClientGui.Models;
-using ACContentSynchronizer.Models;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
@@ -33,40 +31,24 @@ namespace ACContentSynchronizer.ClientGui.Views {
         using var dataReceiver = new DataReceiver(serverEntry.Http);
         var info = await dataReceiver.GetServerInfo();
         if (info != null) {
-          _vm.Cars = new(info.Cars.Select(x => new Entry {
+          _vm.Cars = new(info.Cars.Select(x => new ContentEntry {
             DirectoryName = x,
-            Name = GetCarName(x),
+            Name = ContentUtils.GetCarName(x, Settings.Instance.GamePath),
             Preview = GetCarPreview(x),
           }));
 
           _vm.Track = new() {
             DirectoryName = info.Track,
-            Name = GetTrackName(info.Track),
+            Name = ContentUtils.GetTrackName(info.Track, Settings.Instance.GamePath)
+              .FirstOrDefault() ?? info.Track,
+            Preview = GetTrackPreview(info.Track),
           };
         }
       });
     }
 
-    private string GetCarName(string entry) {
-      var carDirectory = GetCarDirectory(entry);
-      if (string.IsNullOrEmpty(carDirectory)) {
-        return entry;
-      }
-
-      var carDataPath = Path.Combine(carDirectory, "ui", "ui_car.json");
-      if (!File.Exists(carDataPath)) {
-        return entry;
-      }
-
-      var json = File.ReadAllText(carDataPath);
-      var car = JsonSerializer.Deserialize<CarInfo>(json, ContentUtils.JsonSerializerOptions);
-      return car != null
-        ? car.Name
-        : entry;
-    }
-
     private Bitmap? GetCarPreview(string entry) {
-      var carDirectory = GetCarDirectory(entry);
+      var carDirectory = ContentUtils.GetCarDirectory(entry, Settings.Instance.GamePath);
       if (string.IsNullOrEmpty(carDirectory)) {
         return null;
       }
@@ -82,31 +64,19 @@ namespace ACContentSynchronizer.ClientGui.Views {
       return new(Path.Combine(skin, "preview.jpg"));
     }
 
-    private string? GetCarDirectory(string entry) {
-      var settings = Settings.Instance;
-      var carsFolder = Path.Combine(settings.GamePath, Constants.ContentFolder, Constants.CarsFolder);
-      var directories = Directory.GetDirectories(carsFolder);
-      return directories.FirstOrDefault(x => new DirectoryInfo(x).Name == entry);
-    }
-
-    private string GetTrackName(string entry) {
-      var settings = Settings.Instance;
-      var tracksFolder = Path.Combine(settings.GamePath, Constants.ContentFolder, Constants.TracksFolder);
-      var directories = Directory.GetDirectories(tracksFolder, entry, SearchOption.AllDirectories);
-      if (directories.Any()) {
-        var trackDataPath = Path.Combine(directories[0], "ui", "ui_track.json");
-        if (!File.Exists(trackDataPath)) {
-          return entry;
-        }
-
-        var json = File.ReadAllText(trackDataPath);
-        var car = JsonSerializer.Deserialize<CarInfo>(json, ContentUtils.JsonSerializerOptions);
-        return car != null
-          ? car.Name
-          : entry;
+    private Bitmap? GetTrackPreview(string entry) {
+      var trackDirectory = ContentUtils.GetTrackDirectories(entry, Settings.Instance.GamePath)
+        .FirstOrDefault();
+      if (string.IsNullOrEmpty(trackDirectory)) {
+        return null;
       }
 
-      return entry;
+      var trackPreview = Path.Combine(trackDirectory, "preview.png");
+      if (!File.Exists(trackPreview)) {
+        return null;
+      }
+
+      return new(trackPreview);
     }
   }
 }

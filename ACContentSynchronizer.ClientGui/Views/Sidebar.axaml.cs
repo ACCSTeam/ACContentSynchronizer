@@ -27,11 +27,12 @@ namespace ACContentSynchronizer.ClientGui.Views {
       return _vm.OpenAddServerDialog();
     }
 
-    public void Add(ServerEntry server) {
+    public void Save(ServerEntry server) {
       var serverEntry = _vm.Servers.FirstOrDefault(x => x.DateTime == server.DateTime);
       if (serverEntry != null) {
         serverEntry.Ip = server.Ip;
         serverEntry.Password = server.Password;
+        serverEntry.Name = server.Name;
       } else {
         _vm.Servers.Add(server);
       }

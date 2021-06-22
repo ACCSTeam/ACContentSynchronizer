@@ -3,10 +3,12 @@ using Avalonia.Media.Imaging;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Models {
-  public class Entry : ViewModelBase {
+  public class ContentEntry : ViewModelBase {
     private int _count;
 
     private string _directoryName = "";
+
+    private bool _isEnabled;
 
     private string _name = "";
 
@@ -37,6 +39,11 @@ namespace ACContentSynchronizer.ClientGui.Models {
     public int Used {
       get => _used;
       set => this.RaiseAndSetIfChanged(ref _used, value);
+    }
+
+    public bool IsEnabled {
+      get => _isEnabled;
+      set => this.RaiseAndSetIfChanged(ref _isEnabled, value);
     }
   }
 }
