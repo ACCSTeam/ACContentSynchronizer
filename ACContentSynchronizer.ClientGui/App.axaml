@@ -15,6 +15,5 @@
     <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/TransparentButton.axaml" />
     <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/SidebarButton.axaml" />
     <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/ModalDialog.axaml" />
-    <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/Toast.axaml" />
   </Application.Styles>
 </Application>

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
 using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.ViewModels;
 
 namespace ACContentSynchronizer.ClientGui.Tasks {
   public class ValidationTask : TaskViewModel {

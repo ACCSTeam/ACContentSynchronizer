@@ -1,9 +1,10 @@
+using System;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using Avalonia.Media.Imaging;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Models {
-  public class ContentEntry : ViewModelBase {
+  public class ContentEntry : ViewModelBase, IDisposable {
     private int _count;
 
     private string _directoryName = "";
@@ -44,6 +45,10 @@ namespace ACContentSynchronizer.ClientGui.Models {
     public bool IsEnabled {
       get => _isEnabled;
       set => this.RaiseAndSetIfChanged(ref _isEnabled, value);
+    }
+
+    public void Dispose() {
+      _preview?.Dispose();
     }
   }
 }

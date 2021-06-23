@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
 using ACContentSynchronizer.ClientGui.Modals;
 using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.Models;
 
 namespace ACContentSynchronizer.ClientGui.Tasks {

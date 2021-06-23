@@ -1,6 +1,5 @@
 using System.Linq;
 using ACContentSynchronizer.ClientGui.Components;
-using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using Avalonia.Collections;
 using ReactiveUI;

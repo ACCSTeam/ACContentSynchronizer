@@ -1,4 +1,4 @@
-using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;

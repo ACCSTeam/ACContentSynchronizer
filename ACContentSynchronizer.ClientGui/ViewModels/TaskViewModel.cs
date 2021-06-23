@@ -1,8 +1,7 @@
 using System;
-using ACContentSynchronizer.ClientGui.ViewModels;
 using ReactiveUI;
 
-namespace ACContentSynchronizer.ClientGui.Models {
+namespace ACContentSynchronizer.ClientGui.ViewModels {
   public abstract class TaskViewModel : ViewModelBase, IDisposable {
     private double _progress;
 

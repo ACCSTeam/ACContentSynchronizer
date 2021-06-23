@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.ClientGui.Windows;
 using Avalonia;
 using Avalonia.Controls;
@@ -26,11 +27,6 @@ namespace ACContentSynchronizer.ClientGui.Models {
     public static async Task<TResult> Open<T, TResult>() where T : Modal, new() {
       var modal = new T();
       return await modal.ShowDialog<TResult>(MainWindow.Instance);
-    }
-
-    public static async Task Edit<T>() where T : Modal, new() {
-      var modal = new T();
-      await modal.ShowDialog(MainWindow.Instance);
     }
   }
 }

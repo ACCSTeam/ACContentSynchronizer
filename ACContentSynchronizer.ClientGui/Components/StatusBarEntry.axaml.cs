@@ -1,5 +1,5 @@
 using System;
-using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.ViewModels;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Interactivity;

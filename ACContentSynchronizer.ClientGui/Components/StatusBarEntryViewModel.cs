@@ -1,5 +1,4 @@
 using System;
-using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 
 namespace ACContentSynchronizer.ClientGui.Components {

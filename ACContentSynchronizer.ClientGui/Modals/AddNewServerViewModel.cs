@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Client;
 using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.ClientGui.Views;
 using Avalonia.Data;
 using ReactiveUI;

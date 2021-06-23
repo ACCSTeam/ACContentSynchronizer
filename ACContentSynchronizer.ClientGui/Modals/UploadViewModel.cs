@@ -6,7 +6,7 @@ using ACContentSynchronizer.Models;
 using Avalonia.Collections;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
-  public class UploadViewModel : ViewModelBase {
+  public class UploadViewModel : ModalViewModel<UploadModal> {
     public UploadViewModel() {
       var settings = Settings.Instance;
       var carsDirectory = Path.Combine(settings.GamePath, Constants.ContentFolder, Constants.CarsFolder);
