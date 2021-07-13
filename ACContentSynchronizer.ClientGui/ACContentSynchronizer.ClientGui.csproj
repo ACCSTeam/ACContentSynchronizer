@@ -17,8 +17,10 @@
         <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.6" />
         <PackageReference Include="Avalonia.Svg" Version="0.10.6.1" />
+        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.6.7" />
         <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.7" />
+        <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Windows\StatusBar.axaml.cs">
@@ -58,11 +60,11 @@
         <Compile Update="Components\StatusBarEntryViewModel.cs">
           <DependentUpon>StatusBarEntry.axaml</DependentUpon>
         </Compile>
-        <Compile Update="Modals\UploadViewModel.cs">
-          <DependentUpon>UploadModal.axaml</DependentUpon>
+        <Compile Update="Views\UploadViewModel.cs">
+          <DependentUpon>Upload.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\ACContentSynchronizer.Client\ACContentSynchronizer.Client.csproj" />
+      <ProjectReference Include="..\ACContentSynchronizer\ACContentSynchronizer.csproj" />
     </ItemGroup>
 </Project>

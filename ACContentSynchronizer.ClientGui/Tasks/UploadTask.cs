@@ -3,10 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using ACContentSynchronizer.Client;
-using ACContentSynchronizer.ClientGui.Modals;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
+using ACContentSynchronizer.ClientGui.Views;
 using ACContentSynchronizer.Models;
 
 namespace ACContentSynchronizer.ClientGui.Tasks {

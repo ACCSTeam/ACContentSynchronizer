@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
+             xmlns:behaviors="clr-namespace:ACContentSynchronizer.ClientGui.Behaviors"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ACContentSynchronizer.ClientGui.Components.IconButton">
+  <UserControl.Styles>
+    <Style Selector="components|IconButton">
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Button Command="{TemplateBinding Command}"
+                  CommandParameter="{TemplateBinding Parameter}">
+            <Interaction.Behaviors>
+              <behaviors:AddClassBehavior Classes="{Binding Style, RelativeSource={RelativeSource TemplatedParent}}"/>
+            </Interaction.Behaviors>
+            <StackPanel Orientation="Horizontal"
+                        Spacing="{TemplateBinding Spacing}">
+              <avalonia:MaterialIcon Kind="{TemplateBinding Icon}" />
+              <TextBlock VerticalAlignment="Center"
+                         IsVisible="{TemplateBinding TextVisible}"
+                         Text="{TemplateBinding Text}" />
+            </StackPanel>
+          </Button>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+  </UserControl.Styles>
+</UserControl>

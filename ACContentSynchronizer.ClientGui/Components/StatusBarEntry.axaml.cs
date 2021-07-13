@@ -13,7 +13,7 @@ namespace ACContentSynchronizer.ClientGui.Components {
 
     public StatusBarEntryViewModel? ViewModel { get; private set; }
 
-    public AvaloniaList<StatusBarEntry>? Source { get; set; }
+    private AvaloniaList<StatusBarEntry>? Source { get; set; }
 
     public void Dispose() {
       ViewModel?.Dispose();

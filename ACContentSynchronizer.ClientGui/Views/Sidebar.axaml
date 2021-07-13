@@ -19,14 +19,6 @@
       <Setter Property="HorizontalContentAlignment" Value="Stretch" />
       <Setter Property="Padding" Value="0" />
     </Style>
-
-    <Style Selector="ListBox > ListBoxItem:pressed /template/ ContentPresenter">
-      <Setter Property="Background" Value="{StaticResource UiAccentTransparent}" />
-    </Style>
-
-    <Style Selector="ListBox > ListBoxItem:selected /template/ ContentPresenter">
-      <Setter Property="Background" Value="{StaticResource UiAccentDark}" />
-    </Style>
   </UserControl.Styles>
 
   <Grid RowDefinitions="Auto,*,60,60" Width="{Binding Size}">
@@ -80,12 +72,13 @@
         </DataTemplate>
       </ListBox.ItemTemplate>
     </ListBox>
-    <components:SidebarButton Grid.Row="2"
-                              Label="Add new"
-                              IsMinimized="{Binding IsMinimized}"
+    <components:IconButton Grid.Row="2"
+                              Text="Add new"
+                              Icon="Plus"
+                              Spacing="10"
+                              Style="TransparentButton"
                               Command="{Binding OpenAddServerDialog}">
-      <avalonia:MaterialIcon Kind="Plus" />
-    </components:SidebarButton>
+    </components:IconButton>
     <components:SidebarButton Grid.Row="3"
                               Label="Settings"
                               IsMinimized="{Binding IsMinimized}"

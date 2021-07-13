@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ACContentSynchronizer.Client;
 using ACContentSynchronizer.ClientGui.Models;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;

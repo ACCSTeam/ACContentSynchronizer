@@ -15,5 +15,6 @@
     <SolidColorBrush x:Key="UiAccentDark">#a00</SolidColorBrush>
     <SolidColorBrush x:Key="UiAccentTransparent">#55ff0000</SolidColorBrush>
     <SolidColorBrush x:Key="UiGrayLight">#8A6C686C</SolidColorBrush>
+    <SolidColorBrush x:Key="TabItemHeaderSelectedPipeFill">#f00</SolidColorBrush>
   </Styles.Resources>
 </Styles>

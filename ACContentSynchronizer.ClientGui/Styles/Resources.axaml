@@ -70,4 +70,13 @@
     <Setter Property="BorderBrush" Value="{StaticResource UiGrayLight}" />
     <Setter Property="BorderThickness" Value="1" />
   </Style>
+
+  <Style Selector="ListBox > ListBoxItem:selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource UiAccentDark}" />
+  </Style>
+
+  <Style Selector="ListBox > ListBoxItem:pressed /template/ ContentPresenter">
+    <Setter Property="Background" Value="{StaticResource UiAccentTransparent}" />
+  </Style>
+
 </Styles>

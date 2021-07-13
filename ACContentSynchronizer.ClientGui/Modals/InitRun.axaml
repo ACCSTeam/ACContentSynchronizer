@@ -52,7 +52,7 @@
       </StackPanel>
 
       <Button Classes="AccentButton"
-              Content="Next"
+              Content="Save"
               HorizontalAlignment="Center"
               Command="{Binding SaveAndContinue}" />
     </StackPanel>

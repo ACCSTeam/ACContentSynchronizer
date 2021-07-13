@@ -1,0 +1,109 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ACContentSynchronizer.ClientGui.Views.Upload">
+  <Design.DataContext>
+    <views:UploadViewModel />
+  </Design.DataContext>
+
+  <UserControl.Styles>
+    <Style Selector="ListBoxItem">
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    </Style>
+    <Style Selector="ListBoxItem > Grid > :is(Control)">
+      <Setter Property="Margin" Value="10,0" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="ListBoxItem > Grid > TextBox">
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style Selector="ListBoxItem > Grid > ComboBox">
+      <Setter Property="Width" Value="200" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid RowDefinitions="*, 60">
+    <TabControl Grid.Row="0">
+      <TabItem Header="Cars">
+        <DockPanel>
+          <Popup Name="AddPopup"
+                 PlacementAnchor="Top"
+                 IsLightDismissEnabled="True">
+            <StackPanel Background="{StaticResource UiGrayLight}">
+              <TextBox Text="{Binding  Search}" />
+              <ListBox Items="{Binding Cars}">
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <Grid ColumnDefinitions="300, Auto, Auto">
+                      <TextBlock Grid.Column="0"
+                                 Text="{Binding Name}" />
+                      <ComboBox Grid.Column="1"
+                                Items="{Binding Variations}"
+                                SelectedItem="{Binding SelectedVariation}" />
+                      <Button Grid.Column="2"
+                              Classes="TransparentButton"
+                              Command="{Binding ElementName=AddPopup, Path=DataContext.Add}"
+                              CommandParameter="{Binding}">
+                        <avalonia:MaterialIcon Kind="Plus" />
+                      </Button>
+                    </Grid>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </StackPanel>
+          </Popup>
+          <Button DockPanel.Dock="Top"
+                  Classes="TransparentButton"
+                  Click="OpenPopup">
+            <avalonia:MaterialIcon Kind="Plus" />
+          </Button>
+          <ListBox DockPanel.Dock="Bottom"
+                   Items="{Binding SelectedCars}">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Grid ColumnDefinitions="*,Auto,Auto">
+                  <TextBlock Grid.Column="0"
+                             Text="{Binding Name}" />
+                  <ComboBox Grid.Column="1"
+                            Items="{Binding Variations}"
+                            SelectedItem="{Binding SelectedVariation}" />
+                  <Button Grid.Column="2"
+                          Classes="TransparentButton"
+                          Command="{Binding ElementName=AddPopup, Path=DataContext.Remove}"
+                          CommandParameter="{Binding}">
+                    <avalonia:MaterialIcon Kind="Trash" />
+                  </Button>
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="Tracks">
+        <ListBox Items="{Binding Tracks}">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Horizontal"
+                          Spacing="10">
+                <TextBlock Text="{Binding Name}" />
+              </StackPanel>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </TabItem>
+    </TabControl>
+    <components:IconButton Grid.Column="0"
+                           Grid.Row="1"
+                           Spacing="10"
+                           Text="Upload"
+                           Icon="FileUpload"
+                           Style="AccentButton TransparentButton"
+                           Command="{Binding Upload}" />
+  </Grid>
+
+</UserControl>

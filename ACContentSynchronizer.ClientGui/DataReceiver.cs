@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Models;
 
-namespace ACContentSynchronizer.Client {
+namespace ACContentSynchronizer.ClientGui {
   public class DataReceiver : IDisposable {
     public delegate void CompleteEvent();
 

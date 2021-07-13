@@ -1,5 +1,4 @@
-using System.Threading.Tasks;
-using ACContentSynchronizer.ClientGui.Modals;
+using System;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Tasks;
 using ACContentSynchronizer.ClientGui.ViewModels;
@@ -7,7 +6,7 @@ using Avalonia.Collections;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views {
-  public class ServerViewModel : ViewModelBase {
+  public class ServerViewModel : ViewModelBase, IDisposable {
     private AvaloniaList<ContentEntry> _cars = new();
 
     private ContentEntry? _selectedCar;
@@ -36,6 +35,11 @@ namespace ACContentSynchronizer.ClientGui.Views {
       set => this.RaiseAndSetIfChanged(ref _track, value);
     }
 
+    public void Dispose() {
+      _selectedCar?.Dispose();
+      _track.Dispose();
+    }
+
     public void Join() {
     }
 
@@ -44,13 +48,6 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     public void ValidateContent() {
       StatusBar.Instance.AddTask(new ValidationTask(ServerEntry));
-    }
-
-    public async Task UploadContent() {
-      var content = await Modal.Open<UploadModal, UploadViewModel?>();
-      if (content != null) {
-        StatusBar.Instance.AddTask(new UploadTask(ServerEntry, content));
-      }
     }
   }
 }
