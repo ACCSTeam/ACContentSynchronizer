@@ -16,19 +16,33 @@ namespace ACContentSynchronizer.ClientGui.Views {
   public class UploadViewModel : ViewModelBase {
     private ReadOnlyObservableCollection<EntryInfo> _cars;
 
-    private string _search = "";
+    private ReadOnlyObservableCollection<EntryInfo> _tracks;
+
+    private string _carSearch = "";
+
+    private string _trackSearch = "";
 
     public UploadViewModel() {
       ReactiveCommand.CreateFromTask(Load).Execute();
 
-      var filter = this.WhenAnyValue(vm => vm.Search)
+      var carFilter = this.WhenAnyValue(vm => vm.CarSearch)
+        .Throttle(TimeSpan.FromMilliseconds(100))
+        .Select(BuildFilter);
+
+      var trackFilter = this.WhenAnyValue(vm => vm.TrackSearch)
         .Throttle(TimeSpan.FromMilliseconds(100))
         .Select(BuildFilter);
 
       AvailableCars.Connect()
-        .Filter(filter)
+        .Filter(carFilter)
         .ObserveOn(AvaloniaScheduler.Instance)
         .Bind(out _cars)
+        .Subscribe();
+
+      AvailableTracks.Connect()
+        .Filter(trackFilter)
+        .ObserveOn(AvaloniaScheduler.Instance)
+        .Bind(out _tracks)
         .Subscribe();
     }
 
@@ -39,15 +53,25 @@ namespace ACContentSynchronizer.ClientGui.Views {
       set => this.RaiseAndSetIfChanged(ref _cars, value);
     }
 
-    public AvaloniaList<EntryInfo> Tracks { get; set; } = new();
+    private SourceList<EntryInfo> AvailableTracks { get; set; } = new();
+
+    public ReadOnlyObservableCollection<EntryInfo> Tracks {
+      get => _tracks;
+      set => this.RaiseAndSetIfChanged(ref _tracks, value);
+    }
 
     public AvaloniaList<EntryInfo> SelectedCars { get; set; } = new();
 
     public EntryInfo? SelectedTrack { get; set; }
 
-    public string Search {
-      get => _search;
-      set => this.RaiseAndSetIfChanged(ref _search, value);
+    public string CarSearch {
+      get => _carSearch;
+      set => this.RaiseAndSetIfChanged(ref _carSearch, value);
+    }
+
+    public string TrackSearch {
+      get => _trackSearch;
+      set => this.RaiseAndSetIfChanged(ref _trackSearch, value);
     }
 
     private Task Load() {
@@ -70,7 +94,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
         .SelectMany(x => ContentUtils.GetTrackName(x, settings.GamePath)
           .Select(v => new EntryInfo(v, v, new() { v })));
 
-      Tracks.AddRange(tracks);
+      AvailableTracks.AddRange(tracks);
 
       return Task.CompletedTask;
     }

@@ -34,29 +34,38 @@
           <Popup Name="AddPopup"
                  PlacementAnchor="Top"
                  IsLightDismissEnabled="True">
-            <StackPanel Background="{StaticResource UiGrayLight}">
-              <TextBox Text="{Binding  Search}" />
-              <ListBox Items="{Binding Cars}">
-                <ListBox.ItemTemplate>
-                  <DataTemplate>
-                    <Grid ColumnDefinitions="300, Auto, Auto">
-                      <TextBlock Grid.Column="0"
-                                 Text="{Binding Name}" />
-                      <ComboBox Grid.Column="1"
-                                Items="{Binding Variations}"
-                                SelectedItem="{Binding SelectedVariation}" />
-                      <Button Grid.Column="2"
-                              Classes="TransparentButton ListButton"
-                              Command="{Binding ElementName=AddPopup, Path=DataContext.Add}"
-                              CommandParameter="{Binding}">
-                        <avalonia:MaterialIcon Kind="Plus" />
-                      </Button>
-                    </Grid>
-                  </DataTemplate>
-                </ListBox.ItemTemplate>
-              </ListBox>
-            </StackPanel>
+            <Border BorderThickness="10"
+                    BorderBrush="{StaticResource UiGrayLight}">
+              <StackPanel Spacing="10"
+                          Background="{StaticResource UiGrayLight}">
+                <TextBox Text="{Binding  CarSearch}" />
+                <ListBox Items="{Binding Cars}">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate>
+                      <Grid ColumnDefinitions="300, Auto, Auto">
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding Name}" />
+                        <ComboBox Grid.Column="1"
+                                  Items="{Binding Variations}"
+                                  SelectedItem="{Binding SelectedVariation}" />
+                        <Button Grid.Column="2"
+                                Classes="TransparentButton ListButton"
+                                Command="{Binding ElementName=AddPopup, Path=DataContext.Add}"
+                                CommandParameter="{Binding}">
+                          <avalonia:MaterialIcon Kind="Plus" />
+                        </Button>
+                      </Grid>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+              </StackPanel>
+            </Border>
           </Popup>
+          <components:IconButton DockPanel.Dock="Top"
+                                 Text="Add"
+                                 Icon="Plus"
+                                 Spacing="10"
+                                 Click="OpenPopup" />
           <Button DockPanel.Dock="Top"
                   Classes="TransparentButton"
                   Click="OpenPopup">
@@ -85,18 +94,21 @@
         </DockPanel>
       </TabItem>
       <TabItem Header="Tracks">
-        <ListBox Items="{Binding Tracks}">
-          <ListBox.ItemTemplate>
-            <DataTemplate>
-              <StackPanel Orientation="Horizontal"
-                          Height="60"
-                          Spacing="10">
-                <TextBlock VerticalAlignment="Center"
-                  Text="{Binding Name}" />
-              </StackPanel>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
+        <StackPanel Spacing="10">
+          <TextBox Text="{Binding TrackSearch}" />
+          <ListBox Items="{Binding Tracks}">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Horizontal"
+                            Height="60"
+                            Spacing="10">
+                  <TextBlock VerticalAlignment="Center"
+                             Text="{Binding Name}" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </StackPanel>
       </TabItem>
     </TabControl>
     <components:IconButton Grid.Column="0"

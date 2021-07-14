@@ -2,6 +2,7 @@ using System;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Material.Icons;
 using ReactiveUI;
@@ -140,6 +141,15 @@ namespace ACContentSynchronizer.ClientGui.Components {
     public Classes? IconStyle {
       get => _iconStyle;
       set => SetAndRaise(IconStyleProperty, ref _iconStyle, value);
+    }
+
+    public static readonly RoutedEvent<RoutedEventArgs> ClickEvent =
+      RoutedEvent.Register<Button, RoutedEventArgs>(nameof(Click), RoutingStrategies.Bubble);
+
+    public event EventHandler<RoutedEventArgs> Click
+    {
+      add => AddHandler(ClickEvent, value);
+      remove => RemoveHandler(ClickEvent, value);
     }
 
     private void InitializeComponent() {

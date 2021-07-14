@@ -24,10 +24,6 @@ namespace ACContentSynchronizer.Server.Controllers {
       _hub = hubContext;
     }
 
-    [HttpGet("getServerInformation")]
-    public void GetServerInformation() {
-    }
-
     [HttpGet("getManifest")]
     public Manifest GetManifest() {
       var gamePath = _configuration.GetValue<string>("GamePath");
