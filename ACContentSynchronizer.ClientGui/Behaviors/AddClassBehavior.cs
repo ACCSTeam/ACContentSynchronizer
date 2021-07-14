@@ -6,20 +6,20 @@ using Avalonia.Xaml.Interactivity;
 
 namespace ACContentSynchronizer.ClientGui.Behaviors {
   public class AddClassBehavior : AvaloniaObject, IBehavior {
-    public IAvaloniaObject? AssociatedObject { get; private set; }
-
     public static readonly DirectProperty<AddClassBehavior, Classes?> ClassesProperty =
       AvaloniaProperty.RegisterDirect<AddClassBehavior, Classes?>(
         nameof(Classes),
         o => o.Classes,
         (o, v) => o.Classes = v);
 
+    private Classes? _classes;
+
     public Classes? Classes {
       get => _classes;
       set => SetAndRaise(ClassesProperty, ref _classes, value);
     }
 
-    private Classes? _classes;
+    public IAvaloniaObject? AssociatedObject { get; private set; }
 
     public void Attach(IAvaloniaObject? associatedObject) {
       if (!(associatedObject is IStyledElement styledElement)) {

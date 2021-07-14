@@ -11,22 +11,20 @@
     <views:MainViewModel />
   </Design.DataContext>
 
-  <UserControl.Styles>
-    <Style Selector="StackPanel > TextBlock">
-      <Setter Property="TextAlignment" Value="Center" />
-      <Setter Property="FontWeight" Value="Bold" />
-      <Setter Property="FontStyle" Value="Italic" />
-    </Style>
-  </UserControl.Styles>
-
   <Panel>
     <Panel IsHitTestVisible="False"
            Background="{StaticResource UiColorTransparentDark}" />
     <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="100">
       <StackPanel>
         <svg:Svg Width="102" Height="167" Path="/Assets/ac-logo.svg" />
-        <TextBlock FontSize="40">ASSETTO CORSA</TextBlock>
-        <TextBlock FontSize="26">CONTENT SYNCHRONIZER</TextBlock>
+        <TextBlock Classes="TextLogo"
+                   FontSize="40">
+          ASSETTO CORSA
+        </TextBlock>
+        <TextBlock Classes="TextLogo"
+                   FontSize="26">
+          CONTENT SYNCHRONIZER
+        </TextBlock>
       </StackPanel>
       <Button Classes="AccentButton"
               Content="New Connection"

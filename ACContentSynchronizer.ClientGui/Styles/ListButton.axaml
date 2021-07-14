@@ -2,13 +2,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Design.PreviewWith>
     <Border Padding="20">
-      <Button Classes="AccentButton"
-              Content="Default" />
+      <!-- Add Controls for Previewer Here -->
     </Border>
   </Design.PreviewWith>
 
-  <Style Selector="Button.SidebarButton">
-    <Setter Property="Background" Value="{StaticResource UiGrayLight}" />
+  <Style Selector="Button.ListButton">
     <Setter Property="Height" Value="60" />
     <Setter Property="Padding" Value="0" />
   </Style>

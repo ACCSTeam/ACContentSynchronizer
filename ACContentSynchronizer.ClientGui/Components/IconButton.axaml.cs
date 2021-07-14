@@ -44,9 +44,35 @@ namespace ACContentSynchronizer.ClientGui.Components {
         o => o.Command,
         (o, v) => o.Command = v);
 
+    public static readonly DirectProperty<IconButton, bool> TextVisibleProperty =
+      AvaloniaProperty.RegisterDirect<IconButton, bool>(
+        nameof(TextVisible),
+        o => o.TextVisible,
+        (o, v) => o.TextVisible = v);
+
+    public static readonly DirectProperty<IconButton, double> TextVisibleWidthProperty =
+      AvaloniaProperty.RegisterDirect<IconButton, double>(
+        nameof(TextVisibleWidth),
+        o => o.TextVisibleWidth,
+        (o, v) => o.TextVisibleWidth = v);
+
+    public static readonly DirectProperty<IconButton, Classes?> TextStyleProperty =
+      AvaloniaProperty.RegisterDirect<IconButton, Classes?>(
+        nameof(TextStyle),
+        o => o.TextStyle,
+        (o, v) => o.TextStyle = v);
+
+    public static readonly DirectProperty<IconButton, Classes?> IconStyleProperty =
+      AvaloniaProperty.RegisterDirect<IconButton, Classes?>(
+        nameof(IconStyle),
+        o => o.IconStyle,
+        (o, v) => o.IconStyle = v);
+
     private ICommand? _command;
 
     private MaterialIconKind? _icon;
+
+    private Classes? _iconStyle;
 
     private object? _parameter;
 
@@ -55,6 +81,12 @@ namespace ACContentSynchronizer.ClientGui.Components {
     private Classes? _style;
 
     private string _text = "";
+
+    private Classes? _textStyle;
+
+    private bool _textVisible;
+
+    private double _textVisibleWidth;
 
     public IconButton() {
       InitializeComponent();
@@ -90,24 +122,31 @@ namespace ACContentSynchronizer.ClientGui.Components {
       set => SetAndRaise(CommandProperty, ref _command, value);
     }
 
-    public static readonly DirectProperty<IconButton, bool> TextVisibleProperty =
-      AvaloniaProperty.RegisterDirect<IconButton, bool>(
-        nameof(TextVisible),
-        o => o.TextVisible,
-        (o, v) => o.TextVisible = v);
-
     public bool TextVisible {
       get => _textVisible;
       set => SetAndRaise(TextVisibleProperty, ref _textVisible, value);
     }
 
-    private bool _textVisible;
+    public double TextVisibleWidth {
+      get => _textVisibleWidth;
+      set => SetAndRaise(TextVisibleWidthProperty, ref _textVisibleWidth, value);
+    }
+
+    public Classes? TextStyle {
+      get => _textStyle;
+      set => SetAndRaise(TextStyleProperty, ref _textStyle, value);
+    }
+
+    public Classes? IconStyle {
+      get => _iconStyle;
+      set => SetAndRaise(IconStyleProperty, ref _iconStyle, value);
+    }
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
 
-      this.WhenAnyValue(button => button.Width > 100)
-        .Subscribe(x => TextVisible = x);
+      this.WhenAnyValue(button => button.Bounds)
+        .Subscribe(x => TextVisible = x.Width > TextVisibleWidth);
     }
   }
 }

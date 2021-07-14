@@ -29,6 +29,7 @@ namespace ACContentSynchronizer.ClientGui {
 
         hub.Remove(method.ToString());
         hub.On(method.ToString(), action);
+
         if (hub.State == HubConnectionState.Disconnected) {
           await hub.StartAsync();
         }
@@ -47,6 +48,7 @@ namespace ACContentSynchronizer.ClientGui {
           : BuildHub(entry);
 
         hub.On(method.ToString(), action);
+
         if (hub.State == HubConnectionState.Disconnected) {
           await hub.StartAsync();
         }

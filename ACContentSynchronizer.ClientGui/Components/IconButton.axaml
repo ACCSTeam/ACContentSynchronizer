@@ -15,14 +15,29 @@
           <Button Command="{TemplateBinding Command}"
                   CommandParameter="{TemplateBinding Parameter}">
             <Interaction.Behaviors>
-              <behaviors:AddClassBehavior Classes="{Binding Style, RelativeSource={RelativeSource TemplatedParent}}"/>
+              <behaviors:AddClassBehavior
+                Classes="{Binding Style, RelativeSource={RelativeSource TemplatedParent}}" />
             </Interaction.Behaviors>
+
             <StackPanel Orientation="Horizontal"
                         Spacing="{TemplateBinding Spacing}">
-              <avalonia:MaterialIcon Kind="{TemplateBinding Icon}" />
+
+              <avalonia:MaterialIcon Kind="{TemplateBinding Icon}">
+                <Interaction.Behaviors>
+                  <behaviors:AddClassBehavior
+                    Classes="{Binding  IconStyle, RelativeSource={RelativeSource TemplatedParent}}" />
+                </Interaction.Behaviors>
+              </avalonia:MaterialIcon>
+
               <TextBlock VerticalAlignment="Center"
                          IsVisible="{TemplateBinding TextVisible}"
-                         Text="{TemplateBinding Text}" />
+                         Text="{TemplateBinding Text}">
+                <Interaction.Behaviors>
+                  <behaviors:AddClassBehavior
+                    Classes="{Binding TextStyle, RelativeSource={RelativeSource TemplatedParent}}" />
+                </Interaction.Behaviors>
+              </TextBlock>
+
             </StackPanel>
           </Button>
         </ControlTemplate>

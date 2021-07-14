@@ -46,7 +46,7 @@
                                 Items="{Binding Variations}"
                                 SelectedItem="{Binding SelectedVariation}" />
                       <Button Grid.Column="2"
-                              Classes="TransparentButton"
+                              Classes="TransparentButton ListButton"
                               Command="{Binding ElementName=AddPopup, Path=DataContext.Add}"
                               CommandParameter="{Binding}">
                         <avalonia:MaterialIcon Kind="Plus" />
@@ -73,7 +73,7 @@
                             Items="{Binding Variations}"
                             SelectedItem="{Binding SelectedVariation}" />
                   <Button Grid.Column="2"
-                          Classes="TransparentButton"
+                          Classes="TransparentButton ListButton"
                           Command="{Binding ElementName=AddPopup, Path=DataContext.Remove}"
                           CommandParameter="{Binding}">
                     <avalonia:MaterialIcon Kind="Trash" />
@@ -89,8 +89,10 @@
           <ListBox.ItemTemplate>
             <DataTemplate>
               <StackPanel Orientation="Horizontal"
+                          Height="60"
                           Spacing="10">
-                <TextBlock Text="{Binding Name}" />
+                <TextBlock VerticalAlignment="Center"
+                  Text="{Binding Name}" />
               </StackPanel>
             </DataTemplate>
           </ListBox.ItemTemplate>

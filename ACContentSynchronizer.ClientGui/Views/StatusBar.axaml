@@ -10,6 +10,12 @@
     <views:StatusBarViewModel />
   </Design.DataContext>
 
+  <UserControl.Styles>
+    <Style Selector="ListBox > ListBoxItem">
+      <Setter Property="Padding" Value="10,10" />
+    </Style>
+  </UserControl.Styles>
+
   <Panel VerticalAlignment="Stretch">
     <Button Classes="TransparentButton"
             VerticalAlignment="Stretch"

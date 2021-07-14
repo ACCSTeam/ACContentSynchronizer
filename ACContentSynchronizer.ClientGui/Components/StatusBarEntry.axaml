@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Components.StatusBarEntry">
 
@@ -10,17 +11,17 @@
     <components:StatusBarEntryViewModel />
   </Design.DataContext>
 
-  <Grid ColumnDefinitions="*,80">
+  <Grid ColumnDefinitions="*,10,30">
     <StackPanel Grid.Column="0"
                 Spacing="5">
       <TextBlock Text="{Binding Task.State}" />
       <ProgressBar Value="{Binding Task.Progress}" />
     </StackPanel>
-    <Button Padding="5"
-            HorizontalAlignment="Right"
-            Grid.Column="1"
-            Content="Close"
-            Click="Cancel" />
+    <Button Grid.Column="2"
+            Click="Cancel"
+            Classes="TransparentButton ButtonLogo">
+      <avalonia:MaterialIcon Kind="Trash" />
+    </Button>
   </Grid>
 
 </UserControl>

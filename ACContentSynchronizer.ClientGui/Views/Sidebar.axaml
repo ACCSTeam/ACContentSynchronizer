@@ -22,14 +22,15 @@
   </UserControl.Styles>
 
   <Grid RowDefinitions="Auto,*,60,60" Width="{Binding Size}">
-    <Button Grid.Row="0"
-            Classes="TransparentButton"
-            Height="30"
-            HorizontalAlignment="Stretch"
-            Command="{Binding Toggle}">
-      <avalonia:MaterialIcon Kind="ViewList"
-                             FontSize="24" />
-    </Button>
+    <components:IconButton Grid.Row="0"
+                           Text="CONTENT SYNCHRONIZER"
+                           Icon="ViewList"
+                           Spacing="10"
+                           TextVisibleWidth="70"
+                           Style="TransparentButton ButtonLogo"
+                           TextStyle="TextLogo"
+                           IconStyle="IconLogo"
+                           Command="{Binding Toggle}" />
     <ListBox Grid.Row="1"
              Name="Servers"
              HorizontalAlignment="Stretch"
@@ -53,14 +54,14 @@
                            Width="{Binding ElementName=Servers, Path=DataContext.LabelWidth}"
                            Text="{Binding Name}" />
                 <Button Grid.Column="1"
-                        Classes="TransparentButton SidebarButton"
+                        Classes="ListButton TransparentButton"
                         IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}"
                         Command="{Binding ElementName=Servers, Path=DataContext.EditServerDialog}"
                         CommandParameter="{Binding }">
                   <avalonia:MaterialIcon Kind="Edit" />
                 </Button>
                 <Button Grid.Column="2"
-                        Classes="TransparentButton SidebarButton"
+                        Classes="ListButton TransparentButton"
                         IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}"
                         Command="{Binding ElementName=Servers, Path=DataContext.Remove}"
                         CommandParameter="{Binding }">
@@ -73,17 +74,18 @@
       </ListBox.ItemTemplate>
     </ListBox>
     <components:IconButton Grid.Row="2"
-                              Text="Add new"
-                              Icon="Plus"
-                              Spacing="10"
-                              Style="TransparentButton"
-                              Command="{Binding OpenAddServerDialog}">
-    </components:IconButton>
-    <components:SidebarButton Grid.Row="3"
-                              Label="Settings"
-                              IsMinimized="{Binding IsMinimized}"
-                              Command="{Binding OpenSettings}">
-      <avalonia:MaterialIcon Kind="Tune" />
-    </components:SidebarButton>
+                           Text="Add new"
+                           Icon="Plus"
+                           Spacing="10"
+                           Style="TransparentButton SidebarButton"
+                           TextVisibleWidth="70"
+                           Command="{Binding OpenAddServerDialog}" />
+    <components:IconButton Grid.Row="3"
+                           Text="Settings"
+                           Icon="Tune"
+                           Spacing="10"
+                           Style="TransparentButton SidebarButton"
+                           TextVisibleWidth="70"
+                           Command="{Binding OpenSettings}" />
   </Grid>
 </UserControl>
