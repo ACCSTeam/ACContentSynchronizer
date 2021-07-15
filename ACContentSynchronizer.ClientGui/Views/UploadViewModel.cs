@@ -82,8 +82,8 @@ namespace ACContentSynchronizer.ClientGui.Views {
       if (Directory.Exists(carsDirectory)) {
         AvailableCars.AddRange(Directory.GetDirectories(carsDirectory)
           .Select(x => new EntryInfo(x,
-            ContentUtils.GetCarName(x, settings.GamePath),
-            ContentUtils.GetCarSkins(x, settings.GamePath))));
+            ContentUtils.GetCarName(DirectoryUtils.Name(x), settings.GamePath),
+            ContentUtils.GetCarSkins(DirectoryUtils.Name(x), settings.GamePath))));
       }
 
       if (!Directory.Exists(tracksDirectory)) {

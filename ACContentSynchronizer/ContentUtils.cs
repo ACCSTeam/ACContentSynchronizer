@@ -4,6 +4,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
 using ACContentSynchronizer.Models;
+using Newtonsoft.Json;
 
 namespace ACContentSynchronizer {
   public static class ContentUtils {
@@ -188,10 +189,8 @@ namespace ACContentSynchronizer {
       }
 
       var json = File.ReadAllText(carDataPath);
-      var car = JsonSerializer.Deserialize<CarInfo>(json, JsonSerializerOptions);
-      return car != null
-        ? car.Name
-        : entry;
+      var car = JsonConvert.DeserializeObject<CarInfo>(json);
+      return car.Name;
     }
 
     public static List<string> GetCarSkins(string entry, string gamePath) {

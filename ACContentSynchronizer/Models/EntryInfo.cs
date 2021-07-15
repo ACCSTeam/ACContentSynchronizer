@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ACContentSynchronizer.Models {
   public class EntryInfo {
@@ -15,6 +16,7 @@ namespace ACContentSynchronizer.Models {
       Path = path;
       Name = name;
       Variations = variations;
+      SelectedVariation = variations.FirstOrDefault();
     }
 
     public string Name {

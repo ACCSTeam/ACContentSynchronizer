@@ -144,7 +144,7 @@ namespace ACContentSynchronizer.ClientGui.Components {
     }
 
     public static readonly RoutedEvent<RoutedEventArgs> ClickEvent =
-      RoutedEvent.Register<Button, RoutedEventArgs>(nameof(Click), RoutingStrategies.Bubble);
+      RoutedEvent.Register<IconButton, RoutedEventArgs>(nameof(Click), RoutingStrategies.Bubble);
 
     public event EventHandler<RoutedEventArgs> Click
     {
@@ -157,6 +157,11 @@ namespace ACContentSynchronizer.ClientGui.Components {
 
       this.WhenAnyValue(button => button.Bounds)
         .Subscribe(x => TextVisible = x.Width > TextVisibleWidth);
+    }
+
+    private void OnClick(object? sender, RoutedEventArgs e) {
+      e.RoutedEvent = ClickEvent;
+      RaiseEvent(e);
     }
   }
 }

@@ -11,8 +11,8 @@
     <Style Selector="components|IconButton">
       <Setter Property="Template">
         <ControlTemplate>
-          <Button Click="{TemplateBinding }"
-          Command="{TemplateBinding Command}"
+          <Button Click="OnClick"
+                  Command="{TemplateBinding Command}"
                   CommandParameter="{TemplateBinding Parameter}">
             <Interaction.Behaviors>
               <behaviors:AddClassBehavior

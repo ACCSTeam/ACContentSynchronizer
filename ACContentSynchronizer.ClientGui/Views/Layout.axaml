@@ -5,6 +5,7 @@
              xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Layout">
+
   <Grid ColumnDefinitions="Auto,*">
     <views:Sidebar Grid.Column="0" />
     <Grid Grid.Column="1"
