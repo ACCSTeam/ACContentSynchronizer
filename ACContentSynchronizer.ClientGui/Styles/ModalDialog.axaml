@@ -8,7 +8,7 @@
 
   <Style Selector="Window.ModalDialog">
     <Setter Property="CanResize" Value="False" />
-    <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
+    <Setter Property="TransparencyLevelHint" Value="Transparent" />
     <Setter Property="SystemDecorations" Value="BorderOnly" />
     <Setter Property="WindowStartupLocation" Value="CenterOwner" />
     <Setter Property="Background" Value="{StaticResource UiColorTransparentDark}" />

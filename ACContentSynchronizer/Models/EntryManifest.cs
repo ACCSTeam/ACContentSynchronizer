@@ -7,6 +7,10 @@ namespace ACContentSynchronizer.Models {
       Size = size;
     }
 
+    public EntryManifest(string path, long size, string? variation) : base(path, variation) {
+      Size = size;
+    }
+
     public long Size { get; set; }
   }
 }

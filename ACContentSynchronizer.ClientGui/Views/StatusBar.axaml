@@ -31,7 +31,7 @@
     </Button>
     <Popup Name="StatusPopup"
            PlacementAnchor="TopRight"
-           Width="300"
+           Width="500"
            Height="150"
            IsLightDismissEnabled="True">
       <Panel Background="{StaticResource UiGrayLight}">

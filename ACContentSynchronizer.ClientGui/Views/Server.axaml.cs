@@ -20,6 +20,8 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     public static Server Instance => _instance ??= new();
 
+    public ServerEntry GetServer => _vm.ServerEntry;
+
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
     }
@@ -36,10 +38,12 @@ namespace ACContentSynchronizer.ClientGui.Views {
             Preview = GetCarPreview(x),
           }));
 
+          var trackName = ContentUtils.GetTrackName(info.Track, Settings.Instance.GamePath)
+            .FirstOrDefault();
+
           _vm.Track = new() {
             DirectoryName = info.Track,
-            Name = ContentUtils.GetTrackName(info.Track, Settings.Instance.GamePath)
-              .FirstOrDefault() ?? info.Track,
+            Name = trackName?.Name ?? info.Track,
             Preview = GetTrackPreview(info.Track),
           };
         }

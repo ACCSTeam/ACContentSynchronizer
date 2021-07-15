@@ -5,8 +5,8 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.Tasks;
 using ACContentSynchronizer.ClientGui.ViewModels;
-using ACContentSynchronizer.Models;
 using Avalonia.Collections;
 using Avalonia.Threading;
 using DynamicData;
@@ -14,11 +14,13 @@ using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class UploadViewModel : ViewModelBase {
-    private ReadOnlyObservableCollection<EntryInfo> _cars;
-
-    private ReadOnlyObservableCollection<EntryInfo> _tracks;
+    private ReadOnlyObservableCollection<EntryViewModel> _cars;
 
     private string _carSearch = "";
+
+    private EntryViewModel? _selectedTrack;
+
+    private ReadOnlyObservableCollection<EntryViewModel> _tracks;
 
     private string _trackSearch = "";
 
@@ -46,23 +48,26 @@ namespace ACContentSynchronizer.ClientGui.Views {
         .Subscribe();
     }
 
-    private SourceList<EntryInfo> AvailableCars { get; set; } = new();
+    private SourceList<EntryViewModel> AvailableCars { get; } = new();
 
-    public ReadOnlyObservableCollection<EntryInfo> Cars {
+    public ReadOnlyObservableCollection<EntryViewModel> Cars {
       get => _cars;
       set => this.RaiseAndSetIfChanged(ref _cars, value);
     }
 
-    private SourceList<EntryInfo> AvailableTracks { get; set; } = new();
+    private SourceList<EntryViewModel> AvailableTracks { get; } = new();
 
-    public ReadOnlyObservableCollection<EntryInfo> Tracks {
+    public ReadOnlyObservableCollection<EntryViewModel> Tracks {
       get => _tracks;
       set => this.RaiseAndSetIfChanged(ref _tracks, value);
     }
 
-    public AvaloniaList<EntryInfo> SelectedCars { get; set; } = new();
+    public AvaloniaList<EntryViewModel> SelectedCars { get; set; } = new();
 
-    public EntryInfo? SelectedTrack { get; set; }
+    public EntryViewModel? SelectedTrack {
+      get => _selectedTrack;
+      set => this.RaiseAndSetIfChanged(ref _selectedTrack, value);
+    }
 
     public string CarSearch {
       get => _carSearch;
@@ -81,9 +86,10 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
       if (Directory.Exists(carsDirectory)) {
         AvailableCars.AddRange(Directory.GetDirectories(carsDirectory)
-          .Select(x => new EntryInfo(x,
+          .Select(x => new EntryViewModel(x,
             ContentUtils.GetCarName(DirectoryUtils.Name(x), settings.GamePath),
-            ContentUtils.GetCarSkins(DirectoryUtils.Name(x), settings.GamePath))));
+            new AvaloniaList<string>(ContentUtils
+              .GetCarSkins(DirectoryUtils.Name(x), settings.GamePath)))));
       }
 
       if (!Directory.Exists(tracksDirectory)) {
@@ -92,26 +98,26 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
       var tracks = Directory.GetDirectories(tracksDirectory)
         .SelectMany(x => ContentUtils.GetTrackName(x, settings.GamePath)
-          .Select(v => new EntryInfo(v, v, new() { v })));
+          .Select(v => new EntryViewModel(x, v.Name, v.BaseName)));
 
       AvailableTracks.AddRange(tracks);
 
       return Task.CompletedTask;
     }
 
-    private void Add(EntryInfo entry) {
-      SelectedCars.Add(entry);
+    private void Add(EntryViewModel entry) {
+      SelectedCars.Add(entry.Clone());
     }
 
-    private void Remove(EntryInfo entry) {
+    private void Remove(EntryViewModel entry) {
       SelectedCars.Remove(entry);
     }
 
-    private Task Upload() {
-      return Task.CompletedTask;
+    private void Upload() {
+      StatusBar.Instance.AddTask(new UploadTask(Server.Instance.GetServer, this));
     }
 
-    private Func<EntryInfo, bool> BuildFilter(string searchText) {
+    private Func<EntryViewModel, bool> BuildFilter(string searchText) {
       if (string.IsNullOrEmpty(searchText)) {
         return _ => true;
       }

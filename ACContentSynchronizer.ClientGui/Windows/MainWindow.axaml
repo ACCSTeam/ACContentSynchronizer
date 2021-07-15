@@ -7,7 +7,7 @@
         x:Class="ACContentSynchronizer.ClientGui.Windows.MainWindow"
         Icon="\Assets\ac-icon.ico"
         Title="Content Synchronizer"
-        TransparencyLevelHint="AcrylicBlur"
+        TransparencyLevelHint="Transparent"
         Height="768"
         Width="1024"
         MinHeight="600"

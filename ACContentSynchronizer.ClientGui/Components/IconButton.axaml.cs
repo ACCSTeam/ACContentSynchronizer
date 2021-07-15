@@ -69,6 +69,9 @@ namespace ACContentSynchronizer.ClientGui.Components {
         o => o.IconStyle,
         (o, v) => o.IconStyle = v);
 
+    public static readonly RoutedEvent<RoutedEventArgs> ClickEvent =
+      RoutedEvent.Register<IconButton, RoutedEventArgs>(nameof(Click), RoutingStrategies.Bubble);
+
     private ICommand? _command;
 
     private MaterialIconKind? _icon;
@@ -143,11 +146,7 @@ namespace ACContentSynchronizer.ClientGui.Components {
       set => SetAndRaise(IconStyleProperty, ref _iconStyle, value);
     }
 
-    public static readonly RoutedEvent<RoutedEventArgs> ClickEvent =
-      RoutedEvent.Register<IconButton, RoutedEventArgs>(nameof(Click), RoutingStrategies.Bubble);
-
-    public event EventHandler<RoutedEventArgs> Click
-    {
+    public event EventHandler<RoutedEventArgs> Click {
       add => AddHandler(ClickEvent, value);
       remove => RemoveHandler(ClickEvent, value);
     }

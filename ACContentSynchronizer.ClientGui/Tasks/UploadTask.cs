@@ -26,15 +26,21 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
           await settings.SaveAsync();
 
           var manifest = new Manifest {
-            Cars = _content.SelectedCars.Select(x => new EntryManifest(x.Path, DirectoryUtils.Size(x.Path))).ToList(),
+            Cars = _content.SelectedCars.Select(x => new EntryManifest(x.Path, DirectoryUtils.Size(x.Path),
+              x.SelectedVariation
+              ?? x.Variations.FirstOrDefault())).ToList(),
           };
 
           if (_content.SelectedTrack != null) {
-            manifest.Track = new(_content.SelectedTrack.Path, DirectoryUtils.Size(_content.SelectedTrack.Path));
+            manifest.Track = new(_content.SelectedTrack.Path,
+              DirectoryUtils.Size(_content.SelectedTrack.Path),
+              _content.SelectedTrack.SelectedVariation);
           }
 
+          State = "Content comparing";
           var comparedManifest = await dataReceiver.GetUpdateManifest(manifest);
           if (comparedManifest != null) {
+            State = "Pack content...";
             dataReceiver.OnPack += Pack;
 
             if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
@@ -46,7 +52,7 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
             State = "Server refreshed";
           }
         } catch (Exception e) {
-          State = e.ToString();
+          State = $"ERROR: {e.Message}";
         }
       });
     }

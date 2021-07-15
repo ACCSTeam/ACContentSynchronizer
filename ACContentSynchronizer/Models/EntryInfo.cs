@@ -12,6 +12,11 @@ namespace ACContentSynchronizer.Models {
       Path = path;
     }
 
+    public EntryInfo(string path, string? variation) {
+      Path = path;
+      SelectedVariation = variation;
+    }
+
     public EntryInfo(string path, string name, List<string> variations) {
       Path = path;
       Name = name;

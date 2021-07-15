@@ -42,7 +42,7 @@
                      Items="{Binding SelectedCars}">
               <ListBox.ItemTemplate>
                 <DataTemplate>
-                  <Grid ColumnDefinitions="300,Auto,Auto">
+                  <Grid ColumnDefinitions="*,Auto,Auto">
                     <TextBlock Grid.Column="0"
                                Text="{Binding Name}" />
                     <ComboBox Grid.Column="1"
@@ -63,7 +63,8 @@
         <TabItem Header="Tracks">
           <StackPanel Spacing="10">
             <TextBox Text="{Binding TrackSearch}" />
-            <ListBox Items="{Binding Tracks}">
+            <ListBox Items="{Binding Tracks}"
+                     SelectedItem="{Binding SelectedTrack}">
               <ListBox.ItemTemplate>
                 <DataTemplate>
                   <StackPanel Orientation="Horizontal"
@@ -87,8 +88,8 @@
                              Command="{Binding Upload}" />
     </Grid>
     <Popup Name="AddPopup"
-           PlacementMode="Pointer"
-           MaxHeight="600"
+           PlacementMode="AnchorAndGravity"
+           MaxHeight="500"
            IsLightDismissEnabled="True">
       <Border BorderThickness="10"
               BorderBrush="{StaticResource UiGrayLight}">

@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
+using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace ACContentSynchronizer {
       var path = Path.Combine(gamePath, Constants.ContentFolder);
       var pathsOfCars = Directory.GetDirectories(Path.Combine(path, Constants.CarsFolder));
       var pathsOfTracks = Directory.GetDirectories(Path.Combine(path, Constants.TracksFolder));
-      var trackPath = pathsOfTracks.FirstOrDefault(x => new DirectoryInfo(x).Name == trackName);
+      var trackPath = pathsOfTracks.FirstOrDefault(x => DirectoryUtils.Name(x) == trackName);
 
       var manifest = new Manifest {
         Cars = pathsOfCars.Where(carPath => carsName.Contains(new DirectoryInfo(carPath).Name))
@@ -36,7 +37,9 @@ namespace ACContentSynchronizer {
 
       var (carsPath, tracksPath) = GetContentHierarchy(gamePath);
 
-      var cars = manifest.Cars.Where(entry => EntryNeedUpdate(entry, carsPath));
+      var cars = manifest.Cars.DistinctBy(x => x.Name)
+        .Where(entry => EntryNeedUpdate(entry, carsPath));
+
       var tracksNeedUpdate = EntryNeedUpdate(manifest.Track, tracksPath);
       var comparedManifest = new Manifest {
         Cars = cars.ToList(),
@@ -55,7 +58,7 @@ namespace ACContentSynchronizer {
       }
 
       var localEntry = Directory.GetDirectories(carsPath)
-        .FirstOrDefault(dir => new DirectoryInfo(dir).Name == entry.Name);
+        .FirstOrDefault(dir => DirectoryUtils.Name(dir) == entry.Name);
 
       if (string.IsNullOrEmpty(localEntry)) {
         return true;
@@ -72,10 +75,10 @@ namespace ACContentSynchronizer {
       var pathsOfCars = Directory.GetDirectories(Path.Combine(path, Constants.CarsFolder))
         .Where(dir => manifest.Cars
           .Select(x => x.Name)
-          .Contains(new DirectoryInfo(dir).Name));
+          .Contains(DirectoryUtils.Name(dir)));
 
       var trackPath = Directory.GetDirectories(Path.Combine(path, Constants.TracksFolder))
-        .FirstOrDefault(dir => manifest.Track?.Name == new DirectoryInfo(dir).Name);
+        .FirstOrDefault(dir => manifest.Track?.Name == DirectoryUtils.Name(dir));
 
       foreach (var carPath in pathsOfCars) {
         availableContent.Cars.Add(new(carPath));
@@ -94,11 +97,11 @@ namespace ACContentSynchronizer {
       return (
         Directory.GetDirectories(Path
             .Combine(path, Constants.CarsFolder))
-          .Select(dir => new DirectoryInfo(dir).Name)
+          .Select(DirectoryUtils.Name)
           .ToArray(),
         Directory.GetDirectories(Path
             .Combine(path, Constants.TracksFolder))
-          .Select(dir => new DirectoryInfo(dir).Name)
+          .Select(DirectoryUtils.Name)
           .ToArray()
       );
     }
@@ -130,7 +133,7 @@ namespace ACContentSynchronizer {
       var content = GetContentHierarchy(gamePath);
 
       foreach (var car in downloadedCars) {
-        var carName = new DirectoryInfo(car).Name;
+        var carName = DirectoryUtils.Name(car);
         if (string.IsNullOrEmpty(carName)) {
           continue;
         }
@@ -142,7 +145,7 @@ namespace ACContentSynchronizer {
       }
 
       if (!string.IsNullOrEmpty(downloadedTrack)) {
-        var trackName = new DirectoryInfo(downloadedTrack).Name;
+        var trackName = DirectoryUtils.Name(downloadedTrack);
         var contentTrackPath = Path.Combine(content.TracksPath, trackName);
 
         if (Directory.Exists(downloadedTrack)) {
@@ -183,7 +186,7 @@ namespace ACContentSynchronizer {
         return entry;
       }
 
-      var carDataPath = Path.Combine(carDirectory, "ui", "ui_car.json");
+      var carDataPath = Path.Combine(carDirectory, Constants.UiFolder, Constants.UiCar);
       if (!File.Exists(carDataPath)) {
         return entry;
       }
@@ -206,17 +209,17 @@ namespace ACContentSynchronizer {
       }
 
       return Directory.GetDirectories(skinsDirectory)
-        .Select(x => new DirectoryInfo(x).Name)
+        .Select(DirectoryUtils.Name)
         .ToList();
     }
 
     public static string? GetCarDirectory(string entry, string gamePath) {
       var carsFolder = Path.Combine(gamePath, Constants.ContentFolder, Constants.CarsFolder);
       var directories = Directory.GetDirectories(carsFolder);
-      return directories.FirstOrDefault(x => new DirectoryInfo(x).Name == entry);
+      return directories.FirstOrDefault(x => DirectoryUtils.Name(x) == entry);
     }
 
-    public static List<string> GetTrackName(string entry, string gamePath) {
+    public static List<TrackName> GetTrackName(string entry, string gamePath) {
       var data = "ui_track.json";
       var variations = GetTrackDirectories(entry, gamePath);
 
@@ -227,12 +230,22 @@ namespace ACContentSynchronizer {
       return variations.Select(x => {
         var variation = Path.Combine(x, data);
         var json = File.ReadAllText(variation);
-        return TrackInfo.FromJson(json)?.Name ?? DirectoryUtils.Name(x);
+
+        var baseName = DirectoryUtils.Name(x);
+        if (baseName == Constants.UiFolder) {
+          baseName = DirectoryUtils.Name(entry);
+        }
+
+        var name = TrackInfo.FromJson(json)?.Name ?? baseName;
+
+        return new TrackName {
+          Name = name,
+          BaseName = baseName,
+        };
       }).ToList();
     }
 
     public static List<string> GetTrackDirectories(string entry, string gamePath) {
-      var (ui, data) = ("ui", "ui_track.json");
       var trackName = entry.Split('-');
 
       if (trackName.Length > 0) {
@@ -240,8 +253,8 @@ namespace ACContentSynchronizer {
         var trackDirectory = Path.Combine(tracksFolder, trackName[0]);
         if (Directory.Exists(trackDirectory)) {
           return trackName.Length > 1
-            ? new() { Path.Combine(trackDirectory, ui, trackName[1], data) }
-            : GetFirst(trackDirectory, ui, data);
+            ? new() { Path.Combine(trackDirectory, Constants.UiFolder, trackName[1], Constants.UiTrack) }
+            : GetFirst(trackDirectory, Constants.UiFolder, Constants.UiTrack);
         }
       }
 

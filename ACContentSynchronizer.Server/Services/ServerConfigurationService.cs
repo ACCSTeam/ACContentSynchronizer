@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
 using ACContentSynchronizer.Server.Hubs;
 using Microsoft.AspNetCore.Http;
@@ -88,27 +89,30 @@ namespace ACContentSynchronizer.Server.Services {
           var trackPath = Path.Combine(contentPath, Constants.TracksFolder, manifest.Track.Name, "ui");
           var variants = Directory.GetDirectories(trackPath);
 
-          if (variants.Any()) {
-            serverConfig["SERVER"]["CONFIG_TRACK"] = new DirectoryInfo(variants.First()).Name;
+          if (variants.Any() || !string.IsNullOrEmpty(manifest.Track.SelectedVariation)) {
+            serverConfig["SERVER"]["CONFIG_TRACK"] = manifest.Track.SelectedVariation
+                                                     ?? DirectoryUtils.Name(variants.First());
           }
         }
 
         if (manifest.Cars.Any()) {
-          serverConfig["SERVER"]["CARS"] = string.Join(';', manifest.Cars.Select(x => x.Name));
+          serverConfig["SERVER"]["CARS"] = string.Join(';', manifest.Cars
+            .DistinctBy(x => x.Name)
+            .Select(x => x.Name));
 
           for (var i = 0; i < manifest.Cars.Count; i++) {
             var car = manifest.Cars[i];
             var carPath = Path.Combine(contentPath, Constants.CarsFolder, car.Name, "skins");
             var skins = Directory.GetDirectories(carPath);
 
-            if (!skins.Any()) {
+            if (!skins.Any() && string.IsNullOrEmpty(car.SelectedVariation)) {
               continue;
             }
 
             entryList.Add(
               $"CAR_{i}", new() {
                 { "MODEL", car.Name },
-                { "SKIN", new DirectoryInfo(skins.First()).Name },
+                { "SKIN", car.SelectedVariation ?? DirectoryUtils.Name(skins.First()) },
                 { "SPECTATOR_MODE", "0" },
                 { "DRIVERNAME", "" },
                 { "TEAM", "" },

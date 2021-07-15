@@ -75,7 +75,7 @@ namespace ACContentSynchronizer.Models {
       foreach (var file in files) {
         try {
           Canceller.Token.ThrowIfCancellationRequested();
-          var entry = archive.CreateEntry(Path.Combine(type, file.FullName.Replace(path + @"\", "")));
+          var entry = archive.CreateEntry(Path.Combine(type, file.FullName.Replace(path + Path.DirectorySeparatorChar, "")));
           var entryStream = entry.Open();
 
           await GrantAccess(async () => {

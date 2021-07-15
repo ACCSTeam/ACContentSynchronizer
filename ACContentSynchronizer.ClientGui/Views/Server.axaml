@@ -43,17 +43,18 @@
                       HorizontalAlignment="Right">
             <Button Classes="AccentButton"
                     Content="Join"
-                    Command="{Binding Join}"/>
+                    Command="{Binding Join}" />
             <Button Classes="AccentButton"
                     Content="Refresh"
-                    Command="{Binding Refresh}"/>
+                    Command="{Binding Refresh}" />
             <Button Classes="AccentButton"
                     Content="Update content"
                     Command="{Binding ValidateContent}" />
           </StackPanel>
-        </Grid></TabItem>
+        </Grid>
+      </TabItem>
       <TabItem Header="Upload">
-        <views:Upload/>
+        <views:Upload />
       </TabItem>
     </TabControl>
   </Panel>
