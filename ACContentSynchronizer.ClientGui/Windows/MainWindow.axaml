@@ -13,9 +13,8 @@
         MinHeight="600"
         MinWidth="800"
         Background="{StaticResource UiColorTransparent}"
-        ExtendClientAreaToDecorationsHint="False"
-        SystemDecorations="Full">
+        SystemDecorations="None">
 
-  <views:Layout />
+  <views:Layout Name="Layout"/>
 
 </Window>

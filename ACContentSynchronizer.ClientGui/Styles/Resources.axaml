@@ -11,10 +11,6 @@
     <Setter Property="FontFamily" Value="resm:Assets.Fonts.Roboto.*.ttf" />
   </Style>
 
-  <Style Selector="Window[WindowState=Maximized]">
-    <Setter Property="Padding" Value="8" />
-  </Style>
-
   <Style Selector="Button">
     <Setter Property="Padding" Value="20 10" />
   </Style>

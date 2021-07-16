@@ -14,7 +14,11 @@
 
       <Grid RowDefinitions="30,*, 30">
         <Panel Grid.Row="0">
-          <CaptionButtons HorizontalAlignment="Right" />
+          <Panel PointerPressed="DragWindow">
+            <Border Background="Transparent" />
+          </Panel>
+          <CaptionButtons Name="CaptionButtons"
+                          HorizontalAlignment="Right" />
         </Panel>
         <Carousel Grid.Row="1"
                   Name="Carousel">

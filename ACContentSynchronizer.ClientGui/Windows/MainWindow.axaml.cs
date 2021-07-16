@@ -1,3 +1,4 @@
+using ACContentSynchronizer.ClientGui.Views;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -19,6 +20,8 @@ namespace ACContentSynchronizer.ClientGui.Windows {
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
+
+      this.FindControl<Layout>("Layout").Attach(this);
     }
   }
 }
