@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.InteropServices;
 using ACContentSynchronizer.ClientGui.Views;
 using Avalonia;
@@ -14,16 +13,13 @@ namespace ACContentSynchronizer.ClientGui.Windows {
 #if DEBUG
       this.AttachDevTools();
 #endif
-
-      _instance ??= this;
     }
 
     public static MainWindow Instance => _instance ??= new();
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
-
-      this.FindControl<Layout>("Layout").Attach(this);
+      Layout.Instance.Attach(this);
 
       TransparencyLevelHint = RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
         ? WindowTransparencyLevel.Transparent

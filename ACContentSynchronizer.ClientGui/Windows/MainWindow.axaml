@@ -15,6 +15,6 @@
         Background="{StaticResource UiColorTransparent}"
         SystemDecorations="None">
 
-  <views:Layout Name="Layout"/>
+  <ContentPresenter Content="{x:Static views:Layout.Instance}" />
 
 </Window>

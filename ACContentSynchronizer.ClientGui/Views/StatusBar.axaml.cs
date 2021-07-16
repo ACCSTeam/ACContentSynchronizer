@@ -12,8 +12,6 @@ namespace ACContentSynchronizer.ClientGui.Views {
     public StatusBar() {
       DataContext = _vm = new();
       InitializeComponent();
-
-      _instance = this;
     }
 
     public static StatusBar Instance => _instance ??= new();

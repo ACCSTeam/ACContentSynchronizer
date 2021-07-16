@@ -8,11 +8,11 @@ using Avalonia.Markup.Xaml;
 namespace ACContentSynchronizer.ClientGui.Views {
   public class Layout : UserControl {
     private static Layout? _instance;
+    private readonly LayoutViewModel _vm;
 
     public Layout() {
+      DataContext = _vm = new();
       InitializeComponent();
-
-      _instance = this;
     }
 
     public static Layout Instance => _instance ??= new();
@@ -26,8 +26,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public void SelectServer(ServerEntry serverEntry) {
-      var carousel = this.FindControl<Carousel>("Carousel");
-      carousel.SelectedIndex = 1;
+      _vm.ServerSelected = true;
       Server.Instance.SetServer(serverEntry);
     }
 

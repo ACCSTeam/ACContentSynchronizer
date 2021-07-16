@@ -6,8 +6,13 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Layout">
 
+  <Design.DataContext>
+    <views:LayoutViewModel />
+  </Design.DataContext>
+
   <Grid ColumnDefinitions="Auto,*">
-    <views:Sidebar Grid.Column="0" />
+    <ContentPresenter Grid.Column="0"
+                      Content="{x:Static views:Sidebar.Instance}" />
     <Panel Grid.Column="1">
       <Panel IsHitTestVisible="False"
              Background="{StaticResource UiColorTransparentDark}" />
@@ -20,11 +25,12 @@
           <CaptionButtons Name="CaptionButtons"
                           HorizontalAlignment="Right" />
         </Panel>
-        <Carousel Grid.Row="1"
-                  Name="Carousel">
-          <views:Main />
-          <views:Server />
-        </Carousel>
+        <Panel Grid.Row="1">
+          <ContentPresenter Content="{x:Static views:Main.Instance}"
+                            IsVisible="{Binding !ServerSelected}" />
+          <ContentPresenter Content="{x:Static views:Server.Instance}"
+                            IsVisible="{Binding ServerSelected}" />
+        </Panel>
         <ContentPresenter Grid.Row="2"
                           Content="{x:Static views:StatusBar.Instance}" />
       </Grid>

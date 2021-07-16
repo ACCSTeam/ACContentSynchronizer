@@ -15,7 +15,6 @@ namespace ACContentSynchronizer.ClientGui.Views {
     public Server() {
       DataContext = _vm = new();
       InitializeComponent();
-      _instance = this;
     }
 
     public static Server Instance => _instance ??= new();

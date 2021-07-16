@@ -11,10 +11,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     public Sidebar() {
       DataContext = _vm = new();
-
       InitializeComponent();
-
-      _instance = this;
     }
 
     public static Sidebar Instance => _instance ??= new();

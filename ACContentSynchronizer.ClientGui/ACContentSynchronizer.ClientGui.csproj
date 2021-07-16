@@ -63,6 +63,9 @@
         <Compile Update="Views\UploadViewModel.cs">
           <DependentUpon>Upload.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Views\LayoutViewModel.cs">
+          <DependentUpon>Layout.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\ACContentSynchronizer\ACContentSynchronizer.csproj" />
