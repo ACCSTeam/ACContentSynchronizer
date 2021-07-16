@@ -19,7 +19,8 @@
 
       <Grid RowDefinitions="30,*, 30">
         <Panel Grid.Row="0">
-          <Panel PointerPressed="DragWindow">
+          <Panel DoubleTapped="RestoreWindow"
+                 PointerMoved="DragWindow">
             <Border Background="Transparent" />
           </Panel>
           <CaptionButtons Name="CaptionButtons"

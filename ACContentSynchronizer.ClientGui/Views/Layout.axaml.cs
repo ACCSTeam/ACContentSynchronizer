@@ -1,9 +1,13 @@
+using System.Diagnostics;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Windows;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.VisualTree;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class Layout : UserControl {
@@ -30,8 +34,28 @@ namespace ACContentSynchronizer.ClientGui.Views {
       Server.Instance.SetServer(serverEntry);
     }
 
-    private void DragWindow(object? sender, PointerPressedEventArgs e) {
-      MainWindow.Instance.BeginMoveDrag(e);
+    private void RestoreWindow(object? sender, RoutedEventArgs e) {
+      MainWindow.Instance.WindowState = MainWindow.Instance.WindowState == WindowState.Maximized
+        ? WindowState.Normal
+        : WindowState.Maximized;
+    }
+
+    private void DragWindow(object? sender, PointerEventArgs e) {
+      if (sender is not IVisual visual) {
+        return;
+      }
+
+      var pointerPoint = e.GetCurrentPoint(visual);
+      if (!pointerPoint.Properties.IsLeftButtonPressed) {
+        return;
+      }
+
+      if (e.Source != null) {
+        MainWindow.Instance.BeginMoveDrag(new(e.Source, e.Pointer,
+          visual, new(),
+          e.Timestamp, pointerPoint.Properties,
+          KeyModifiers.None));
+      }
     }
   }
 }
