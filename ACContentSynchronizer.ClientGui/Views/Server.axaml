@@ -10,10 +10,7 @@
     <views:ServerViewModel />
   </Design.DataContext>
 
-  <Panel>
-    <Panel IsHitTestVisible="False"
-           Background="{StaticResource UiColorTransparentDark}" />
-    <TabControl>
+  <TabControl>
       <TabItem Header="Server">
         <Grid RowDefinitions="*,10,*,10,60"
               ColumnDefinitions="*,30,*"
@@ -57,5 +54,4 @@
         <views:Upload />
       </TabItem>
     </TabControl>
-  </Panel>
 </UserControl>
