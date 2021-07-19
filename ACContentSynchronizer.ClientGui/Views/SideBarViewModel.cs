@@ -16,7 +16,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     private object _newContent = "Add new";
 
-    private ServerEntry _selectedServer = new();
+    private ServerEntry? _selectedServer;
 
     private object _settingsContent = "Settings";
 
@@ -66,10 +66,13 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     public AvaloniaList<ServerEntry> Servers { get; set; }
 
-    public ServerEntry SelectedServer {
+    public ServerEntry? SelectedServer {
       get => _selectedServer;
       set {
-        Layout.Instance.SelectServer(value);
+        if (value != null) {
+          Layout.Instance.SelectServer(value);
+        }
+
         this.RaiseAndSetIfChanged(ref _selectedServer, value);
       }
     }

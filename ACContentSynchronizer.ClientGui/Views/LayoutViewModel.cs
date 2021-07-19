@@ -9,5 +9,10 @@ namespace ACContentSynchronizer.ClientGui.Views {
       get => _serverSelected;
       set => this.RaiseAndSetIfChanged(ref _serverSelected, value);
     }
+
+    public void GoBack() {
+      ServerSelected = false;
+      Sidebar.Instance.UnsetServer();
+    }
   }
 }

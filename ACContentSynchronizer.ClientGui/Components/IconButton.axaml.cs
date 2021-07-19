@@ -69,7 +69,7 @@ namespace ACContentSynchronizer.ClientGui.Components {
         o => o.IconStyle,
         (o, v) => o.IconStyle = v);
 
-    public static readonly RoutedEvent<RoutedEventArgs> ClickEvent =
+    private static readonly RoutedEvent<RoutedEventArgs> ClickEvent =
       RoutedEvent.Register<IconButton, RoutedEventArgs>(nameof(Click), RoutingStrategies.Bubble);
 
     private ICommand? _command;

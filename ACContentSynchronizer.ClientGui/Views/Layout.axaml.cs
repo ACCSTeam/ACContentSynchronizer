@@ -1,7 +1,5 @@
-using System.Diagnostics;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Windows;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
 using Avalonia.Input;

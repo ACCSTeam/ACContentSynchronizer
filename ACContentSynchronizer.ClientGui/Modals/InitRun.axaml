@@ -48,7 +48,13 @@
       <StackPanel MaxWidth="600" Classes="FilePickerWrapper">
         <Label>Steam profile</Label>
         <ComboBox Items="{Binding Profiles}"
-                  SelectedItem="{Binding SteamId}" />
+                  SelectedItem="{Binding Profile}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding DisplayName}" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
       </StackPanel>
 
       <Button Classes="AccentButton"

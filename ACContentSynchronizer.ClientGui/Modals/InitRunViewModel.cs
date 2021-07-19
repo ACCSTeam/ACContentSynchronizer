@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.ClientGui.Windows;
@@ -12,14 +13,17 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 
     private string _playerName = "Player";
 
-    private long _steamId;
+    private SteamProfile? _profile;
+
+    private AvaloniaList<SteamProfile> _profiles = new();
 
     public InitRunViewModel(InitRun instance) {
+      Instance = instance;
       var settings = Settings.Instance;
       Path = settings.GamePath;
       PlayerName = settings.PlayerName;
-      SteamId = settings.SteamId;
-      Instance = instance;
+      Profiles = new(SteamIdHelper.FindUsers());
+      Profile = Profiles.FirstOrDefault(x => x.SteamId == settings.SteamId);
     }
 
     public string Path {
@@ -32,14 +36,15 @@ namespace ACContentSynchronizer.ClientGui.Modals {
       set => this.RaiseAndSetIfChanged(ref _playerName, value);
     }
 
-    public long SteamId {
-      get => _steamId;
-      set => this.RaiseAndSetIfChanged(ref _steamId, value);
+    public SteamProfile? Profile {
+      get => _profile;
+      set => this.RaiseAndSetIfChanged(ref _profile, value);
     }
 
-    public AvaloniaList<long> Profiles { get; set; } = new() {
-      76561198142095501,
-    };
+    public AvaloniaList<SteamProfile> Profiles {
+      get => _profiles;
+      set => this.RaiseAndSetIfChanged(ref _profiles, value);
+    }
 
     public async Task GetPath() {
       var path = await new OpenFolderDialog().ShowAsync(MainWindow.Instance);
@@ -53,7 +58,7 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 
       settings.GamePath = Path;
       settings.PlayerName = PlayerName;
-      settings.SteamId = SteamId;
+      settings.SteamId = Profile?.SteamId ?? default;
 
       await settings.SaveAsync();
       Close();

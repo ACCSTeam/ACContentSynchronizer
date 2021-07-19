@@ -19,7 +19,7 @@ namespace ACContentSynchronizer.ClientGui {
       var settings = Settings.Instance;
       if (string.IsNullOrEmpty(settings.GamePath)
           || string.IsNullOrEmpty(settings.PlayerName)
-          || settings.SteamId == 0) {
+          || settings.SteamId == default) {
         Modal.Open<InitRun>().ConfigureAwait(false);
       }
 

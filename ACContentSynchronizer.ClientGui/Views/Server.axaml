@@ -11,47 +11,52 @@
   </Design.DataContext>
 
   <TabControl>
-      <TabItem Header="Server">
-        <Grid RowDefinitions="*,10,*,10,60"
-              ColumnDefinitions="*,30,*"
-              Margin="20,50,20,20">
-          <ListBox Grid.Row="0"
-                   Grid.Column="0"
-                   Items="{Binding Cars}"
-                   SelectedItem="{Binding SelectedCar}">
-            <ListBox.ItemTemplate>
-              <DataTemplate>
-                <TextBlock Text="{Binding Name}"
+    <TabItem Header="Server">
+      <Grid RowDefinitions="*,10,*,10,60"
+            ColumnDefinitions="*,30,*"
+            Margin="20,50,20,20">
+        <ListBox Grid.Row="0"
+                 Grid.Column="0"
+                 SelectionChanged="UpdateCars"
+                 Items="{Binding Cars}"
+                 SelectedItem="{Binding SelectedCar}">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <Grid ColumnDefinitions="*,60">
+                <TextBlock Grid.Column="0"
+                           Text="{Binding Name}"
                            IsEnabled="{Binding IsEnabled}" />
-              </DataTemplate>
-            </ListBox.ItemTemplate>
-          </ListBox>
-          <Image Grid.Row="0"
-                 Grid.Column="2"
-                 Source="{Binding SelectedCar.Preview}" />
-          <Image Grid.Row="2"
-                 Grid.Column="2"
-                 Source="{Binding Track.Preview}" />
-          <StackPanel Grid.Row="4"
-                      Grid.Column="0"
-                      Grid.ColumnSpan="3"
-                      Orientation="Horizontal"
-                      Spacing="10"
-                      HorizontalAlignment="Right">
-            <Button Classes="AccentButton"
-                    Content="Join"
-                    Command="{Binding Join}" />
-            <Button Classes="AccentButton"
-                    Content="Refresh"
-                    Command="{Binding Refresh}" />
-            <Button Classes="AccentButton"
-                    Content="Update content"
-                    Command="{Binding ValidateContent}" />
-          </StackPanel>
-        </Grid>
-      </TabItem>
-      <TabItem Header="Upload">
-        <views:Upload />
-      </TabItem>
-    </TabControl>
+                <TextBlock Grid.Column="1" Text="{Binding Used}" />
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+        <Image Grid.Row="0"
+               Grid.Column="2"
+               Source="{Binding SelectedCar.Preview}" />
+        <Image Grid.Row="2"
+               Grid.Column="2"
+               Source="{Binding Track.Preview}" />
+        <StackPanel Grid.Row="4"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Orientation="Horizontal"
+                    Spacing="10"
+                    HorizontalAlignment="Right">
+          <Button Classes="AccentButton"
+                  Content="Join"
+                  Command="{Binding Join}" />
+          <Button Classes="AccentButton"
+                  Content="Refresh"
+                  Command="{Binding Refresh}" />
+          <Button Classes="AccentButton"
+                  Content="Update content"
+                  Command="{Binding ValidateContent}" />
+        </StackPanel>
+      </Grid>
+    </TabItem>
+    <TabItem Header="Upload">
+      <views:Upload />
+    </TabItem>
+  </TabControl>
 </UserControl>

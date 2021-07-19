@@ -15,7 +15,7 @@ namespace ACContentSynchronizer.ClientGui.Models {
 
     private Bitmap? _preview;
 
-    private int _used;
+    private string _used = "0";
 
     public string Name {
       get => _name;
@@ -37,8 +37,8 @@ namespace ACContentSynchronizer.ClientGui.Models {
       set => this.RaiseAndSetIfChanged(ref _count, value);
     }
 
-    public int Used {
-      get => _used;
+    public string Used {
+      get => $"[{_used}/{Count}]";
       set => this.RaiseAndSetIfChanged(ref _used, value);
     }
 

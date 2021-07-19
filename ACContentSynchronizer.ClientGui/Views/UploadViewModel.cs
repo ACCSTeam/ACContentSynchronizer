@@ -13,7 +13,7 @@ using DynamicData;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views {
-  public class UploadViewModel : ViewModelBase {
+  public class UploadViewModel : ViewModelBase, IDisposable {
     private ReadOnlyObservableCollection<EntryViewModel> _cars;
 
     private string _carSearch = "";
@@ -77,6 +77,11 @@ namespace ACContentSynchronizer.ClientGui.Views {
     public string TrackSearch {
       get => _trackSearch;
       set => this.RaiseAndSetIfChanged(ref _trackSearch, value);
+    }
+
+    public void Dispose() {
+      AvailableCars.Dispose();
+      AvailableTracks.Dispose();
     }
 
     private Task Load() {

@@ -34,5 +34,9 @@ namespace ACContentSynchronizer.ClientGui.Views {
         _vm.Servers.Add(server);
       }
     }
+
+    public void UnsetServer() {
+      _vm.SelectedServer = null;
+    }
   }
 }

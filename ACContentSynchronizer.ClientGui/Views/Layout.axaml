@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Layout">
 
@@ -23,6 +24,12 @@
                  PointerMoved="DragWindow">
             <Border Background="Transparent" />
           </Panel>
+          <components:IconButton
+            Icon="ArrowBack"
+            Style="TransparentButton ListButton"
+            HorizontalAlignment="Left"
+            IsEnabled="{Binding ServerSelected}"
+            Command="{Binding GoBack}"/>
           <CaptionButtons Name="CaptionButtons"
                           HorizontalAlignment="Right" />
         </Panel>

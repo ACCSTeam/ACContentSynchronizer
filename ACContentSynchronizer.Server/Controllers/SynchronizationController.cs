@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -130,8 +131,13 @@ namespace ACContentSynchronizer.Server.Controllers {
     }
 
     [HttpGet("getServerInfo")]
-    public Task<string> GetServerInfo() {
+    public Dictionary<string, Dictionary<string, string>>? GetServerInfo() {
       return _serverConfiguration.GetServerInfo();
+    }
+
+    [HttpGet("getCarsUpdate")]
+    public IEnumerable<CarsUpdate>? GetCarsUpdate() {
+      return _serverConfiguration.GetCarsUpdate();
     }
   }
 }

@@ -169,9 +169,28 @@ namespace ACContentSynchronizer.Server.Services {
       });
     }
 
-    public Task<string> GetServerInfo() {
-      var client = GetServerClient();
-      return client.GetStringAsync("/INFO");
+    public Dictionary<string, Dictionary<string, string>>? GetServerInfo() {
+      var presetPath = GetServerPath();
+
+      return !string.IsNullOrEmpty(presetPath)
+        ? GetServerConfig(presetPath)
+        : null;
+    }
+
+    public IEnumerable<CarsUpdate>? GetCarsUpdate() {
+      var presetPath = GetServerPath();
+
+      if (string.IsNullOrEmpty(presetPath)) {
+        return null;
+      }
+
+      var serverConfig = GetServerConfig(presetPath);
+
+      return serverConfig["SERVER"]["CARS"].Split(";").Select(x => new CarsUpdate {
+        Name = x,
+        Used = "3",
+        Count = 10,
+      });
     }
 
     private async Task<bool> ServerNotIsEmpty() {

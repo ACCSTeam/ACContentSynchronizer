@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Models;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ACContentSynchronizer.ClientGui {
   public class DataReceiver : IDisposable {
@@ -94,13 +96,18 @@ namespace ACContentSynchronizer.ClientGui {
       await Client.PostAsJsonAsync($"refreshServer?adminPassword={adminPassword}", manifest);
     }
 
-    public async Task<ServerInfo?> GetServerInfo() {
+    public async Task<Dictionary<string, Dictionary<string, string>>?> GetServerInfo() {
       var json = await Client.GetStringAsync("getServerInfo");
-      return JsonSerializer.Deserialize<ServerInfo>(json, ContentUtils.JsonSerializerOptions);
+      return JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>?>(json);
     }
 
     public Task<string> GetServerName() {
       return Client.GetStringAsync("getServerName");
+    }
+
+    public async Task<List<CarsUpdate>?> GetCarsUpdate() {
+      var json = await Client.GetStringAsync("getCarsUpdate");
+      return JsonConvert.DeserializeObject<List<CarsUpdate>?>(json);
     }
   }
 }
