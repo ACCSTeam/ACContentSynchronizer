@@ -103,7 +103,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
       var tracks = Directory.GetDirectories(tracksDirectory)
         .SelectMany(x => ContentUtils.GetTrackName(x, settings.GamePath)
-          .Select(v => new EntryViewModel(x, v.Name, v.BaseName)));
+          .Select(v => new EntryViewModel(x, v.Name, v.Variation)));
 
       AvailableTracks.AddRange(tracks);
 

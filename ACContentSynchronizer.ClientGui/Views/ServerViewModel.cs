@@ -129,7 +129,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     public async Task UpdateCars() {
       var dataReceiver = new DataReceiver(ServerEntry.Http);
-      var carsUpdate = await dataReceiver.GetCarsUpdate();
+      var carsUpdate = await dataReceiver.GetCarsUpdate(Settings.Instance.SteamId);
 
       if (carsUpdate != null) {
         foreach (var update in carsUpdate) {
@@ -140,7 +140,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
           }
 
           car.Count = update.Count;
-          car.Used = update.Used;
+          car.Used = update.Used.ToString();
         }
       }
     }

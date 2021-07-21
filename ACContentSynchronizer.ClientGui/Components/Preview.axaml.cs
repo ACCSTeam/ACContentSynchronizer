@@ -8,19 +8,22 @@ using SkiaSharp;
 
 namespace ACContentSynchronizer.ClientGui.Components {
   public class Preview : UserControl {
-    public Preview() {
-      InitializeComponent();
-    }
-
-    private void InitializeComponent() {
-      AvaloniaXamlLoader.Load(this);
-    }
-
     public static readonly DirectProperty<Preview, Bitmap?> SourceProperty =
       AvaloniaProperty.RegisterDirect<Preview, Bitmap?>(
         nameof(Source),
         o => o.Source,
         (o, v) => o.Source = v);
+
+    public static readonly DirectProperty<Preview, Bitmap?> BlurredProperty =
+      AvaloniaProperty.RegisterDirect<Preview, Bitmap?>(
+        nameof(Blurred),
+        o => o.Blurred);
+
+    private Bitmap? _source;
+
+    public Preview() {
+      InitializeComponent();
+    }
 
     public Bitmap? Source {
       get => _source;
@@ -29,13 +32,6 @@ namespace ACContentSynchronizer.ClientGui.Components {
         RaisePropertyChanged(BlurredProperty, Optional<Bitmap?>.Empty, BindingValue<Bitmap?>.Unset);
       }
     }
-
-    private Bitmap? _source;
-
-    public static readonly DirectProperty<Preview, Bitmap?> BlurredProperty =
-      AvaloniaProperty.RegisterDirect<Preview, Bitmap?>(
-        nameof(Blurred),
-        o => o.Blurred);
 
     public Bitmap? Blurred {
       get {
@@ -57,14 +53,18 @@ namespace ACContentSynchronizer.ClientGui.Components {
         var clip = SKRectI.Create(width, height);
 
         var rect = SKRectI.Create(blurOffsetX, blurOffsetY,
-          width - (blurOffsetX * 2),
-          height - (blurOffsetY * 2));
+          width - blurOffsetX * 2,
+          height - blurOffsetY * 2);
 
         var blurredImage = image.ApplyImageFilter(filter, clip, rect,
           out _, out SKPoint _);
 
         return new(blurredImage.Encode(SKEncodedImageFormat.Jpeg, 100).AsStream());
       }
+    }
+
+    private void InitializeComponent() {
+      AvaloniaXamlLoader.Load(this);
     }
   }
 }

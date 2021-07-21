@@ -136,8 +136,8 @@ namespace ACContentSynchronizer.Server.Controllers {
     }
 
     [HttpGet("getCarsUpdate")]
-    public IEnumerable<CarsUpdate>? GetCarsUpdate() {
-      return _serverConfiguration.GetCarsUpdate();
+    public Task<IEnumerable<CarsUpdate>?> GetCarsUpdate(string steamId) {
+      return _serverConfiguration.GetCarsUpdate(steamId);
     }
   }
 }

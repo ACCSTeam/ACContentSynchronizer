@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
@@ -177,27 +176,31 @@ namespace ACContentSynchronizer.Server.Services {
         : null;
     }
 
-    public IEnumerable<CarsUpdate>? GetCarsUpdate() {
+    public async Task<IEnumerable<CarsUpdate>?> GetCarsUpdate(string steamId) {
       var presetPath = GetServerPath();
 
       if (string.IsNullOrEmpty(presetPath)) {
         return null;
       }
 
-      var serverConfig = GetServerConfig(presetPath);
+      var serverConfig = GetEntriesConfig(presetPath);
+      var cars = serverConfig.GroupBy(x => x.Value["MODEL"]);
+      var client = GetServerClient();
+      var state = await client.GetJson<ServerState>($"JSON|{steamId}");
+      var stateCars = state.Cars.GroupBy(x => x.Model);
 
-      return serverConfig["SERVER"]["CARS"].Split(";").Select(x => new CarsUpdate {
-        Name = x,
-        Used = "3",
-        Count = 10,
+      return cars.Select(x => new CarsUpdate {
+        Name = x.Key,
+        Count = x.Count(),
+        Used = stateCars.Where(s => s.Key == x.Key)
+          .Sum(s => s.Count(c => !c.IsConnected)),
       });
     }
 
     private async Task<bool> ServerNotIsEmpty() {
       try {
         var client = GetServerClient();
-        var json = await client.GetStringAsync("INFO");
-        var serverInfo = JsonSerializer.Deserialize<ServerInfo>(json, ContentUtils.JsonSerializerOptions);
+        var serverInfo = await client.GetJson<ServerInfo>("INFO");
         return serverInfo is { Clients: > 0 };
       } catch {
         return false;
@@ -249,6 +252,11 @@ namespace ACContentSynchronizer.Server.Services {
       return IniToDictionary(serverCfgPath);
     }
 
+    private Dictionary<string, Dictionary<string, string>> GetEntriesConfig(string path) {
+      var serverCfgPath = Path.Combine(path, Constants.EntryList);
+      return IniToDictionary(serverCfgPath);
+    }
+
     private string? GetStringValue(string path, string section, string key) {
       try {
         var serverCfg = GetServerConfig(path);
@@ -268,7 +276,7 @@ namespace ACContentSynchronizer.Server.Services {
         : null;
     }
 
-    private Dictionary<string, Dictionary<string, string>> IniToDictionary(string path) {
+    private static Dictionary<string, Dictionary<string, string>> IniToDictionary(string path) {
       var lines = File.ReadAllLines(path).Where(line => !string.IsNullOrEmpty(line)).ToList();
       var lastIndex = 0;
       var sections = new List<int>();
@@ -302,7 +310,7 @@ namespace ACContentSynchronizer.Server.Services {
       return ini;
     }
 
-    private async Task SaveConfig(string path, string cfg, Dictionary<string, Dictionary<string, string>> data) {
+    private static async Task SaveConfig(string path, string cfg, Dictionary<string, Dictionary<string, string>> data) {
       var cfgPath = Path.Combine(path, cfg);
       var config = new StringBuilder();
 

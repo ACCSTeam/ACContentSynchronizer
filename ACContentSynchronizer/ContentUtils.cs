@@ -230,17 +230,16 @@ namespace ACContentSynchronizer {
       return variations.Select(x => {
         var variation = Path.Combine(x, data);
         var json = File.ReadAllText(variation);
-
         var baseName = DirectoryUtils.Name(x);
         if (baseName == Constants.UiFolder) {
-          baseName = DirectoryUtils.Name(entry);
+          baseName = string.Empty;
         }
 
         var name = TrackInfo.FromJson(json)?.Name ?? baseName;
 
         return new TrackName {
           Name = name,
-          BaseName = baseName,
+          Variation = baseName,
         };
       }).ToList();
     }

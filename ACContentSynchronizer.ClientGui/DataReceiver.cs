@@ -6,9 +6,8 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
-using Newtonsoft.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ACContentSynchronizer.ClientGui {
   public class DataReceiver : IDisposable {
@@ -39,19 +38,16 @@ namespace ACContentSynchronizer.ClientGui {
     public event ProgressEvent? OnProgress;
     public event CompleteEvent? OnComplete;
 
-    public async Task<Manifest?> DownloadManifest() {
-      var json = await Client.GetStringAsync("getManifest");
-      return JsonSerializer.Deserialize<Manifest>(json, ContentUtils.JsonSerializerOptions);
+    public Task<Manifest> DownloadManifest() {
+      return Client.GetJson<Manifest>("getManifest");
     }
 
     public Manifest CompareContent(string gamePath, Manifest manifest) {
       return ContentUtils.CompareContent(gamePath, manifest);
     }
 
-    public async Task<string> PrepareContent(Manifest manifest) {
-      var result = await Client.PostAsJsonAsync("prepareContent", manifest);
-      var session = await result.Content.ReadAsStringAsync();
-      return session;
+    public Task<string> PrepareContent(Manifest manifest) {
+      return Client.PostString("prepareContent", manifest);
     }
 
     public Task PackContent(string session, string clientId) {
@@ -82,10 +78,8 @@ namespace ACContentSynchronizer.ClientGui {
       ContentUtils.ApplyContent(gamePath, session);
     }
 
-    public async Task<Manifest?> GetUpdateManifest(Manifest manifest) {
-      var response = await Client.PostAsJsonAsync("getUpdateManifest", manifest);
-      var json = await response.Content.ReadAsStringAsync();
-      return JsonSerializer.Deserialize<Manifest>(json, ContentUtils.JsonSerializerOptions);
+    public Task<Manifest> GetUpdateManifest(Manifest manifest) {
+      return Client.PostJson<Manifest>("getUpdateManifest", manifest);
     }
 
     private void OnPackHandler(double progress, string entry) {
@@ -96,18 +90,16 @@ namespace ACContentSynchronizer.ClientGui {
       await Client.PostAsJsonAsync($"refreshServer?adminPassword={adminPassword}", manifest);
     }
 
-    public async Task<Dictionary<string, Dictionary<string, string>>?> GetServerInfo() {
-      var json = await Client.GetStringAsync("getServerInfo");
-      return JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>?>(json);
+    public Task<Dictionary<string, Dictionary<string, string>>> GetServerInfo() {
+      return Client.GetJson<Dictionary<string, Dictionary<string, string>>>("getServerInfo");
     }
 
     public Task<string> GetServerName() {
       return Client.GetStringAsync("getServerName");
     }
 
-    public async Task<List<CarsUpdate>?> GetCarsUpdate() {
-      var json = await Client.GetStringAsync("getCarsUpdate");
-      return JsonConvert.DeserializeObject<List<CarsUpdate>?>(json);
+    public Task<List<CarsUpdate>> GetCarsUpdate(long steamId) {
+      return Client.GetJson<List<CarsUpdate>>($"getCarsUpdate?steamId={steamId}");
     }
   }
 }
