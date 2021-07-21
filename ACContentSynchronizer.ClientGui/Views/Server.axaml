@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Server">
 
@@ -31,12 +32,12 @@
             </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
-        <Image Grid.Row="0"
-               Grid.Column="2"
-               Source="{Binding SelectedCar.Preview}" />
-        <Image Grid.Row="2"
-               Grid.Column="2"
-               Source="{Binding Track.Preview}" />
+        <components:Preview Grid.Row="0"
+                            Grid.Column="2"
+                            Source="{Binding SelectedCar.Preview}" />
+        <components:Preview Grid.Row="2"
+                            Grid.Column="2"
+                            Source="{Binding Track.Preview}" />
         <StackPanel Grid.Row="4"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"

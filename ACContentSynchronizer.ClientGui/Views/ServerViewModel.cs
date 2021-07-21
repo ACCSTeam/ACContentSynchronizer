@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Tasks;
 using ACContentSynchronizer.ClientGui.ViewModels;
+using Avalonia;
 using Avalonia.Collections;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using ReactiveUI;
 
@@ -30,7 +32,21 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public ContentEntry? SelectedCar {
-      get => _selectedCar;
+      get {
+        if (_selectedCar != null) {
+          return _selectedCar;
+        }
+
+        Application.Current.TryFindResource("CarPlaceholder", out var placeholder);
+
+        if (placeholder is Image { Source: Bitmap bitmap }) {
+          return new() {
+            Preview = bitmap,
+          };
+        }
+
+        return null;
+      }
       set => this.RaiseAndSetIfChanged(ref _selectedCar, value);
     }
 

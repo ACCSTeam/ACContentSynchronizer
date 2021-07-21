@@ -2,8 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:modals="clr-namespace:ACContentSynchronizer.ClientGui.Modals"
+        xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ACContentSynchronizer.ClientGui.Modals.InitRun"
         Classes="ModalDialog"
@@ -21,7 +21,10 @@
       <Setter Property="CornerRadius" Value="3 0 0 3" />
       <Setter Property="BorderThickness" Value="1,1,0,1" />
     </Style>
-    <Style Selector="Grid.FilePicker > Button /template/ ContentPresenter">
+    <Style Selector="Grid.FilePicker > components|IconButton /template/ Button">
+      <Setter Property="Height" Value="32" />
+    </Style>
+    <Style Selector="Grid.FilePicker > components|IconButton /template/ Button /template/ ContentPresenter">
       <Setter Property="CornerRadius" Value="0 3 3 0" />
     </Style>
   </Window.Styles>
@@ -33,10 +36,10 @@
         <Grid Classes="FilePicker" ColumnDefinitions="*,60">
           <TextBox Grid.Column="0"
                    Text="{Binding Path}" />
-          <Button Grid.Column="1" Classes="AccentButton"
-                  Command="{Binding GetPath}">
-            <avalonia:MaterialIcon Kind="Folder" />
-          </Button>
+          <components:IconButton Grid.Column="1"
+                                 Icon="Folder"
+                                 Style="AccentButton TransparentButton ButtonLogo"
+                                 Command="{Binding GetPath}" />
         </Grid>
       </StackPanel>
 
