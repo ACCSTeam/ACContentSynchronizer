@@ -64,11 +64,11 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public async Task Refresh() {
+      using var dataReceiver = new DataReceiver(ServerEntry.Http);
       try {
-        using var dataReceiver = new DataReceiver(ServerEntry.Http);
         var info = await dataReceiver.GetServerInfo();
 
-        if (info != null) {
+        if (info.Any()) {
           Cars = new(info["SERVER"]["CARS"].Split(";").Select(x => new ContentEntry {
             DirectoryName = x,
             Name = ContentUtils.GetCarName(x, Settings.Instance.GamePath),
@@ -88,6 +88,10 @@ namespace ACContentSynchronizer.ClientGui.Views {
           await UpdateCars();
         }
       } catch {
+        if (dataReceiver.Client.BaseAddress?.AbsoluteUri != ServerEntry.Http) {
+          return;
+        }
+
         Cars = new();
         Track = new();
       }
@@ -131,7 +135,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
       var dataReceiver = new DataReceiver(ServerEntry.Http);
       var carsUpdate = await dataReceiver.GetCarsUpdate(Settings.Instance.SteamId);
 
-      if (carsUpdate != null) {
+      if (carsUpdate.Any()) {
         foreach (var update in carsUpdate) {
           var car = Cars.FirstOrDefault(x => x.DirectoryName == update.Name);
 
