@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
@@ -18,18 +16,21 @@ namespace ACContentSynchronizer.Server.Services {
   public class ServerConfigurationService {
     private readonly IConfiguration _configuration;
     private readonly IHubContext<NotificationHub> _hub;
+    private readonly ServerPresetService _presetService;
 
     public ServerConfigurationService(IConfiguration configuration,
-                                      IHubContext<NotificationHub> hub) {
+                                      IHubContext<NotificationHub> hub,
+                                      ServerPresetService presetService) {
       _configuration = configuration;
       _hub = hub;
+      _presetService = presetService;
     }
 
     public void CheckAccess(string password) {
-      var serverConfig = GetServerPath();
+      var serverConfig = _presetService.GetServerPath();
 
       if (!string.IsNullOrEmpty(serverConfig)) {
-        var adminPassword = GetStringValue(serverConfig, "SERVER", "ADMIN_PASSWORD");
+        var adminPassword = _presetService.GetStringValue(serverConfig, "SERVER", "ADMIN_PASSWORD");
 
         if (adminPassword == password) {
           return;
@@ -73,10 +74,10 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public async Task UpdateConfig(Manifest manifest) {
-      var presetPath = GetServerPath();
+      var presetPath = _presetService.GetServerPath();
 
       if (!string.IsNullOrEmpty(presetPath)) {
-        var serverConfig = GetServerConfig(presetPath);
+        var serverConfig = _presetService.GetServerConfig(presetPath);
         var entryList = new Dictionary<string, Dictionary<string, string>>();
 
         var gamePath = _configuration.GetValue<string>("GamePath");
@@ -122,8 +123,8 @@ namespace ACContentSynchronizer.Server.Services {
           }
         }
 
-        await SaveConfig(presetPath, Constants.EntryList, entryList);
-        await SaveConfig(presetPath, Constants.ServerCfg, serverConfig);
+        await _presetService.SaveConfig(presetPath, Constants.EntryList, entryList);
+        await _presetService.SaveConfig(presetPath, Constants.ServerCfg, serverConfig);
       }
     }
 
@@ -169,162 +170,99 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public Dictionary<string, Dictionary<string, string>>? GetServerInfo() {
-      var presetPath = GetServerPath();
+      var presetPath = _presetService.GetServerPath();
 
       return !string.IsNullOrEmpty(presetPath)
-        ? GetServerConfig(presetPath)
+        ? _presetService.GetServerConfig(presetPath)
         : null;
     }
 
-    public async Task<IEnumerable<CarsUpdate>?> GetCarsUpdate(string steamId) {
-      var presetPath = GetServerPath();
+    public async Task<IEnumerable<CarsUpdate>?> GetCarsUpdate(long steamId) {
+      var presetPath = _presetService.GetServerPath();
 
       if (string.IsNullOrEmpty(presetPath)) {
         return null;
       }
 
-      var serverConfig = GetEntriesConfig(presetPath);
-      var cars = serverConfig.GroupBy(x => x.Value["MODEL"]);
-      var client = GetServerClient();
-      var state = await client.GetJson<ServerState>($"JSON|{steamId}");
-      var stateCars = state.Cars.GroupBy(x => x.Model);
+      var serverConfig = _presetService.GetEntriesConfig(presetPath);
+      var cars = serverConfig.GroupBy(x => x.Value["MODEL"])
+        .ToList();
 
-      return cars.Select(x => new CarsUpdate {
-        Name = x.Key,
-        Count = x.Count(),
-        Used = stateCars.Where(s => s.Key == x.Key)
-          .Sum(s => s.Count(c => !c.IsConnected)),
-      });
+      try {
+        var state = await Client().GetServerState(steamId);
+        var stateCars = state.Cars.GroupBy(x => x.Model);
+
+        return cars.Select(x => new CarsUpdate {
+          Name = x.Key,
+          Count = x.Count(),
+          Allowed = stateCars.Where(s => s.Key == x.Key)
+            .Sum(s => s.Count(c => !c.IsConnected)),
+        });
+      } catch {
+        return cars.Select(x => new CarsUpdate {
+          Name = x.Key,
+          Count = x.Count(),
+        });
+      }
+    }
+
+    private string GetLocalPort() {
+      const string defaultPort = "8081";
+      var serverConfig = _presetService.GetServerPath();
+      var port = !string.IsNullOrEmpty(serverConfig)
+        ? _presetService.GetStringValue(serverConfig, "SERVER", "HTTP_PORT")
+          ?? defaultPort
+        : defaultPort;
+
+      return port;
+    }
+
+    private KunosClient Client() {
+      var port = GetLocalPort();
+      return new("localhost", port);
     }
 
     private async Task<bool> ServerNotIsEmpty() {
       try {
-        var client = GetServerClient();
-        var serverInfo = await client.GetJson<ServerInfo>("INFO");
+        var serverInfo = await Client().GetServerInfo();
         return serverInfo is { Clients: > 0 };
       } catch {
         return false;
       }
     }
 
-    private HttpClient GetServerClient() {
-      var serverConfig = GetServerPath();
-      var port = !string.IsNullOrEmpty(serverConfig)
-        ? GetStringValue(serverConfig, "SERVER", "HTTP_PORT")
-        : "8081";
-
-      var client = new HttpClient {
-        BaseAddress = new($"http://localhost:{port}/"),
-      };
-
-      return client;
-    }
-
     public string? GetTrackName() {
-      var serverConfig = GetServerPath();
+      var serverConfig = _presetService.GetServerPath();
       return !string.IsNullOrEmpty(serverConfig)
-        ? GetStringValue(serverConfig, "SERVER", "TRACK")
+        ? _presetService.GetStringValue(serverConfig, "SERVER", "TRACK")
         : null;
     }
 
-    public string? GetServerName() {
-      var serverConfig = GetServerPath();
+    public ServerProps? GetServerProps() {
+      var serverConfig = _presetService.GetServerPath();
       return !string.IsNullOrEmpty(serverConfig)
-        ? GetStringValue(serverConfig, "SERVER", "NAME")
+        ? new ServerProps {
+          Name = _presetService.GetStringValue(serverConfig,
+            "SERVER",
+            "NAME") ?? "",
+          HttpPort = _presetService.GetStringValue(serverConfig,
+            "SERVER",
+            "HTTP_PORT") ?? "",
+        }
         : null;
     }
 
     public string[] GetCars() {
-      var serverConfig = GetServerPath();
+      var serverConfig = _presetService.GetServerPath();
       if (string.IsNullOrEmpty(serverConfig)) {
         return Array.Empty<string>();
       }
 
-      var cars = GetStringValue(serverConfig, "SERVER", "CARS");
+      var cars = _presetService.GetStringValue(serverConfig, "SERVER", "CARS");
 
       return string.IsNullOrEmpty(cars)
         ? Array.Empty<string>()
         : cars.Split(';');
-    }
-
-    private Dictionary<string, Dictionary<string, string>> GetServerConfig(string path) {
-      var serverCfgPath = Path.Combine(path, Constants.ServerCfg);
-      return IniToDictionary(serverCfgPath);
-    }
-
-    private Dictionary<string, Dictionary<string, string>> GetEntriesConfig(string path) {
-      var serverCfgPath = Path.Combine(path, Constants.EntryList);
-      return IniToDictionary(serverCfgPath);
-    }
-
-    private string? GetStringValue(string path, string section, string key) {
-      try {
-        var serverCfg = GetServerConfig(path);
-        return serverCfg[section][key];
-      } catch {
-        return null;
-      }
-    }
-
-    private string? GetServerPath() {
-      var gamePath = _configuration.GetValue<string>("GamePath");
-      var preset = _configuration.GetValue<string>("Preset");
-      var serverPath = Path.Combine(gamePath, Constants.ServerPresetsPath, preset);
-
-      return Directory.Exists(serverPath)
-        ? serverPath
-        : null;
-    }
-
-    private static Dictionary<string, Dictionary<string, string>> IniToDictionary(string path) {
-      var lines = File.ReadAllLines(path).Where(line => !string.IsNullOrEmpty(line)).ToList();
-      var lastIndex = 0;
-      var sections = new List<int>();
-      var ini = new Dictionary<string, Dictionary<string, string>>();
-
-      while (true) {
-        lastIndex = lines.FindIndex(lastIndex, line => line.StartsWith("["));
-
-        if (lastIndex < 0) {
-          break;
-        }
-
-        sections.Add(lastIndex);
-        lastIndex += 1;
-      }
-
-      for (var i = 0; i < sections.Count; i++) {
-        var index = sections[i];
-        var nextIndex = sections.Count - 1 == i
-          ? lines.Count
-          : sections[i + 1];
-        var count = nextIndex - sections[i] - 1;
-        var sectionLines = lines.GetRange(index + 1, count);
-        ini.Add(lines[index]
-            .Replace("[", "")
-            .Replace("]", ""),
-          sectionLines.ToDictionary(entry => entry[..entry.IndexOf("=", StringComparison.Ordinal)],
-            entry => entry[(entry.IndexOf("=", StringComparison.Ordinal) + 1)..]));
-      }
-
-      return ini;
-    }
-
-    private static async Task SaveConfig(string path, string cfg, Dictionary<string, Dictionary<string, string>> data) {
-      var cfgPath = Path.Combine(path, cfg);
-      var config = new StringBuilder();
-
-      await FileUtils.CreateIfNotExistsAsync(cfgPath);
-
-      foreach (var (section, values) in data) {
-        config.Append($"[{section}]\n");
-
-        foreach (var (key, value) in values) {
-          config.Append($"{key}={value}\n");
-        }
-      }
-
-      await File.WriteAllTextAsync(cfgPath, config.ToString());
     }
   }
 }

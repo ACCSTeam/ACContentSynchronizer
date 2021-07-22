@@ -12,16 +12,7 @@
     <views:SideBarViewModel />
   </Design.DataContext>
 
-  <UserControl.Styles>
-    <Style Selector="ListBox > ListBoxItem">
-      <Setter Property="Height" Value="60" />
-      <Setter Property="VerticalAlignment" Value="Center" />
-      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-      <Setter Property="Padding" Value="0" />
-    </Style>
-  </UserControl.Styles>
-
-  <Grid RowDefinitions="Auto,*,60,60" Width="{Binding Size}">
+  <Grid RowDefinitions="Auto,*,Auto,Auto" Width="{Binding Size}">
     <components:IconButton Grid.Row="0"
                            Text="CONTENT SYNCHRONIZER"
                            Icon="ViewList"
@@ -44,13 +35,13 @@
               <ToolTip Tip="{Binding Name}"
                        Placement="Right" />
 
-              <Grid ColumnDefinitions="Auto,60,60"
+              <Grid ColumnDefinitions="*,Auto,Auto"
                     ToolTip.Tip="{Binding Name}"
                     ToolTip.Placement="Right">
                 <TextBlock Grid.Column="0"
                            VerticalAlignment="Center"
                            TextWrapping="Wrap"
-                           Margin="20"
+                           Classes="SidebarText"
                            Width="{Binding ElementName=Servers, Path=DataContext.LabelWidth}"
                            Text="{Binding Name}" />
                 <Button Grid.Column="1"

@@ -34,7 +34,6 @@ namespace ACContentSynchronizer.ClientGui {
       Client.Dispose();
     }
 
-    public event PackProgressEvent? OnPack;
     public event ProgressEvent? OnProgress;
     public event CompleteEvent? OnComplete;
 
@@ -82,10 +81,6 @@ namespace ACContentSynchronizer.ClientGui {
       return Client.PostJson<Manifest>("getUpdateManifest", manifest);
     }
 
-    private void OnPackHandler(double progress, string entry) {
-      OnPack?.Invoke(progress, entry);
-    }
-
     public async Task RefreshServer(string adminPassword, Manifest manifest) {
       await Client.PostAsJsonAsync($"refreshServer?adminPassword={adminPassword}", manifest);
     }
@@ -94,8 +89,8 @@ namespace ACContentSynchronizer.ClientGui {
       return Client.GetJson<Dictionary<string, Dictionary<string, string>>>("getServerInfo");
     }
 
-    public Task<string> GetServerName() {
-      return Client.GetStringAsync("getServerName");
+    public Task<ServerProps> GetServerProps() {
+      return Client.GetJson<ServerProps>("getServerProps");
     }
 
     public Task<List<CarsUpdate>> GetCarsUpdate(long steamId) {

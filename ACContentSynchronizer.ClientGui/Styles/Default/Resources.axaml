@@ -1,0 +1,20 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+    <Border Padding="20">
+      <!-- Add Controls for Previewer Here -->
+    </Border>
+  </Design.PreviewWith>
+
+  <Style Selector="ListBox > ListBoxItem">
+    <Setter Property="Padding" Value="10, 0" />
+    <Setter Property="Height" Value="60" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+  </Style>
+
+  <Style Selector="TextBlock.SidebarText">
+    <Setter Property="Margin" Value="5, 20" />
+  </Style>
+</Styles>
+

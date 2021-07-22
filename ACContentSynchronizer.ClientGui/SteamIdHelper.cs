@@ -54,9 +54,7 @@ namespace ACContentSynchronizer.ClientGui {
       var section = new Vdf();
       while (!tokenizer.IsFinished) {
         switch (tokenizer.ReadNext()) {
-          case null:
-            return section;
-          case VdfToken.End:
+          case null or VdfToken.End:
             return section;
           case VdfToken.Begin:
             throw new("Unexpected begin of section");
@@ -116,9 +114,6 @@ namespace ACContentSynchronizer.ClientGui {
           case '}':
             return VdfToken.End;
           case '"':
-            if (IsFinished) {
-              return null;
-            }
             var start = _pos;
             while (_content[_pos] != '"') {
               ++_pos;

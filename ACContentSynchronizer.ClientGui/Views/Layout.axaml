@@ -19,13 +19,18 @@
              Background="{StaticResource UiColorTransparentDark}" />
 
       <Grid RowDefinitions="30,*, 30">
-        <components:IconButton
-          Icon="ArrowBack"
-          Style="TransparentButton ListButton"
-          HorizontalAlignment="Left"
-          VerticalAlignment="Top"
-          IsEnabled="{Binding ServerSelected}"
-          Command="{Binding GoBack}" />
+        <StackPanel Spacing="30"
+                    Orientation="Horizontal">
+          <components:IconButton
+            Icon="ArrowBack"
+            Style="TransparentButton ListButton"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            IsEnabled="{Binding ServerSelected}"
+            Command="{Binding GoBack}" />
+          <ComboBox Items="{Binding AllowedThemes}"
+                    SelectedItem="{Binding  SelectedTheme}" />
+        </StackPanel>
         <Panel Grid.Row="1">
           <ContentPresenter Content="{x:Static views:Main.Instance}"
                             IsVisible="{Binding !ServerSelected}" />

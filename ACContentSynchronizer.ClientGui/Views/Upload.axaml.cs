@@ -21,7 +21,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
       AvaloniaXamlLoader.Load(this);
     }
 
-    private void OpenPopup(object? sender, RoutedEventArgs e) {
+    public void OpenPopup(object? sender, RoutedEventArgs e) {
       this.FindControl<Popup>("AddPopup").IsOpen = true;
     }
   }

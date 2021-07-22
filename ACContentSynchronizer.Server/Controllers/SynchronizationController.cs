@@ -125,9 +125,9 @@ namespace ACContentSynchronizer.Server.Controllers {
       await _hub.Clients.All.SendAsync(HubMethods.Message.ToString(), "Server rebooted");
     }
 
-    [HttpGet("getServerName")]
-    public string? GetServerName() {
-      return _serverConfiguration.GetServerName();
+    [HttpGet("getServerProps")]
+    public ServerProps? GetServerProps() {
+      return _serverConfiguration.GetServerProps();
     }
 
     [HttpGet("getServerInfo")]
@@ -136,7 +136,7 @@ namespace ACContentSynchronizer.Server.Controllers {
     }
 
     [HttpGet("getCarsUpdate")]
-    public Task<IEnumerable<CarsUpdate>?> GetCarsUpdate(string steamId) {
+    public Task<IEnumerable<CarsUpdate>?> GetCarsUpdate(long steamId) {
       return _serverConfiguration.GetCarsUpdate(steamId);
     }
   }

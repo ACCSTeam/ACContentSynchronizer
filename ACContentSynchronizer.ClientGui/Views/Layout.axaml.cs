@@ -22,5 +22,9 @@ namespace ACContentSynchronizer.ClientGui.Views {
       _vm.ServerSelected = true;
       Server.Instance.SetServer(serverEntry);
     }
+
+    public void SetTheme(Themes theme) {
+      _vm.SelectedTheme = theme;
+    }
   }
 }

@@ -17,6 +17,8 @@
     <StackPanel Spacing="5">
       <TextBlock Text="IP address" />
       <TextBox Text="{Binding Ip}" />
+      <TextBlock Text="Port" />
+      <TextBox Text="{Binding Port}" />
       <TextBlock Text="Password" />
       <TextBox Text="{Binding Password}" />
       <Grid ColumnDefinitions="*,10,*">

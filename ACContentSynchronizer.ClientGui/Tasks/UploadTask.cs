@@ -39,18 +39,15 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
 
           State = "Content comparing";
           var comparedManifest = await dataReceiver.GetUpdateManifest(manifest);
-          if (comparedManifest != null) {
-            State = "Pack content...";
-            dataReceiver.OnPack += Pack;
+          State = "Pack content...";
 
-            if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
-              await UpdateContent(dataReceiver, settings.GamePath, comparedManifest);
-            }
-
-            State = "Refreshing server...";
-            await dataReceiver.RefreshServer(_server.Password, manifest);
-            State = "Server refreshed";
+          if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
+            await UpdateContent(dataReceiver, settings.GamePath, comparedManifest);
           }
+
+          State = "Refreshing server...";
+          await dataReceiver.RefreshServer(_server.Password, manifest);
+          State = "Server refreshed";
         } catch (Exception e) {
           State = $"ERROR: {e.Message}";
         }

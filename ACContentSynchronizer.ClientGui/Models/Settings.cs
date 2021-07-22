@@ -15,6 +15,8 @@ namespace ACContentSynchronizer.ClientGui.Models {
 
     public bool SidebarMinimized { get; set; }
 
+    public Themes Theme { get; set; }
+
     public List<ServerEntry> Servers { get; set; } = new();
 
     public static Settings Instance => _instance ??= Load();

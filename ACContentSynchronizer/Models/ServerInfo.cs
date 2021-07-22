@@ -5,17 +5,17 @@ namespace ACContentSynchronizer.Models {
   public class ServerInfo {
     public string Ip { get; set; } = "";
 
-    public long Port { get; set; }
+    public short Port { get; set; }
 
     [JsonPropertyName("cport")]
-    public long CPort { get; set; }
+    public short CPort { get; set; }
 
     public string Name { get; set; } = "";
 
-    public long Clients { get; set; }
+    public short Clients { get; set; }
 
     [JsonPropertyName("maxclients")]
-    public long MaxClients { get; set; }
+    public short MaxClients { get; set; }
 
     public string Track { get; set; } = "";
 
@@ -47,7 +47,7 @@ namespace ACContentSynchronizer.Models {
     public bool Pickup { get; set; }
 
     [JsonPropertyName("tport")]
-    public long TPort { get; set; }
+    public short TPort { get; set; }
 
     public bool Timed { get; set; }
 

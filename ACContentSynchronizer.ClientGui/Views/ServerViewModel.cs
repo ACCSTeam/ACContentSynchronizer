@@ -47,7 +47,13 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
         return null;
       }
-      set => this.RaiseAndSetIfChanged(ref _selectedCar, value);
+      set {
+        if (value != null) {
+          ReactiveCommand.CreateFromTask(() => Booking(value)).Execute();
+        }
+
+        this.RaiseAndSetIfChanged(ref _selectedCar, value);
+      }
     }
 
     public ContentEntry Track {
@@ -58,6 +64,12 @@ namespace ACContentSynchronizer.ClientGui.Views {
     public void Dispose() {
       _selectedCar?.Dispose();
       _track.Dispose();
+    }
+
+    private async Task Booking(ContentEntry value) {
+      using var kunosClient = new KunosClient(ServerEntry.Ip, ServerEntry.HttpPort);
+      var json = await kunosClient.Booking(value.DirectoryName, value.Variation, "fEst", "EE",
+        Settings.Instance.SteamId.ToString(), ServerEntry.Password);
     }
 
     public void Join() {
@@ -73,6 +85,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
             DirectoryName = x,
             Name = ContentUtils.GetCarName(x, Settings.Instance.GamePath),
             Preview = GetCarPreview(x),
+            Variation = "1MF777",
           }));
 
           var track = info["SERVER"]["TRACK"];
@@ -144,7 +157,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
           }
 
           car.Count = update.Count;
-          car.Used = update.Used.ToString();
+          car.Allowed = update.Allowed;
         }
       }
     }

@@ -1,5 +1,6 @@
 using ACContentSynchronizer.ClientGui.Modals;
 using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.Views;
 using ACContentSynchronizer.ClientGui.Windows;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -23,6 +24,7 @@ namespace ACContentSynchronizer.ClientGui {
         Modal.Open<InitRun>().ConfigureAwait(false);
       }
 
+      Layout.Instance.SetTheme(settings.Theme);
       base.OnFrameworkInitializationCompleted();
     }
   }

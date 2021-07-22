@@ -11,7 +11,7 @@ namespace ACContentSynchronizer {
     public const string EntryList = "entry_list.ini";
     public const string SettingPath = "settings.json";
     public const int BufferSize = 81920;
-    public const string Pattern = @"(localhost|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\:?([0-9]{1,5})?";
+    public const string Pattern = @"(localhost|[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})";
     public const string Client = "Client";
     public const string UiFolder = "ui";
     public const string UiTrack = "ui_track.json";

@@ -19,13 +19,6 @@
     <Setter Property="Background" Value="Transparent" />
   </Style>
 
-  <Style Selector="ListBox > ListBoxItem">
-    <Setter Property="Padding" Value="10, 0" />
-    <Setter Property="Height" Value="60" />
-    <Setter Property="VerticalContentAlignment" Value="Center" />
-    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-  </Style>
-
   <Style Selector="ListBox > ListBoxItem:selected /template/ ContentPresenter">
     <Setter Property="Background" Value="{StaticResource UiAccentDark}" />
   </Style>

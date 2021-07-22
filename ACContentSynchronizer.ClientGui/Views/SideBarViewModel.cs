@@ -4,21 +4,13 @@ using ACContentSynchronizer.ClientGui.Modals;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using Avalonia.Collections;
-using Material.Icons;
-using Material.Icons.Avalonia;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class SideBarViewModel : ViewModelBase {
     private bool _isMinimized;
 
-    private int _labelWidth;
-
-    private object _newContent = "Add new";
-
     private ServerEntry? _selectedServer;
-
-    private object _settingsContent = "Settings";
 
     private int _size = 300;
 
@@ -34,34 +26,18 @@ namespace ACContentSynchronizer.ClientGui.Views {
       set => this.RaiseAndSetIfChanged(ref _size, value);
     }
 
-    public int LabelWidth {
-      get => _labelWidth;
-      set => this.RaiseAndSetIfChanged(ref _labelWidth, value);
-    }
-
     public bool IsMinimized {
       get => _isMinimized;
-      set {
-        LabelWidth = value ? 20 : 140;
-        Size = value ? 60 : 300;
-        NewContent = value ? new MaterialIcon { Kind = MaterialIconKind.Plus } : "Add new";
-        SettingsContent = value ? new MaterialIcon { Kind = MaterialIconKind.Cog } : "Settings";
+      private set {
         this.RaiseAndSetIfChanged(ref _isMinimized, value);
 
         var settings = Settings.Instance;
+        Size = value
+          ? 60
+          : 300;
         settings.SidebarMinimized = value;
         settings.Save();
       }
-    }
-
-    public object NewContent {
-      get => _newContent;
-      set => this.RaiseAndSetIfChanged(ref _newContent, value);
-    }
-
-    public object SettingsContent {
-      get => _settingsContent;
-      set => this.RaiseAndSetIfChanged(ref _settingsContent, value);
     }
 
     public AvaloniaList<ServerEntry> Servers { get; set; }
@@ -89,6 +65,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
     public async Task EditServerDialog(ServerEntry server) {
       await Modal.Open<AddNewServer, AddNewServerViewModel>(new() {
         Ip = server.Ip,
+        Port = server.Port,
         Password = server.Password,
         DateTime = server.DateTime,
       });

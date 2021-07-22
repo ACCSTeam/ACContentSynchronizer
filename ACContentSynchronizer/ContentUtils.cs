@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
@@ -117,8 +118,24 @@ namespace ACContentSynchronizer {
 
       DirectoryUtils.DeleteIfExists(downloads, true);
       Directory.CreateDirectory(downloads);
-      ZipFile.ExtractToDirectory(archive, downloads);
-      File.Delete(archive);
+
+      using var content = ZipFile.Open(archive, ZipArchiveMode.Read);
+      foreach (var entry in content.Entries) {
+        var path = Path.Combine(downloads, entry.FullName.Replace(entry.Name, string.Empty));
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+          path = path.Replace('\\', Path.DirectorySeparatorChar);
+        }
+
+        DirectoryUtils.CreateIfNotExists(path);
+        var destinationFileName = Path.Combine(path, entry.Name);
+
+        using Stream fs = new FileStream(destinationFileName, FileMode.CreateNew, FileAccess.Write, FileShare.None,
+          0x1000, false);
+        using Stream es = entry.Open();
+        es.CopyTo(fs);
+      }
+
+      FileUtils.DeleteIfExists(archive);
     }
 
     public static void ApplyContent(string gamePath, string connectionId) {

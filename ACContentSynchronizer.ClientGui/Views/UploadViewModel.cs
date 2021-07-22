@@ -110,15 +110,15 @@ namespace ACContentSynchronizer.ClientGui.Views {
       return Task.CompletedTask;
     }
 
-    private void Add(EntryViewModel entry) {
+    public void Add(EntryViewModel entry) {
       SelectedCars.Add(entry.Clone());
     }
 
-    private void Remove(EntryViewModel entry) {
+    public void Remove(EntryViewModel entry) {
       SelectedCars.Remove(entry);
     }
 
-    private void Upload() {
+    public void Upload() {
       StatusBar.Instance.AddTask(new UploadTask(Server.Instance.GetServer, this));
     }
 

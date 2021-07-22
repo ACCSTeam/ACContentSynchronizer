@@ -27,17 +27,19 @@
                 <TextBlock Grid.Column="0"
                            Text="{Binding Name}"
                            IsEnabled="{Binding IsEnabled}" />
-                <TextBlock Grid.Column="1" Text="{Binding Used}" />
+                <TextBlock Grid.Column="1" Text="{Binding CarStats}" />
               </Grid>
             </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
         <components:Preview Grid.Row="0"
                             Grid.Column="2"
-                            Source="{Binding SelectedCar.Preview}" />
+                            Source="{Binding SelectedCar.Preview}"
+                            PreviewName="{Binding SelectedCar.Name}"/>
         <components:Preview Grid.Row="2"
                             Grid.Column="2"
-                            Source="{Binding Track.Preview}" />
+                            Source="{Binding Track.Preview}"
+                            PreviewName="{Binding Track.Name}"/>
         <StackPanel Grid.Row="4"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"

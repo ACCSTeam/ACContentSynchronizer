@@ -16,6 +16,8 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 
     private string _password = "";
 
+    private string _port = "";
+
     public string Ip {
       get => _ip;
       set {
@@ -25,6 +27,11 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 
         this.RaiseAndSetIfChanged(ref _ip, value);
       }
+    }
+
+    public string Port {
+      get => _port;
+      set => this.RaiseAndSetIfChanged(ref _port, value);
     }
 
     public string Password {
@@ -37,13 +44,17 @@ namespace ACContentSynchronizer.ClientGui.Modals {
     public async Task Save() {
       var serverEntry = new ServerEntry {
         Ip = Ip,
+        Port = Port,
         Password = Password,
         DateTime = DateTime,
       };
 
       try {
         using var dataReceiver = new DataReceiver(serverEntry.Http);
-        serverEntry.Name = await dataReceiver.GetServerName();
+        var serverProps = await dataReceiver.GetServerProps();
+
+        serverEntry.Name = serverProps.Name;
+        serverEntry.HttpPort = serverProps.HttpPort;
       } catch (HttpRequestException e) {
         if (e.StatusCode == null) {
           Toast.Open("Cant connect to server");

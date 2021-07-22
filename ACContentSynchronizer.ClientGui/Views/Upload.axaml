@@ -97,10 +97,11 @@
           <TextBox DockPanel.Dock="Top"
                    Text="{Binding  CarSearch}" />
           <ListBox DockPanel.Dock="Bottom"
+                   VirtualizationMode="None"
                    Items="{Binding Cars}">
             <ListBox.ItemTemplate>
               <DataTemplate>
-                <Grid ColumnDefinitions="200, 220, 60">
+                <Grid ColumnDefinitions="*, Auto, Auto">
                   <TextBlock Grid.Column="0"
                              Text="{Binding Name}" />
                   <ComboBox Grid.Column="1"
