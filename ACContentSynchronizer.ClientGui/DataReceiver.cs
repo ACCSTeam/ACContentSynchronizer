@@ -64,7 +64,10 @@ namespace ACContentSynchronizer.ClientGui {
       FileUtils.DeleteIfExists(archive);
       DirectoryUtils.CreateIfNotExists(session);
 
-      client.DownloadProgressChanged += (_, e) => OnProgress?.Invoke(e.ProgressPercentage);
+      try {
+        client.DownloadProgressChanged += (_, e) => OnProgress?.Invoke(e.ProgressPercentage);
+      } catch (OperationCanceledException) {
+      }
       client.DownloadFileCompleted += (_, _) => OnComplete?.Invoke();
       client.DownloadFileAsync(new(server), archive);
     }
