@@ -26,13 +26,14 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     public UploadViewModel() {
       ReactiveCommand.CreateFromTask(Load).Execute();
+      const int throttle = 500;
 
       var carFilter = this.WhenAnyValue(vm => vm.CarSearch)
-        .Throttle(TimeSpan.FromMilliseconds(100))
+        .Throttle(TimeSpan.FromMilliseconds(throttle))
         .Select(BuildFilter);
 
       var trackFilter = this.WhenAnyValue(vm => vm.TrackSearch)
-        .Throttle(TimeSpan.FromMilliseconds(100))
+        .Throttle(TimeSpan.FromMilliseconds(throttle))
         .Select(BuildFilter);
 
       AvailableCars.Connect()

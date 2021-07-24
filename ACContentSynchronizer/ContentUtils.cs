@@ -133,8 +133,13 @@ namespace ACContentSynchronizer {
           0x1000, false);
         using Stream es = entry.Open();
         es.CopyTo(fs);
+        fs.Close();
+        es.Close();
+        fs.Dispose();
+        es.Dispose();
       }
 
+      content.Dispose();
       FileUtils.DeleteIfExists(archive);
     }
 
@@ -282,7 +287,15 @@ namespace ACContentSynchronizer {
       var dataPath = Path.Combine(uiPath, data);
       return File.Exists(dataPath)
         ? new() { uiPath }
-        : Directory.GetDirectories(uiPath).ToList();
+        : GetVariations(uiPath);
+    }
+
+    private static List<string> GetVariations(string uiPath) {
+      try {
+        return Directory.GetDirectories(uiPath).ToList();
+      } catch {
+        return new();
+      }
     }
   }
 }

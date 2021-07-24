@@ -16,25 +16,23 @@ namespace ACContentSynchronizer.Server.Services {
   public class ServerConfigurationService {
     private readonly IConfiguration _configuration;
     private readonly IHubContext<NotificationHub> _hub;
-    private readonly ServerPresetService _presetService;
+    private readonly IniProvider _iniProvider;
 
     public ServerConfigurationService(IConfiguration configuration,
-                                      IHubContext<NotificationHub> hub,
-                                      ServerPresetService presetService) {
+                                      IHubContext<NotificationHub> hub) {
       _configuration = configuration;
       _hub = hub;
-      _presetService = presetService;
+
+      var gamePath = _configuration.GetValue<string>("GamePath");
+      var preset = _configuration.GetValue<string>("Preset");
+      _iniProvider = new(Path.Combine(gamePath, Constants.ServerPresetsPath, preset));
     }
 
     public void CheckAccess(string password) {
-      var serverConfig = _presetService.GetServerPath();
+      var adminPassword = _iniProvider.GetStringValue("SERVER", "ADMIN_PASSWORD");
 
-      if (!string.IsNullOrEmpty(serverConfig)) {
-        var adminPassword = _presetService.GetStringValue(serverConfig, "SERVER", "ADMIN_PASSWORD");
-
-        if (adminPassword == password) {
-          return;
-        }
+      if (adminPassword == password) {
+        return;
       }
 
       throw new("");
@@ -74,58 +72,43 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public async Task UpdateConfig(Manifest manifest) {
-      var presetPath = _presetService.GetServerPath();
+      var serverConfig = _iniProvider.GetServerConfig();
+      var entryList = new Dictionary<string, Dictionary<string, string>>();
 
-      if (!string.IsNullOrEmpty(presetPath)) {
-        var serverConfig = _presetService.GetServerConfig(presetPath);
-        var entryList = new Dictionary<string, Dictionary<string, string>>();
+      if (!string.IsNullOrEmpty(manifest.Track?.Name)) {
+        serverConfig["SERVER"]["TRACK"] = manifest.Track.Name;
 
-        var gamePath = _configuration.GetValue<string>("GamePath");
-        var contentPath = Path.Combine(gamePath, Constants.ContentFolder);
-
-        if (!string.IsNullOrEmpty(manifest.Track?.Name)) {
-          serverConfig["SERVER"]["TRACK"] = manifest.Track.Name;
-
-          var trackPath = Path.Combine(contentPath, Constants.TracksFolder, manifest.Track.Name, "ui");
-          var variants = Directory.GetDirectories(trackPath);
-
-          if (variants.Any() || !string.IsNullOrEmpty(manifest.Track.SelectedVariation)) {
-            serverConfig["SERVER"]["CONFIG_TRACK"] = manifest.Track.SelectedVariation
-                                                     ?? DirectoryUtils.Name(variants.First());
-          }
-        }
-
-        if (manifest.Cars.Any()) {
-          serverConfig["SERVER"]["CARS"] = string.Join(';', manifest.Cars
-            .DistinctBy(x => x.Name)
-            .Select(x => x.Name));
-
-          for (var i = 0; i < manifest.Cars.Count; i++) {
-            var car = manifest.Cars[i];
-            var carPath = Path.Combine(contentPath, Constants.CarsFolder, car.Name, "skins");
-            var skins = Directory.GetDirectories(carPath);
-
-            if (!skins.Any() && string.IsNullOrEmpty(car.SelectedVariation)) {
-              continue;
-            }
-
-            entryList.Add(
-              $"CAR_{i}", new() {
-                { "MODEL", car.Name },
-                { "SKIN", car.SelectedVariation ?? DirectoryUtils.Name(skins.First()) },
-                { "SPECTATOR_MODE", "0" },
-                { "DRIVERNAME", "" },
-                { "TEAM", "" },
-                { "GUID", "" },
-                { "BALLAST", "0" },
-                { "RESTRICTOR", "0" },
-              });
-          }
-        }
-
-        await _presetService.SaveConfig(presetPath, Constants.EntryList, entryList);
-        await _presetService.SaveConfig(presetPath, Constants.ServerCfg, serverConfig);
+        serverConfig["SERVER"]["CONFIG_TRACK"] = manifest.Track.SelectedVariation ?? "";
       }
+
+      if (manifest.Cars.Any()) {
+        serverConfig["SERVER"]["CARS"] = string.Join(';', manifest.Cars
+          .DistinctBy(x => x.Name)
+          .Select(x => x.Name));
+
+        for (var i = 0; i < manifest.Cars.Count; i++) {
+          var car = manifest.Cars[i];
+
+          if (string.IsNullOrEmpty(car.SelectedVariation)) {
+            continue;
+          }
+
+          entryList.Add(
+            $"CAR_{i}", new() {
+              { "MODEL", car.Name },
+              { "SKIN", car.SelectedVariation },
+              { "SPECTATOR_MODE", "0" },
+              { "DRIVERNAME", "" },
+              { "TEAM", "" },
+              { "GUID", "" },
+              { "BALLAST", "0" },
+              { "RESTRICTOR", "0" },
+            });
+        }
+      }
+
+      await _iniProvider.SaveConfig(Constants.EntryList, entryList);
+      await _iniProvider.SaveConfig(Constants.ServerCfg, serverConfig);
     }
 
     public async Task RunServer() {
@@ -169,50 +152,14 @@ namespace ACContentSynchronizer.Server.Services {
       });
     }
 
-    public Dictionary<string, Dictionary<string, string>>? GetServerInfo() {
-      var presetPath = _presetService.GetServerPath();
-
-      return !string.IsNullOrEmpty(presetPath)
-        ? _presetService.GetServerConfig(presetPath)
-        : null;
-    }
-
-    public async Task<IEnumerable<CarsUpdate>?> GetCarsUpdate(long steamId) {
-      var presetPath = _presetService.GetServerPath();
-
-      if (string.IsNullOrEmpty(presetPath)) {
-        return null;
-      }
-
-      var serverConfig = _presetService.GetEntriesConfig(presetPath);
-      var cars = serverConfig.GroupBy(x => x.Value["MODEL"])
-        .ToList();
-
-      try {
-        var state = await Client().GetServerState(steamId);
-        var stateCars = state.Cars.GroupBy(x => x.Model);
-
-        return cars.Select(x => new CarsUpdate {
-          Name = x.Key,
-          Count = x.Count(),
-          Allowed = stateCars.Where(s => s.Key == x.Key)
-            .Sum(s => s.Count(c => !c.IsConnected)),
-        });
-      } catch {
-        return cars.Select(x => new CarsUpdate {
-          Name = x.Key,
-          Count = x.Count(),
-        });
-      }
+    public Dictionary<string, Dictionary<string, string>> GetServerInfo() {
+      return _iniProvider.GetServerConfig();
     }
 
     private string GetLocalPort() {
       const string defaultPort = "8081";
-      var serverConfig = _presetService.GetServerPath();
-      var port = !string.IsNullOrEmpty(serverConfig)
-        ? _presetService.GetStringValue(serverConfig, "SERVER", "HTTP_PORT")
-          ?? defaultPort
-        : defaultPort;
+      var port = _iniProvider.GetStringValue("SERVER", "HTTP_PORT")
+                 ?? defaultPort;
 
       return port;
     }
@@ -232,33 +179,20 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public string? GetTrackName() {
-      var serverConfig = _presetService.GetServerPath();
-      return !string.IsNullOrEmpty(serverConfig)
-        ? _presetService.GetStringValue(serverConfig, "SERVER", "TRACK")
-        : null;
+      return _iniProvider.GetStringValue("SERVER", "TRACK");
     }
 
-    public ServerProps? GetServerProps() {
-      var serverConfig = _presetService.GetServerPath();
-      return !string.IsNullOrEmpty(serverConfig)
-        ? new ServerProps {
-          Name = _presetService.GetStringValue(serverConfig,
-            "SERVER",
-            "NAME") ?? "",
-          HttpPort = _presetService.GetStringValue(serverConfig,
-            "SERVER",
-            "HTTP_PORT") ?? "",
-        }
-        : null;
+    public ServerProps GetServerProps() {
+      return new() {
+        Name = _iniProvider.GetStringValue("SERVER",
+          "NAME") ?? "",
+        HttpPort = _iniProvider.GetStringValue("SERVER",
+          "HTTP_PORT") ?? "",
+      };
     }
 
     public string[] GetCars() {
-      var serverConfig = _presetService.GetServerPath();
-      if (string.IsNullOrEmpty(serverConfig)) {
-        return Array.Empty<string>();
-      }
-
-      var cars = _presetService.GetStringValue(serverConfig, "SERVER", "CARS");
+      var cars = _iniProvider.GetStringValue("SERVER", "CARS");
 
       return string.IsNullOrEmpty(cars)
         ? Array.Empty<string>()

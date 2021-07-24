@@ -6,6 +6,7 @@ using ReactiveUI;
 namespace ACContentSynchronizer.ClientGui.Models {
   public class ContentEntry : ViewModelBase, IDisposable {
     private int _allowed;
+
     private int _count;
 
     private string _directoryName = "";
@@ -40,7 +41,7 @@ namespace ACContentSynchronizer.ClientGui.Models {
       get => _count;
       set {
         this.RaiseAndSetIfChanged(ref _count, value);
-        this.RaisePropertyChanged(nameof(CarStats));
+        this.RaisePropertyChanged(nameof(CarCount));
       }
     }
 
@@ -48,11 +49,11 @@ namespace ACContentSynchronizer.ClientGui.Models {
       get => _allowed;
       set {
         this.RaiseAndSetIfChanged(ref _allowed, value);
-        this.RaisePropertyChanged(nameof(CarStats));
+        this.RaisePropertyChanged(nameof(CarCount));
       }
     }
 
-    public string CarStats => $"[{Allowed}/{Count}]";
+    public string CarCount => $"[{Allowed}/{Count}]";
 
     public bool IsEnabled => Allowed > 0;
 

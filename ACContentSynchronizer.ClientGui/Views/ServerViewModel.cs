@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,13 +48,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
         return null;
       }
-      set {
-        if (value != null) {
-          ReactiveCommand.CreateFromTask(() => Booking(value)).Execute();
-        }
-
-        this.RaiseAndSetIfChanged(ref _selectedCar, value);
-      }
+      set => this.RaiseAndSetIfChanged(ref _selectedCar, value);
     }
 
     public ContentEntry Track {
@@ -72,7 +67,46 @@ namespace ACContentSynchronizer.ClientGui.Views {
         Settings.Instance.SteamId.ToString(), ServerEntry.Password);
     }
 
-    public void Join() {
+    public async Task Join() {
+      var car = SelectedCar;
+      await ValidateContent();
+      var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+      var cfgPath = Path.Combine(documents, "Assetto Corsa", "cfg");
+      var iniProvider = new IniProvider(cfgPath);
+      var config = iniProvider.GetConfig("race.ini");
+
+      if (car is { IsEnabled: true }) {
+        var remote = config["REMOTE"];
+        remote["ACTIVE"] = "1";
+        remote["SERVER_IP"] = ServerEntry.Ip;
+        remote["SERVER_PORT"] = "9600";
+        remote["SERVER_NAME"] = ServerEntry.Name;
+        remote["SERVER_HTTP_PORT"] = ServerEntry.HttpPort;
+        remote["REQUESTED_CAR"] = car.DirectoryName;
+        remote["GUID"] = Settings.Instance.SteamId.ToString();
+        remote["__CM_EXTENDED"] = "1";
+        remote["NAME"] = Settings.Instance.PlayerName;
+        remote["PASSWORD"] = ServerEntry.Password;
+        config["REMOTE"] = remote;
+
+        var race = config["RACE"];
+        race["TRACK"] = Track.DirectoryName;
+        race["CONFIG_TRACK"] = Track.Variation;
+        config["RACE"] = race;
+
+        await iniProvider.SaveConfig("race.ini", config);
+        var gamePath = Path.Combine(Settings.Instance.GamePath, "acs.exe");
+        var process = new Process {
+          StartInfo = {
+            FileName = gamePath,
+            WorkingDirectory = Settings.Instance.GamePath,
+          },
+        };
+
+        process.Start();
+
+        ReactiveCommand.CreateFromTask(() => Booking(car)).Execute();
+      }
     }
 
     public async Task Refresh() {
@@ -81,12 +115,16 @@ namespace ACContentSynchronizer.ClientGui.Views {
         var info = await dataReceiver.GetServerInfo();
 
         if (info.Any()) {
+          var selectedCar = SelectedCar?.DirectoryName;
           Cars = new(info["SERVER"]["CARS"].Split(";").Select(x => new ContentEntry {
             DirectoryName = x,
             Name = ContentUtils.GetCarName(x, Settings.Instance.GamePath),
             Preview = GetCarPreview(x),
-            Variation = "1MF777",
           }));
+
+          SelectedCar = !string.IsNullOrEmpty(selectedCar)
+            ? Cars.FirstOrDefault(x => x.DirectoryName == selectedCar)
+            : Cars.FirstOrDefault();
 
           var track = info["SERVER"]["TRACK"];
           var trackName = ContentUtils.GetTrackName(track, Settings.Instance.GamePath)
@@ -110,11 +148,18 @@ namespace ACContentSynchronizer.ClientGui.Views {
       }
     }
 
-    public void ValidateContent() {
-      StatusBar.Instance.AddTask(new ValidationTask(ServerEntry));
+    public async Task ValidateContent() {
+      var validationTask = new ValidationTask(ServerEntry);
+      StatusBar.Instance.AddTask(validationTask);
+
+      if (validationTask.Worker != null) {
+        await validationTask.Worker;
+      }
+
+      await Refresh();
     }
 
-    private Bitmap? GetCarPreview(string entry) {
+    private static Bitmap? GetCarPreview(string entry) {
       var carDirectory = ContentUtils.GetCarDirectory(entry, Settings.Instance.GamePath);
       if (string.IsNullOrEmpty(carDirectory)) {
         return null;
@@ -130,7 +175,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
         (Path.Combine(skin, "preview.jpg"));
     }
 
-    private Bitmap? GetTrackPreview(string entry) {
+    private static Bitmap? GetTrackPreview(string entry) {
       var trackDirectory = ContentUtils.GetTrackDirectories(entry, Settings.Instance.GamePath)
         .FirstOrDefault();
       if (string.IsNullOrEmpty(trackDirectory)) {
@@ -145,20 +190,19 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public async Task UpdateCars() {
-      var dataReceiver = new DataReceiver(ServerEntry.Http);
-      var carsUpdate = await dataReceiver.GetCarsUpdate(Settings.Instance.SteamId);
+      var kunosClient = new KunosClient(ServerEntry.Ip, ServerEntry.HttpPort);
+      var cars = await kunosClient.GetCars(Settings.Instance.SteamId);
+      var grouped = cars.Cars.GroupBy(x => x.Model);
 
-      if (carsUpdate.Any()) {
-        foreach (var update in carsUpdate) {
-          var car = Cars.FirstOrDefault(x => x.DirectoryName == update.Name);
+      foreach (var update in grouped) {
+        var car = Cars.FirstOrDefault(x => x.DirectoryName == update.Key);
 
-          if (car == null) {
-            continue;
-          }
-
-          car.Count = update.Count;
-          car.Allowed = update.Allowed;
+        if (car == null) {
+          continue;
         }
+
+        car.Count = update.Count();
+        car.Allowed = update.Count(x => !x.IsConnected);
       }
     }
   }

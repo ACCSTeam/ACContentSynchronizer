@@ -5,7 +5,7 @@ namespace ACContentSynchronizer.ClientGui.Components {
   public class StatusBarEntryViewModel : ViewModelBase, IDisposable {
     public StatusBarEntryViewModel(TaskViewModel task) {
       Task = task;
-      Task.Run();
+      task.Worker = Task.Run();
     }
 
     public StatusBarEntryViewModel() {

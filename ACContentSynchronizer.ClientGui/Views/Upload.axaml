@@ -61,9 +61,11 @@
           </DockPanel>
         </TabItem>
         <TabItem Header="Tracks">
-          <StackPanel Spacing="10">
-            <TextBox Text="{Binding TrackSearch}" />
-            <ListBox Items="{Binding Tracks}"
+          <DockPanel>
+            <TextBox DockPanel.Dock="Top"
+              Text="{Binding TrackSearch}" />
+            <ListBox DockPanel.Dock="Bottom"
+              Items="{Binding Tracks}"
                      SelectedItem="{Binding SelectedTrack}">
               <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -76,7 +78,7 @@
                 </DataTemplate>
               </ListBox.ItemTemplate>
             </ListBox>
-          </StackPanel>
+          </DockPanel>
         </TabItem>
       </TabControl>
       <components:IconButton Grid.Column="0"
@@ -97,7 +99,6 @@
           <TextBox DockPanel.Dock="Top"
                    Text="{Binding  CarSearch}" />
           <ListBox DockPanel.Dock="Bottom"
-                   VirtualizationMode="None"
                    Items="{Binding Cars}">
             <ListBox.ItemTemplate>
               <DataTemplate>

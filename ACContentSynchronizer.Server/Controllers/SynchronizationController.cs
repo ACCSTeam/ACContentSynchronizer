@@ -134,10 +134,5 @@ namespace ACContentSynchronizer.Server.Controllers {
     public Dictionary<string, Dictionary<string, string>>? GetServerInfo() {
       return _serverConfiguration.GetServerInfo();
     }
-
-    [HttpGet("getCarsUpdate")]
-    public Task<IEnumerable<CarsUpdate>?> GetCarsUpdate(long steamId) {
-      return _serverConfiguration.GetCarsUpdate(steamId);
-    }
   }
 }

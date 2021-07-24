@@ -9,4 +9,3 @@
   <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/Compact/ListButton.axaml" />
   <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/Compact/Resources.axaml" />
 </Styles>
-

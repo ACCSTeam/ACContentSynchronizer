@@ -39,11 +39,13 @@ namespace ACContentSynchronizer {
         file.CopyTo(tempPath, false);
       }
 
-      if (copySubDirs) {
-        foreach (DirectoryInfo subDir in dirs) {
-          string tempPath = Path.Combine(destDirName, subDir.Name);
-          Copy(subDir.FullName, tempPath, copySubDirs);
-        }
+      if (!copySubDirs) {
+        return;
+      }
+
+      foreach (DirectoryInfo subDir in dirs) {
+        string tempPath = Path.Combine(destDirName, subDir.Name);
+        Copy(subDir.FullName, tempPath, copySubDirs);
       }
     }
 

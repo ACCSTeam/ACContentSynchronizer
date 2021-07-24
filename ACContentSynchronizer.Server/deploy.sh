@@ -1,6 +1,6 @@
 BASEPATH=$1
-SERVERPATH=$2
-SSH=$3
+SSH=$2
+SERVERPATH=ACContentSynchronizer.Server
 DEPLOYPATH=$BASEPATH/$SERVERPATH
 ARCHIVE=$SERVERPATH.zip
 echo BASEPATH=$BASEPATH
@@ -11,14 +11,14 @@ rm -rf $DEPLOYPATH
 dotnet publish -c Release -o $DEPLOYPATH -r win-x64 -p:PublishSingleFile=true --self-contained true
 cd $BASEPATH;
 rm $ARCHIVE
-zip -r $ARCHIVE $SERVERPATH;
+tar.exe -acf $ARCHIVE $SERVERPATH
 scp $ARCHIVE $SSH:;
 ssh $SSH "echo $SERVERPATH &\
 sc.exe stop $SERVERPATH &\
 echo Unpack &\
-powershell -command \"Expand-Archive -Force $ARCHIVE\" &&\
+tar -xvf $ARCHIVE &&\
 echo Move &\
-cd \"$SERVERPATH/$SERVERPATH\" &&\
+cd $SERVERPATH &&\
 echo Directory &\
 mkdir \"C:/$SERVERPATRH\" &\
 echo Copy &\

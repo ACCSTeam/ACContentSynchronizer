@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
@@ -17,9 +18,11 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
       set => this.RaiseAndSetIfChanged(ref _state, value);
     }
 
+    public Task? Worker { get; set; }
+
     public abstract void Dispose();
 
-    public abstract void Run();
+    public abstract Task Run();
 
     public abstract void Cancel();
   }

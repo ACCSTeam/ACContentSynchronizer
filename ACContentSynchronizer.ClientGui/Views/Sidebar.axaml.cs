@@ -28,6 +28,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
       var serverEntry = _vm.Servers.FirstOrDefault(x => x.DateTime == server.DateTime);
       if (serverEntry != null) {
         serverEntry.Ip = server.Ip;
+        serverEntry.Port = server.Port;
         serverEntry.Password = server.Password;
         serverEntry.Name = server.Name;
       } else {
