@@ -1,25 +1,30 @@
 using System;
+using System.Linq;
 using ACContentSynchronizer.ClientGui.ViewModels;
+using ACContentSynchronizer.Models;
+using Avalonia.Collections;
 using Avalonia.Media.Imaging;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Models {
   public class ContentEntry : ViewModelBase, IDisposable {
-    private int _allowed;
-
-    private int _count;
-
     private string _directoryName = "";
 
     private string _name = "";
 
     private Bitmap? _preview;
 
-    private string _variation = "";
+    private AvaloniaList<EntryVariation> _variations = new();
 
-    public string Variation {
-      get => _variation;
-      set => this.RaiseAndSetIfChanged(ref _variation, value);
+    public string? Variation => _variations.FirstOrDefault(x => !x.IsConnected)?.Variation;
+
+    public AvaloniaList<EntryVariation> Variations {
+      get => _variations;
+      set {
+        this.RaiseAndSetIfChanged(ref _variations, value);
+        this.RaisePropertyChanged(nameof(Variation));
+        this.RaisePropertyChanged(nameof(CarCount));
+      }
     }
 
     public string Name {
@@ -37,25 +42,7 @@ namespace ACContentSynchronizer.ClientGui.Models {
       set => this.RaiseAndSetIfChanged(ref _preview, value);
     }
 
-    public int Count {
-      get => _count;
-      set {
-        this.RaiseAndSetIfChanged(ref _count, value);
-        this.RaisePropertyChanged(nameof(CarCount));
-      }
-    }
-
-    public int Allowed {
-      get => _allowed;
-      set {
-        this.RaiseAndSetIfChanged(ref _allowed, value);
-        this.RaisePropertyChanged(nameof(CarCount));
-      }
-    }
-
-    public string CarCount => $"[{Allowed}/{Count}]";
-
-    public bool IsEnabled => Allowed > 0;
+    public string CarCount => $"[{Variations.Count(x => !x.IsConnected)}/{Variations.Count}]";
 
     public void Dispose() {
       _preview?.Dispose();

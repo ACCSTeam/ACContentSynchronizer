@@ -95,9 +95,5 @@ namespace ACContentSynchronizer.ClientGui {
     public Task<ServerProps> GetServerProps() {
       return Client.GetJson<ServerProps>("getServerProps");
     }
-
-    public Task<List<CarsUpdate>> GetCarsUpdate(long steamId) {
-      return Client.GetJson<List<CarsUpdate>>($"getCarsUpdate?steamId={steamId}");
-    }
   }
 }

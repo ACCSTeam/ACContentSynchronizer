@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Tasks;
 using ACContentSynchronizer.ClientGui.ViewModels;
+using ACContentSynchronizer.Models;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -63,7 +64,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     private async Task Booking(ContentEntry value) {
       using var kunosClient = new KunosClient(ServerEntry.Ip, ServerEntry.HttpPort);
-      var json = await kunosClient.Booking(value.DirectoryName, value.Variation, "fEst", "EE",
+      var json = await kunosClient.Booking(value.DirectoryName, value.Variation ?? "", "fEst", "EE",
         Settings.Instance.SteamId.ToString(), ServerEntry.Password);
     }
 
@@ -75,7 +76,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
       var iniProvider = new IniProvider(cfgPath);
       var config = iniProvider.GetConfig("race.ini");
 
-      if (car is { IsEnabled: true }) {
+      if (car != null && !string.IsNullOrEmpty(car.Variation)) {
         var remote = config["REMOTE"];
         remote["ACTIVE"] = "1";
         remote["SERVER_IP"] = ServerEntry.Ip;
@@ -91,7 +92,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
         var race = config["RACE"];
         race["TRACK"] = Track.DirectoryName;
-        race["CONFIG_TRACK"] = Track.Variation;
+        race["CONFIG_TRACK"] = Track.Variation ?? "";
         config["RACE"] = race;
 
         await iniProvider.SaveConfig("race.ini", config);
@@ -110,56 +111,61 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public async Task Refresh() {
-      using var dataReceiver = new DataReceiver(ServerEntry.Http);
-      try {
-        var info = await dataReceiver.GetServerInfo();
+      Cars = new();
+      Track = new();
 
-        if (info.Any()) {
-          var selectedCar = SelectedCar?.DirectoryName;
-          Cars = new(info["SERVER"]["CARS"].Split(";").Select(x => new ContentEntry {
-            DirectoryName = x,
-            Name = ContentUtils.GetCarName(x, Settings.Instance.GamePath),
-            Preview = GetCarPreview(x),
-          }));
+      var kunosClient = new KunosClient(ServerEntry.Ip, ServerEntry.HttpPort);
+      var cars = await kunosClient.GetCars(Settings.Instance.SteamId);
+      var selectedCar = SelectedCar?.DirectoryName;
 
-          SelectedCar = !string.IsNullOrEmpty(selectedCar)
-            ? Cars.FirstOrDefault(x => x.DirectoryName == selectedCar)
-            : Cars.FirstOrDefault();
+      Cars = new(cars.Cars.GroupBy(x => x.Model)
+        .Select(x => new ContentEntry {
+          DirectoryName = x.Key,
+          Name = ContentUtils.GetCarName(x.Key, Settings.Instance.GamePath),
+          Preview = GetCarPreview(x.Key, x.First().Skin),
+          Variations = new(x.Select(s => new EntryVariation {
+            Variation = s.Skin,
+            IsConnected = s.IsConnected,
+          })),
+        }));
 
-          var track = info["SERVER"]["TRACK"];
-          var trackName = ContentUtils.GetTrackName(track, Settings.Instance.GamePath)
-            .FirstOrDefault();
+      SelectedCar = !string.IsNullOrEmpty(selectedCar)
+        ? Cars.FirstOrDefault(x => x.DirectoryName == selectedCar)
+        : Cars.FirstOrDefault();
 
-          Track = new() {
-            DirectoryName = track,
-            Name = trackName?.Name ?? track,
-            Preview = GetTrackPreview(track),
-          };
+      var info = await kunosClient.GetServerInfo();
+      var index = info.Track.IndexOf('-');
+      var (name, variation) = index == -1
+        ? (info.Track, string.Empty)
+        : (info.Track[..index], info.Track[(index + 1)..]);
 
-          await UpdateCars();
-        }
-      } catch {
-        if (dataReceiver.Client.BaseAddress?.AbsoluteUri != ServerEntry.Http) {
-          return;
-        }
+      var trackNames = ContentUtils.GetTrackName(name, Settings.Instance.GamePath);
+      Track = new() {
+        DirectoryName = name,
+        Variations = new() {
+          new() {
+            Variation = variation,
+          },
+        },
+        Name = (string.IsNullOrEmpty(variation)
+            ? trackNames.FirstOrDefault()?.Name
+            : trackNames.FirstOrDefault(x => x.Variation == variation)?.Name
+          ) ?? name,
+        Preview = GetTrackPreview(name),
+      };
 
-        Cars = new();
-        Track = new();
-      }
+      await UpdateCars();
     }
 
     public async Task ValidateContent() {
       var validationTask = new ValidationTask(ServerEntry);
       StatusBar.Instance.AddTask(validationTask);
-
-      if (validationTask.Worker != null) {
-        await validationTask.Worker;
-      }
+      await validationTask.Worker;
 
       await Refresh();
     }
 
-    private static Bitmap? GetCarPreview(string entry) {
+    private static Bitmap? GetCarPreview(string entry, string? skinName = null) {
       var carDirectory = ContentUtils.GetCarDirectory(entry, Settings.Instance.GamePath);
       if (string.IsNullOrEmpty(carDirectory)) {
         return null;
@@ -168,6 +174,11 @@ namespace ACContentSynchronizer.ClientGui.Views {
       if (!Directory.Exists(carSkinsDirectory)) {
         return null;
       }
+
+      if (!string.IsNullOrEmpty(skinName)) {
+        return new(Path.Combine(carSkinsDirectory, skinName, "preview.jpg"));
+      }
+
       var skins = Directory.GetDirectories(carSkinsDirectory);
       var rnd = new Random();
       var skin = skins[rnd.Next(0, skins.Length)];
@@ -201,8 +212,10 @@ namespace ACContentSynchronizer.ClientGui.Views {
           continue;
         }
 
-        car.Count = update.Count();
-        car.Allowed = update.Count(x => !x.IsConnected);
+        car.Variations = new(update.Select(x => new EntryVariation {
+          Variation = x.Skin,
+          IsConnected = x.IsConnected,
+        }));
       }
     }
   }

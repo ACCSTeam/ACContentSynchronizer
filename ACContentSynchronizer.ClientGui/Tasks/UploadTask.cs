@@ -18,38 +18,45 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
       _content = content;
     }
 
-    public override async Task Run() {
-      try {
-        var dataReceiver = new DataReceiver(_server.Http);
-        var settings = Settings.Instance;
-        await settings.SaveAsync();
+    public override void Dispose() {
+      _content.Dispose();
+      Worker.Dispose();
+    }
 
-        var manifest = new Manifest {
-          Cars = _content.SelectedCars.Select(x => new EntryManifest(x.Path, DirectoryUtils.Size(x.Path),
-            x.SelectedVariation
-            ?? x.Variations.FirstOrDefault())).ToList(),
-        };
+    public override void Run() {
+      Worker = Task.Run(async () => {
+        try {
+          var dataReceiver = new DataReceiver(_server.Http);
+          var settings = Settings.Instance;
+          await settings.SaveAsync();
 
-        if (_content.SelectedTrack != null) {
-          manifest.Track = new(_content.SelectedTrack.Path,
-            DirectoryUtils.Size(_content.SelectedTrack.Path),
-            _content.SelectedTrack.SelectedVariation);
+          var manifest = new Manifest {
+            Cars = _content.SelectedCars.Select(x => new EntryManifest(x.Path, DirectoryUtils.Size(x.Path),
+              x.SelectedVariation
+              ?? x.Variations.FirstOrDefault())).ToList(),
+          };
+
+          if (_content.SelectedTrack != null) {
+            manifest.Track = new(_content.SelectedTrack.Path,
+              DirectoryUtils.Size(_content.SelectedTrack.Path),
+              _content.SelectedTrack.SelectedVariation);
+          }
+
+          State = "Content comparing";
+          var comparedManifest = await dataReceiver.GetUpdateManifest(manifest);
+          State = "Pack content...";
+
+          if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
+            await UpdateContent(dataReceiver, settings.GamePath, comparedManifest);
+          }
+
+          State = "Refreshing server...";
+          await dataReceiver.RefreshServer(_server.Password, manifest);
+          State = "Server refreshed";
+        } catch (Exception e) {
+          State = $"ERROR: {e.Message}";
         }
-
-        State = "Content comparing";
-        var comparedManifest = await dataReceiver.GetUpdateManifest(manifest);
-        State = "Pack content...";
-
-        if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
-          await UpdateContent(dataReceiver, settings.GamePath, comparedManifest);
-        }
-
-        State = "Refreshing server...";
-        await dataReceiver.RefreshServer(_server.Password, manifest);
-        State = "Server refreshed";
-      } catch (Exception e) {
-        State = $"ERROR: {e.Message}";
-      }
+      });
     }
 
     private async Task UpdateContent(DataReceiver dataReceiver, string gamePath, Manifest manifest) {
@@ -77,9 +84,6 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
     }
 
     public override void Cancel() {
-    }
-
-    public override void Dispose() {
     }
   }
 }

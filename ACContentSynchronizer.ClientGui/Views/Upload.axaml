@@ -63,9 +63,9 @@
         <TabItem Header="Tracks">
           <DockPanel>
             <TextBox DockPanel.Dock="Top"
-              Text="{Binding TrackSearch}" />
+                     Text="{Binding TrackSearch}" />
             <ListBox DockPanel.Dock="Bottom"
-              Items="{Binding Tracks}"
+                     Items="{Binding Tracks}"
                      SelectedItem="{Binding SelectedTrack}">
               <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -92,6 +92,7 @@
     <Popup Name="AddPopup"
            PlacementMode="AnchorAndGravity"
            MaxHeight="500"
+           Width="600"
            IsLightDismissEnabled="True">
       <Border BorderThickness="10"
               BorderBrush="{StaticResource UiGrayLight}">

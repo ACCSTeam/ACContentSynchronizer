@@ -18,11 +18,11 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
       set => this.RaiseAndSetIfChanged(ref _state, value);
     }
 
-    public Task? Worker { get; set; }
+    public Task Worker { get; set; } = new(() => { });
 
     public abstract void Dispose();
 
-    public abstract Task Run();
+    public abstract void Run();
 
     public abstract void Cancel();
   }
