@@ -111,12 +111,12 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public async Task Refresh() {
+      var selectedCar = SelectedCar?.DirectoryName;
       Cars = new();
       Track = new();
 
       var kunosClient = new KunosClient(ServerEntry.Ip, ServerEntry.HttpPort);
       var cars = await kunosClient.GetCars(Settings.Instance.SteamId);
-      var selectedCar = SelectedCar?.DirectoryName;
 
       Cars = new(cars.Cars.GroupBy(x => x.Model)
         .Select(x => new ContentEntry {

@@ -25,6 +25,11 @@ namespace ACContentSynchronizer.Server.Controllers {
       _hub = hubContext;
     }
 
+    [HttpGet("rofl")]
+    public string Rolf() {
+      return "mem";
+    }
+
     [HttpGet("getManifest")]
     public Manifest GetManifest() {
       var gamePath = _configuration.GetValue<string>("GamePath");
