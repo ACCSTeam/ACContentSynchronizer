@@ -1,0 +1,90 @@
+name: ACContentSynchronizer
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        targetplatform: [x64]
+
+    runs-on: windows-latest
+
+    env:
+      ProjectName: ACContentSynchronizer
+      ServerPath: ${{ env.ProjectName }}\{${ env.ProjectName }}.ServerWorker
+      ServerBuild: ${{ env.ServerPath }}\publish
+      ServerArchive: ${{ env.ServerBuild }}\${{ env.ProjectName }}.zip
+      ClientPath: ${{  env.ProjectName }}\${{ env.ProjectName }}.ClientGui
+      ClientBuild: ${{ env.ClientPath }}\publish
+      ClientArchive: ${{ env.ClientBuild }}\${{ env.ProjectName }}.zip
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Use Nerdbank.GitVersioning to set version variables
+        uses: aarnott/nbgv@master
+        with:
+          setAllVars: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Build server win-x64
+        run: dotnet publish ${{ env.ServerPath }} -c Release -o ${{ env.ServerBuild }} -r win-x64 -p:PublishSingleFile=true --self-contained true
+
+      - name: Build client win-x64
+        run: dotnet publish ${{ env.ClientPath }} -c Release -o ${{ env.ClientBuild }} -r win-x64 -p:PublishSingleFile=true --self-contained true
+
+      - name: Create server archive win-x64
+        run: Compress-Archive -Path ${{ env.ServerBuild }}\* -DestinationPath ${{ env.ServerArchive }}
+
+      - name: Create server archive win-x64
+        run: Compress-Archive -Path ${{ env.ClientBuild }}\* -DestinationPath ${{ env.ClientArchive }}
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ env.NBGV_Version }}${{ env.NBGV_PrereleaseVersion }}
+          release_name: ${{ env.NBGV_Version }}${{ env.NBGV_PrereleaseVersion }}
+          draft: false
+          prerelease: false
+
+      - name: Update server win-x64
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.ServerArchive }}
+          asset_name: ${{ env.ServerArchive }}
+          asset_content_type: application/zip
+
+      - name: Update client win-x64
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.ServerArchive }}
+          asset_name: ${{ env.ServerArchive }}
+          asset_content_type: application/zip

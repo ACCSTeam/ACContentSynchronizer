@@ -67,6 +67,7 @@ namespace ACContentSynchronizer.ClientGui {
       try {
         client.DownloadProgressChanged += (_, e) => OnProgress?.Invoke(e.ProgressPercentage);
       } catch (OperationCanceledException) {
+        OnComplete?.Invoke();
       }
       client.DownloadFileCompleted += (_, _) => OnComplete?.Invoke();
       client.DownloadFileAsync(new(server), archive);
