@@ -59,7 +59,10 @@ namespace ACContentSynchronizer.ServerWorker {
 
           ZipFile.ExtractToDirectory(_archiveName, Constants.DownloadsPath);
           StopServer();
+          var destinationPath = Path.Combine(Directory.GetCurrentDirectory(), ServerName);
 
+          DirectoryUtils.DeleteIfExists(destinationPath, true);
+          DirectoryUtils.Move(Constants.DownloadsPath, destinationPath);
           StartServer();
           _latestRelease = releases.Id;
         }
