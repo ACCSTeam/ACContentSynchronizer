@@ -16,6 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ACContentSynchronizer.ServerShared\ACContentSynchronizer.ServerShared.csproj" />
+      <ProjectReference Include="..\ACContentSynchronizer\ACContentSynchronizer.csproj" />
     </ItemGroup>
 </Project>

@@ -124,32 +124,7 @@ namespace ACContentSynchronizer.Server.Services {
       var runningProcess = Process.GetProcesses().FirstOrDefault(x => x.ProcessName == serverExecutableName);
       runningProcess?.Kill();
 
-      ExecuteCommand(serverExecutablePath);
-    }
-
-    private static void ExecuteCommand(string command) {
-      Task.Run(() => {
-        ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command}\"") {
-          CreateNoWindow = true,
-          UseShellExecute = false,
-          RedirectStandardError = true,
-          RedirectStandardOutput = true,
-          WorkingDirectory = Directory.GetDirectoryRoot(command),
-        };
-
-        var process = Process.Start(processInfo);
-        process?.WaitForExit();
-
-        var output = process?.StandardOutput.ReadToEnd();
-        var error = process?.StandardError.ReadToEnd();
-
-        var exitCode = process?.ExitCode;
-
-        Console.WriteLine("output>>" + (string.IsNullOrEmpty(output) ? "(none)" : output));
-        Console.WriteLine("error>>" + (string.IsNullOrEmpty(error) ? "(none)" : error));
-        Console.WriteLine("ExitCode: " + exitCode, "ExecuteCommand");
-        process?.Close();
-      });
+      ContentUtils.ExecuteCommand(serverExecutablePath);
     }
 
     public Dictionary<string, Dictionary<string, string>> GetServerInfo() {

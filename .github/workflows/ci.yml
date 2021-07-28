@@ -20,9 +20,12 @@ jobs:
 
     env:
       ProjectName: ACContentSynchronizer
-      ServerPath: ACContentSynchronizer.ServerWorker
-      ServerBuild: ACContentSynchronizer.ServerWorker/publish
-      ServerArchive: ACContentSynchronizer.ServerWorker.zip
+      ServerPath: ACContentSynchronizer.Server
+      ServerBuild: ACContentSynchronizer.Server/publish
+      ServerArchive: ACContentSynchronizer.Server.zip
+      WorkerPath: ACContentSynchronizer.ServerWorker
+      WorkerBuild: ACContentSynchronizer.ServerWorker/publish
+      WorkerArchive: ACContentSynchronizer.ServerWorker.zip
       ClientPath: ACContentSynchronizer.ClientGui
       ClientBuild: ACContentSynchronizer.ClientGui/publish
       ClientArchive: ACContentSynchronizer.ClientGui.zip
@@ -48,13 +51,19 @@ jobs:
         run: dir
 
       - name: Build server win-x64
-        run: dotnet publish ${{ env.ServerPath }} -c Release -o ${{ env.ServerBuild }} -r win-x64 --self-contained true
+        run: dotnet publish ${{ env.ServerPath }} -c Release -o ${{ env.ServerBuild }} -r win-x64 -p:PublishSingleFile=true --self-contained true
+
+      - name: Build worker win-x64
+        run: dotnet publish ${{ env.WorkerPath }} -c Release -o ${{ env.WorkerBuild }} -r win-x64 -p:PublishSingleFile=true --self-contained true
 
       - name: Build client win-x64
         run: dotnet publish ${{ env.ClientPath }} -c Release -o ${{ env.ClientBuild }} -r win-x64 -p:PublishSingleFile=true --self-contained true
 
       - name: Create server archive win-x64
         run: Compress-Archive -Path ${{ env.ServerBuild }}\* -DestinationPath ${{ env.ServerArchive }}
+
+      - name: Create worker archive win-x64
+        run: Compress-Archive -Path ${{ env.WorkerBuild }}\* -DestinationPath ${{ env.WorkerArchive }}
 
       - name: Create server archive win-x64
         run: Compress-Archive -Path ${{ env.ClientBuild }}\* -DestinationPath ${{ env.ClientArchive }}
@@ -79,6 +88,17 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ env.ServerArchive }}
           asset_name: ${{ env.ServerArchive }}
+          asset_content_type: application/zip
+
+      - name: Update worker win-x64
+        id: upload-worker
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.WorkerArchive }}
+          asset_name: ${{ env.WorkerArchive }}
           asset_content_type: application/zip
 
       - name: Update client win-x64

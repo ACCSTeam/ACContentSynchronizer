@@ -1,31 +1,36 @@
 using System;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
-using ACContentSynchronizer.ServerShared;
+using ACContentSynchronizer.Extensions;
+using ACContentSynchronizer.ServerWorker.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace ACContentSynchronizer.ServerWorker {
-  public class Worker : IDisposable {
-    [Import(typeof(IServer))]
-    public IServer? Server { get; set; }
+  public class CustomAssemblyLoadContext : AssemblyLoadContext {
+    public CustomAssemblyLoadContext() : base(true) {
+    }
 
-    public void Dispose() {
-      Server?.Dispose();
+    protected override Assembly? Load(AssemblyName assemblyName) {
+      return null;
     }
   }
 
   public class Updater : BackgroundService {
-    private const string ArchiveName = "ACContentSynchronizer.ServerWorker.zip";
+    private const string ServerName = "ACContentSynchronizer.Server";
+    private readonly string _archiveName = $"{ServerName}.zip";
+    private readonly string _executableName = $"{ServerName}.exe";
     private long _latestRelease;
 
     private readonly ILogger<Updater> _logger;
-    private Task? _serverTask;
-    private IServer? _server;
     private readonly HttpClient _github;
 
     public Updater(ILogger<Updater> logger) {
@@ -40,55 +45,41 @@ namespace ACContentSynchronizer.ServerWorker {
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
-      while (true) {
-        // var releases = await _github.GetJson<List<GithubRepository>>("/repos/the1fest/ACContentSynchronizer/releases");
-        // var latestRelease = releases.FirstOrDefault(x => x.Id == releases.Max(r => r.Id));
-        // var serverUrl = latestRelease?.Assets
-        //   .FirstOrDefault(x => x.Name == ArchiveName)?.BrowserDownloadUrl;
-        //
-        // if (!string.IsNullOrEmpty(serverUrl) && latestRelease?.Id > _latestRelease) {
-        //   var applyTask = new Task(() => { });
-        //   var downloadClient = new WebClient();
-        //   downloadClient.DownloadFileCompleted += (_, _) => applyTask.Start();
-        //   downloadClient.DownloadFileAsync(new(serverUrl), ArchiveName);
-        //   await applyTask;
-        //
-        //   ZipFile.ExtractToDirectory(ArchiveName, Constants.DownloadsPath);
-        //
-        //   _latestRelease = latestRelease.Id;
-        // }
-        StartServer(stoppingToken);
+      while (!stoppingToken.IsCancellationRequested) {
+        var releases = await _github.GetJson<GithubRepository>("/repos/the1fest/ACContentSynchronizer/releases/latest");
+        var serverUrl = releases.Assets
+          .FirstOrDefault(x => x.Name == _archiveName)?.BrowserDownloadUrl;
+
+        if (!string.IsNullOrEmpty(serverUrl) && releases.Id > _latestRelease) {
+          var applyTask = new Task(() => { });
+          var downloadClient = new WebClient();
+          downloadClient.DownloadFileCompleted += (_, _) => applyTask.Start();
+          downloadClient.DownloadFileAsync(new(serverUrl), _archiveName);
+          await applyTask;
+
+          ZipFile.ExtractToDirectory(_archiveName, Constants.DownloadsPath);
+          StopServer();
+
+          StartServer();
+          _latestRelease = releases.Id;
+        }
         await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
       }
     }
 
-    private void StartServer(CancellationToken stoppingToken) {
-      Task.Run(async () => {
-        if (_serverTask != null) {
-          _server?.Stop();
-          await _serverTask;
-        }
-
-        _serverTask = Task.Run(() => {
-          _server = GetServer();
-          _server?.EntryPoint();
-        }, stoppingToken);
-      }, stoppingToken);
-    }
-
-    private IServer? GetServer() {
+    private void StartServer() {
       try {
-        var asm = Assembly.LoadFrom("server/ACContentSynchronizer.Server.dll");
-        using var catalog = new AssemblyCatalog(asm);
-        using var worker = new Worker();
-        using var container = new CompositionContainer(catalog);
-        container.ComposeParts(worker);
-
-        return worker.Server ?? null;
+        var path = Path.Combine(Directory.GetCurrentDirectory(),
+          $"{ServerName}/{_executableName}");
+        ContentUtils.ExecuteCommand(path);
       } catch (Exception e) {
         _logger.LogInformation(e.Message);
-        return null;
       }
+    }
+
+    private void StopServer() {
+      var runningProcess = Process.GetProcesses().FirstOrDefault(x => x.ProcessName == _executableName);
+      runningProcess?.Kill();
     }
   }
 }
