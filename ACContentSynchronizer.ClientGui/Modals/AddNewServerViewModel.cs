@@ -53,8 +53,10 @@ namespace ACContentSynchronizer.ClientGui.Modals {
         using var dataReceiver = new DataReceiver(serverEntry.Http);
         var serverProps = await dataReceiver.GetServerProps();
 
-        serverEntry.Name = serverProps.Name;
-        serverEntry.HttpPort = serverProps.HttpPort;
+        if (serverProps != null) {
+          serverEntry.Name = serverProps.Name;
+          serverEntry.HttpPort = serverProps.HttpPort;
+        }
       } catch (HttpRequestException e) {
         if (e.StatusCode == null) {
           Toast.Open("Cant connect to server");

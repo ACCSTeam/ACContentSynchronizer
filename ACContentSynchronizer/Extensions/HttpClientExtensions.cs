@@ -5,12 +5,12 @@ using Newtonsoft.Json;
 
 namespace ACContentSynchronizer.Extensions {
   public static class HttpClientExtensions {
-    public static async Task<T> GetJson<T>(this HttpClient client, string action) {
+    public static async Task<T?> GetJson<T>(this HttpClient client, string action) {
       var json = await client.GetStringAsync(action);
       return JsonConvert.DeserializeObject<T>(json);
     }
 
-    public static async Task<T> PostJson<T>(this HttpClient client, string action, object body) {
+    public static async Task<T?> PostJson<T>(this HttpClient client, string action, object body) {
       var response = await client.PostAsJsonAsync(action, body);
       var json = await response.Content.ReadAsStringAsync();
       return JsonConvert.DeserializeObject<T>(json);

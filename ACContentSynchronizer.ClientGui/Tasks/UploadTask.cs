@@ -46,7 +46,7 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
           var comparedManifest = await dataReceiver.GetUpdateManifest(manifest);
           State = "Pack content...";
 
-          if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
+          if (comparedManifest != null && (comparedManifest.Cars.Any() || comparedManifest.Track != null)) {
             await UpdateContent(dataReceiver, settings.GamePath, comparedManifest);
           }
 

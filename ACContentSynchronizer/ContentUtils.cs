@@ -148,7 +148,7 @@ namespace ACContentSynchronizer {
 
     public static void ExecuteCommand(string command) {
       Task.Run(() => {
-       ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command}\"") {
+        ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command}\"") {
           CreateNoWindow = true,
           UseShellExecute = false,
           RedirectStandardError = true,
@@ -229,7 +229,7 @@ namespace ACContentSynchronizer {
       return (contentCarsPath, contentTracksPath);
     }
 
-    public static string GetCarName(string entry, string gamePath) {
+    public static string? GetCarName(string entry, string gamePath) {
       var carDirectory = GetCarDirectory(entry, gamePath);
       if (string.IsNullOrEmpty(carDirectory)) {
         return entry;
@@ -242,7 +242,7 @@ namespace ACContentSynchronizer {
 
       var json = File.ReadAllText(carDataPath);
       var car = JsonConvert.DeserializeObject<CarInfo>(json);
-      return car.Name;
+      return car?.Name;
     }
 
     public static List<string> GetCarSkins(string entry, string gamePath) {

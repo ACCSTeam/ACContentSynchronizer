@@ -53,58 +53,60 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
 
           Canceller.Token.ThrowIfCancellationRequested();
           State = "Content comparing";
-          var comparedManifest = dataReceiver.CompareContent(settings.GamePath, manifest);
+          if (manifest != null) {
+            var comparedManifest = dataReceiver.CompareContent(settings.GamePath, manifest);
 
-          if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
-            Canceller.Token.ThrowIfCancellationRequested();
-            State = "Preparing content...";
+            if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
+              Canceller.Token.ThrowIfCancellationRequested();
+              State = "Preparing content...";
 
-            var clientId = await SubscribeToProgress(ServerEntry, Canceller.Token);
-            session = await dataReceiver.PrepareContent(comparedManifest);
+              var clientId = await SubscribeToProgress(ServerEntry, Canceller.Token);
+              session = await dataReceiver.PrepareContent(comparedManifest);
 
-            OnException += exception => {
-              if (exception is not OperationCanceledException) {
-                return;
-              }
+              OnException += exception => {
+                if (exception is not OperationCanceledException) {
+                  return;
+                }
 
-              if (!string.IsNullOrEmpty(session)) {
-                dataReceiver.CancelPreparing(session);
-              }
-            };
+                if (!string.IsNullOrEmpty(session)) {
+                  dataReceiver.CancelPreparing(session);
+                }
+              };
 
-            Canceller.Token.ThrowIfCancellationRequested();
-            State = "Pack content...";
-            await dataReceiver.PackContent(session, clientId);
-            var applyTask = new Task(() => {
-              try {
-                Canceller.Token.ThrowIfCancellationRequested();
-                State = "Downloaded";
+              Canceller.Token.ThrowIfCancellationRequested();
+              State = "Pack content...";
+              await dataReceiver.PackContent(session, clientId);
+              var applyTask = new Task(() => {
+                try {
+                  Canceller.Token.ThrowIfCancellationRequested();
+                  State = "Downloaded";
 
-                Canceller.Token.ThrowIfCancellationRequested();
-                State = "Trying to save content...";
-                dataReceiver.SaveData(session);
-                Canceller.Token.ThrowIfCancellationRequested();
-                State = "Content saved";
+                  Canceller.Token.ThrowIfCancellationRequested();
+                  State = "Trying to save content...";
+                  dataReceiver.SaveData(session);
+                  Canceller.Token.ThrowIfCancellationRequested();
+                  State = "Content saved";
 
-                Canceller.Token.ThrowIfCancellationRequested();
-                State = "Applying changes...";
-                dataReceiver.Apply(settings.GamePath, session);
-                State = "Done!";
-                Canceller.Token.ThrowIfCancellationRequested();
-              } catch (Exception e) {
-                State = $"ERROR: {e.Message}";
-              }
-            });
+                  Canceller.Token.ThrowIfCancellationRequested();
+                  State = "Applying changes...";
+                  dataReceiver.Apply(settings.GamePath, session);
+                  State = "Done!";
+                  Canceller.Token.ThrowIfCancellationRequested();
+                } catch (Exception e) {
+                  State = $"ERROR: {e.Message}";
+                }
+              });
 
-            dataReceiver.OnProgress += progress => SetProgress(progress, Canceller.Token);
-            dataReceiver.OnComplete += () => applyTask.Start();
+              dataReceiver.OnProgress += progress => SetProgress(progress, Canceller.Token);
+              dataReceiver.OnComplete += () => applyTask.Start();
 
-            Canceller.Token.ThrowIfCancellationRequested();
-            State = "Downloading content...";
-            dataReceiver.DownloadContent(session, clientId);
-            await applyTask;
-          } else {
-            State = "Content no need to update";
+              Canceller.Token.ThrowIfCancellationRequested();
+              State = "Downloading content...";
+              dataReceiver.DownloadContent(session, clientId);
+              await applyTask;
+            } else {
+              State = "Content no need to update";
+            }
           }
         } catch (OperationCanceledException) {
           State = "Task canceled";

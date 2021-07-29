@@ -42,7 +42,6 @@
                            VerticalAlignment="Center"
                            TextWrapping="Wrap"
                            Classes="SidebarText"
-                           Width="{Binding ElementName=Servers, Path=DataContext.LabelWidth}"
                            Text="{Binding Name}" />
                 <Button Grid.Column="1"
                         Classes="ListButton TransparentButton"

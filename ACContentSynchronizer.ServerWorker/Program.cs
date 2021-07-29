@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -11,9 +7,10 @@ namespace ACContentSynchronizer.ServerWorker {
       CreateHostBuilder(args).Build().Run();
     }
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-      Host.CreateDefaultBuilder(args)
-        .ConfigureServices((hostContext, services) => services.AddHostedService<Updater>())
+    private static IHostBuilder CreateHostBuilder(string[] args) {
+      return Host.CreateDefaultBuilder(args)
+        .ConfigureServices((_, services) => services.AddHostedService<Updater>())
         .UseWindowsService();
+    }
   }
 }

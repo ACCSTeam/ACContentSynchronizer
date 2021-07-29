@@ -131,12 +131,12 @@ namespace ACContentSynchronizer.Server.Controllers {
     }
 
     [HttpGet("getServerProps")]
-    public ServerProps? GetServerProps() {
+    public ServerProps GetServerProps() {
       return _serverConfiguration.GetServerProps();
     }
 
     [HttpGet("getServerInfo")]
-    public Dictionary<string, Dictionary<string, string>>? GetServerInfo() {
+    public Dictionary<string, Dictionary<string, string>> GetServerInfo() {
       return _serverConfiguration.GetServerInfo();
     }
   }

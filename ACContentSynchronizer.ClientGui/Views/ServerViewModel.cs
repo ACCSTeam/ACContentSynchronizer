@@ -118,43 +118,47 @@ namespace ACContentSynchronizer.ClientGui.Views {
       var kunosClient = new KunosClient(ServerEntry.Ip, ServerEntry.HttpPort);
       var cars = await kunosClient.GetCars(Settings.Instance.SteamId);
 
-      Cars = new(cars.Cars.GroupBy(x => x.Model)
-        .Select(x => new ContentEntry {
-          DirectoryName = x.Key,
-          Name = ContentUtils.GetCarName(x.Key, Settings.Instance.GamePath),
-          Preview = GetCarPreview(x.Key, x.First().Skin),
-          Variations = new(x.Select(s => new EntryVariation {
-            Variation = s.Skin,
-            IsConnected = s.IsConnected,
-          })),
-        }));
+      if (cars != null) {
+        Cars = new(cars.Cars.GroupBy(x => x.Model)
+          .Select(x => new ContentEntry {
+            DirectoryName = x.Key,
+            Name = ContentUtils.GetCarName(x.Key, Settings.Instance.GamePath) ?? x.Key,
+            Preview = GetCarPreview(x.Key, x.First().Skin),
+            Variations = new(x.Select(s => new EntryVariation {
+              Variation = s.Skin,
+              IsConnected = s.IsConnected,
+            })),
+          }));
 
-      SelectedCar = !string.IsNullOrEmpty(selectedCar)
-        ? Cars.FirstOrDefault(x => x.DirectoryName == selectedCar)
-        : Cars.FirstOrDefault();
+        SelectedCar = !string.IsNullOrEmpty(selectedCar)
+          ? Cars.FirstOrDefault(x => x.DirectoryName == selectedCar)
+          : Cars.FirstOrDefault();
+      }
 
       var info = await kunosClient.GetServerInfo();
-      var index = info.Track.IndexOf('-');
-      var (name, variation) = index == -1
-        ? (info.Track, string.Empty)
-        : (info.Track[..index], info.Track[(index + 1)..]);
+      if (info != null) {
+        var index = info.Track.IndexOf('-');
+        var (name, variation) = index == -1
+          ? (info.Track, string.Empty)
+          : (info.Track[..index], info.Track[(index + 1)..]);
 
-      var trackNames = ContentUtils.GetTrackName(name, Settings.Instance.GamePath);
-      Track = new() {
-        DirectoryName = name,
-        Variations = new() {
-          new() {
-            Variation = variation,
+        var trackNames = ContentUtils.GetTrackName(name, Settings.Instance.GamePath);
+        Track = new() {
+          DirectoryName = name,
+          Variations = new() {
+            new() {
+              Variation = variation,
+            },
           },
-        },
-        Name = (string.IsNullOrEmpty(variation)
-            ? trackNames.FirstOrDefault()?.Name
-            : trackNames.FirstOrDefault(x => x.Variation == variation)?.Name
-          ) ?? name,
-        Preview = GetTrackPreview(name),
-      };
+          Name = (string.IsNullOrEmpty(variation)
+              ? trackNames.FirstOrDefault()?.Name
+              : trackNames.FirstOrDefault(x => x.Variation == variation)?.Name
+            ) ?? name,
+          Preview = GetTrackPreview(name),
+        };
 
-      await UpdateCars();
+        await UpdateCars();
+      }
     }
 
     public async Task ValidateContent() {
@@ -203,19 +207,21 @@ namespace ACContentSynchronizer.ClientGui.Views {
     public async Task UpdateCars() {
       var kunosClient = new KunosClient(ServerEntry.Ip, ServerEntry.HttpPort);
       var cars = await kunosClient.GetCars(Settings.Instance.SteamId);
-      var grouped = cars.Cars.GroupBy(x => x.Model);
+      if (cars != null) {
+        var grouped = cars.Cars.GroupBy(x => x.Model);
 
-      foreach (var update in grouped) {
-        var car = Cars.FirstOrDefault(x => x.DirectoryName == update.Key);
+        foreach (var update in grouped) {
+          var car = Cars.FirstOrDefault(x => x.DirectoryName == update.Key);
 
-        if (car == null) {
-          continue;
+          if (car == null) {
+            continue;
+          }
+
+          car.Variations = new(update.Select(x => new EntryVariation {
+            Variation = x.Skin,
+            IsConnected = x.IsConnected,
+          }));
         }
-
-        car.Variations = new(update.Select(x => new EntryVariation {
-          Variation = x.Skin,
-          IsConnected = x.IsConnected,
-        }));
       }
     }
   }

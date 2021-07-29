@@ -93,7 +93,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
       if (Directory.Exists(carsDirectory)) {
         AvailableCars.AddRange(Directory.GetDirectories(carsDirectory)
           .Select(x => new EntryViewModel(x,
-            ContentUtils.GetCarName(DirectoryUtils.Name(x), settings.GamePath),
+            ContentUtils.GetCarName(DirectoryUtils.Name(x), settings.GamePath) ?? DirectoryUtils.Name(x),
             new AvaloniaList<string>(ContentUtils
               .GetCarSkins(DirectoryUtils.Name(x), settings.GamePath)))));
       }

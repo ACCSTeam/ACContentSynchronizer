@@ -21,11 +21,11 @@ namespace ACContentSynchronizer {
   }
 
   public static class ServerApiProvider {
-    public static Task<ServerState> GetCars(this KunosClient client, long steamId) {
+    public static Task<ServerState?> GetCars(this KunosClient client, long steamId) {
       return client.Client.GetJson<ServerState>($"JSON|{steamId}");
     }
 
-    public static Task<ServerInfo> GetServerInfo(this KunosClient client) {
+    public static Task<ServerInfo?> GetServerInfo(this KunosClient client) {
       return client.Client.GetJson<ServerInfo>("INFO");
     }
 

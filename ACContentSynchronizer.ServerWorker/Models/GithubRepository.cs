@@ -59,7 +59,7 @@ namespace ACContentSynchronizer.ServerWorker.Models {
     public string Body { get; set; } = "";
   }
 
-  public partial class Asset {
+  public class Asset {
     [JsonProperty("url")]
     public string Url { get; set; } = "";
 
@@ -100,7 +100,7 @@ namespace ACContentSynchronizer.ServerWorker.Models {
     public string BrowserDownloadUrl { get; set; } = "";
   }
 
-  public partial class Author {
+  public class Author {
     [JsonProperty("login")]
     public string Login { get; set; } = "";
 

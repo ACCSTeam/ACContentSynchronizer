@@ -37,7 +37,7 @@ namespace ACContentSynchronizer.ClientGui {
     public event ProgressEvent? OnProgress;
     public event CompleteEvent? OnComplete;
 
-    public Task<Manifest> DownloadManifest() {
+    public Task<Manifest?> DownloadManifest() {
       return Client.GetJson<Manifest>("getManifest");
     }
 
@@ -81,7 +81,7 @@ namespace ACContentSynchronizer.ClientGui {
       ContentUtils.ApplyContent(gamePath, session);
     }
 
-    public Task<Manifest> GetUpdateManifest(Manifest manifest) {
+    public Task<Manifest?> GetUpdateManifest(Manifest manifest) {
       return Client.PostJson<Manifest>("getUpdateManifest", manifest);
     }
 
@@ -89,11 +89,11 @@ namespace ACContentSynchronizer.ClientGui {
       await Client.PostAsJsonAsync($"refreshServer?adminPassword={adminPassword}", manifest);
     }
 
-    public Task<Dictionary<string, Dictionary<string, string>>> GetServerInfo() {
+    public Task<Dictionary<string, Dictionary<string, string>>?> GetServerInfo() {
       return Client.GetJson<Dictionary<string, Dictionary<string, string>>>("getServerInfo");
     }
 
-    public Task<ServerProps> GetServerProps() {
+    public Task<ServerProps?> GetServerProps() {
       return Client.GetJson<ServerProps>("getServerProps");
     }
   }
