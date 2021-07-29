@@ -42,7 +42,7 @@ namespace ACContentSynchronizer.ClientGui.Behaviors {
     protected override void OnPropertyChanged<T>(AvaloniaPropertyChangedEventArgs<T> e) {
       base.OnPropertyChanged(e);
 
-      if (!(AssociatedObject is IStyledElement styledElement)) {
+      if (AssociatedObject is not IStyledElement styledElement) {
         return;
       }
 

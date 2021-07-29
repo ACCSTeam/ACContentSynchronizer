@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace ACContentSynchronizer.Models {
   public class TrackInfo {
@@ -20,7 +19,7 @@ namespace ACContentSynchronizer.Models {
 
     public string Width { get; set; } = "";
 
-    [JsonPropertyName("pitboxes")]
+    [JsonProperty("pitboxes")]
     public string PitBoxes { get; set; } = "";
 
     public string Run { get; set; } = "";
@@ -35,7 +34,7 @@ namespace ACContentSynchronizer.Models {
 
     public static TrackInfo? FromJson(string json) {
       try {
-        return JsonSerializer.Deserialize<TrackInfo>(json, ContentUtils.JsonSerializerOptions);
+        return JsonConvert.DeserializeObject<TrackInfo>(json);
       } catch {
         return new() {
           Name = "error",

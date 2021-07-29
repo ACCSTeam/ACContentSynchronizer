@@ -5,7 +5,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.Json;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
@@ -13,10 +12,6 @@ using Newtonsoft.Json;
 
 namespace ACContentSynchronizer {
   public static class ContentUtils {
-    public static readonly JsonSerializerOptions JsonSerializerOptions = new() {
-      PropertyNameCaseInsensitive = true,
-    };
-
     public static Manifest GetManifest(string gamePath, string[] carsName, string trackName) {
       var path = Path.Combine(gamePath, Constants.ContentFolder);
       var pathsOfCars = Directory.GetDirectories(Path.Combine(path, Constants.CarsFolder));
@@ -93,21 +88,6 @@ namespace ACContentSynchronizer {
       }
 
       return availableContent;
-    }
-
-    public static (string[] cars, string[] tracks) GetContentNames(string gamePath) {
-      var path = Path.Combine(gamePath, Constants.ContentFolder);
-
-      return (
-        Directory.GetDirectories(Path
-            .Combine(path, Constants.CarsFolder))
-          .Select(DirectoryUtils.Name)
-          .ToArray(),
-        Directory.GetDirectories(Path
-            .Combine(path, Constants.TracksFolder))
-          .Select(DirectoryUtils.Name)
-          .ToArray()
-      );
     }
 
     public static void UnpackContent(string connectionId) {

@@ -62,9 +62,9 @@ namespace ACContentSynchronizer.ClientGui.Views {
       _track.Dispose();
     }
 
-    private async Task Booking(ContentEntry value) {
+    private Task Booking(ContentEntry value) {
       using var kunosClient = new KunosClient(ServerEntry.Ip, ServerEntry.HttpPort);
-      var json = await kunosClient.Booking(value.DirectoryName, value.Variation ?? "", "fEst", "EE",
+      return kunosClient.Booking(value.DirectoryName, value.Variation ?? "", "fEst", "EE",
         Settings.Instance.SteamId.ToString(), ServerEntry.Password);
     }
 

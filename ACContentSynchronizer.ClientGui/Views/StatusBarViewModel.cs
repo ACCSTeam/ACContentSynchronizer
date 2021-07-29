@@ -20,8 +20,11 @@ namespace ACContentSynchronizer.ClientGui.Views {
         foreach (var statusBarEntry in enumerable) {
           if (statusBarEntry is { ViewModel: { } }) {
             statusBarEntry.ViewModel.Task.PropertyChanged += (_, _) => {
-              var count = Tasks.Count(x => x.ViewModel != null && x.ViewModel.Task.Progress > 0);
-              var progress = Tasks.Sum(x => x.ViewModel?.Task.Progress ?? 0);
+              var tasks = Tasks.Where(x => !(x.ViewModel?.Task.Worker.IsCompleted ?? true))
+                .ToList();
+
+              var count = tasks.Count(x => x.ViewModel != null && x.ViewModel.Task.Progress > 0);
+              var progress = tasks.Sum(x => x.ViewModel?.Task.Progress ?? 0);
 
               Progress = progress > 0 && count > 0
                 ? progress / count
@@ -49,7 +52,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
     public void AddTask(TaskViewModel task) {
       var entry = new StatusBarEntry();
       entry.Run(task, Tasks);
-      Tasks.Add(entry);
+      Tasks.Insert(0, entry);
     }
   }
 }

@@ -12,7 +12,7 @@ namespace ACContentSynchronizer.ServerWorker {
     private static IHostBuilder CreateHostBuilder(string[] args) {
       var pathToExe = Process.GetCurrentProcess().MainModule?.FileName;
       var pathToContentRoot = Path.GetDirectoryName(pathToExe);
-      Directory.SetCurrentDirectory(pathToContentRoot);
+      Directory.SetCurrentDirectory(pathToContentRoot!);
       return Host.CreateDefaultBuilder(args)
         .ConfigureServices((_, services) => services.AddHostedService<Updater>())
         .UseContentRoot(pathToContentRoot)
