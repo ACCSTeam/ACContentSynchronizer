@@ -67,6 +67,7 @@ namespace ACContentSynchronizer.ServerWorker {
                 File.Move(file, destinationPath, true);
               }
 
+              DirectoryUtils.DeleteIfExists(Constants.DownloadsPath);
               StartServer();
 
               _latestRelease = releases.Id;
