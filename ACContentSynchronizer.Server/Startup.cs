@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Prometheus;
 
 namespace ACContentSynchronizer.Server {
   public class Startup {
@@ -40,6 +41,19 @@ namespace ACContentSynchronizer.Server {
       app.UseRouting();
 
       app.UseAuthorization();
+
+      var counter = Metrics.CreateCounter("api_path_counter", "Counts requests to the API endpoints",
+        new CounterConfiguration {
+          LabelNames = new[] { "method", "endpoint" },
+        });
+
+      app.Use((context, next) => {
+        counter.WithLabels(context.Request.Method, context.Request.Path).Inc();
+        return next();
+      });
+
+      app.UseMetricServer();
+      app.UseHttpMetrics();
 
       app.UseEndpoints(endpoints => {
         endpoints.MapControllers();
