@@ -35,28 +35,40 @@ namespace ACContentSynchronizer.ServerWorker {
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
       while (!stoppingToken.IsCancellationRequested) {
-        var releases = await _github.GetJson<GithubRepository>("/repos/the1fest/ACContentSynchronizer/releases/latest");
-        var serverUrl = releases?.Assets
-          .FirstOrDefault(x => x.Name == _archiveName)?.BrowserDownloadUrl;
+        try {
+          var releases = await _github
+            .GetJson<GithubRepository>("/repos/the1fest/ACContentSynchronizer/releases/latest");
 
-        if (!string.IsNullOrEmpty(serverUrl) && releases?.Id > _latestRelease) {
-          _logger.LogInformation($"Has new release {DateTime.Now}");
-          var downloadClient = new WebClient();
-          downloadClient.DownloadFileAsync(new(serverUrl), _archiveName);
-          downloadClient.DownloadFileCompleted += (_, _) => {
-            _logger.LogInformation($"Downloaded {DateTime.Now}");
-            ZipFile.ExtractToDirectory(_archiveName, Constants.DownloadsPath);
-            StopServer();
-            var destinationPath = Path.Combine(Directory.GetCurrentDirectory(), ServerName);
+          var serverUrl = releases?.Assets
+            .FirstOrDefault(x => x.Name == _archiveName)?.BrowserDownloadUrl;
 
-            DirectoryUtils.DeleteIfExists(destinationPath, true);
-            DirectoryUtils.Move(Constants.DownloadsPath, destinationPath);
-            StartServer();
-            _latestRelease = releases.Id;
-            _logger.LogInformation($"Done {DateTime.Now}");
-          };
+          if (!string.IsNullOrEmpty(serverUrl) && releases?.Id > _latestRelease) {
+            _logger.LogInformation($"Has new release {DateTime.Now}");
+            var downloadClient = new WebClient();
+            downloadClient.DownloadFileAsync(new(serverUrl), _archiveName);
+            downloadClient.DownloadFileCompleted += (_, _) => {
+              _logger.LogInformation($"Downloaded {DateTime.Now}");
+              ZipFile.ExtractToDirectory(_archiveName, Constants.DownloadsPath);
+              StopServer();
+              var files = Directory.GetFiles(Constants.DownloadsPath);
+
+              foreach (var file in files) {
+                var destinationPath = Path.Combine(Directory.GetCurrentDirectory(),
+                  ServerName, DirectoryUtils.Name(file));
+
+                File.Move(file, destinationPath, true);
+              }
+
+              StartServer();
+
+              _latestRelease = releases.Id;
+              _logger.LogInformation($"Done {DateTime.Now}");
+            };
+          }
+        } catch (Exception e) {
+          _logger.LogError(e.Message);
         }
-        await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
+        await Task.Delay(TimeSpan.FromMinutes(30), stoppingToken);
       }
     }
 
