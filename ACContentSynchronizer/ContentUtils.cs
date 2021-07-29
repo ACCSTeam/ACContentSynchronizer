@@ -113,13 +113,13 @@ namespace ACContentSynchronizer {
     public static void UnpackContent(string connectionId) {
       var downloads = Path.Combine(connectionId, Constants.DownloadsPath);
       var archive = Path.Combine(connectionId, Constants.ContentArchive);
-      DirectoryUtils.DeleteIfExists(downloads, true);
+      DirectoryUtils.DeleteIfExists(downloads);
 
       if (!File.Exists(archive)) {
         return;
       }
 
-      DirectoryUtils.DeleteIfExists(downloads, true);
+      DirectoryUtils.DeleteIfExists(downloads);
       Directory.CreateDirectory(downloads);
 
       using var content = ZipFile.Open(archive, ZipArchiveMode.Read);
@@ -202,11 +202,11 @@ namespace ACContentSynchronizer {
         }
       }
 
-      DirectoryUtils.DeleteIfExists(Path.Combine(connectionId, Constants.DownloadsPath), true);
+      DirectoryUtils.DeleteIfExists(Path.Combine(connectionId, Constants.DownloadsPath));
     }
 
     private static void MoveContent(string entry, string contentPath) {
-      DirectoryUtils.DeleteIfExists(contentPath, true);
+      DirectoryUtils.DeleteIfExists(contentPath);
       DirectoryUtils.Move(entry, contentPath);
     }
 

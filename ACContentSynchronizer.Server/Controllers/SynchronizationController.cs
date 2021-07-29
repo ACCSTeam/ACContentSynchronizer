@@ -95,7 +95,7 @@ namespace ACContentSynchronizer.Server.Controllers {
       await fileStream.CopyToAsync(Response.Body);
       fileStream.Close();
       await fileStream.DisposeAsync();
-      DirectoryUtils.DeleteIfExists(session, true);
+      DirectoryUtils.DeleteIfExists(session);
     }
 
     [HttpPost("getUpdateManifest")]

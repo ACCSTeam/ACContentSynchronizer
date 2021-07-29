@@ -21,7 +21,7 @@ namespace ACContentSynchronizer.Models {
       try {
         var contentArchive = Path.Combine(session, Constants.ContentArchive);
 
-        DirectoryUtils.DeleteIfExists(session, true);
+        DirectoryUtils.DeleteIfExists(session);
         Directory.CreateDirectory(session);
         FileUtils.DeleteIfExists(contentArchive);
         await FileUtils.CreateIfNotExistsAsync(contentArchive);
@@ -37,7 +37,7 @@ namespace ACContentSynchronizer.Models {
           CalculateProgress(entriesPassed, Track.Name);
         }
       } catch (Exception) {
-        DirectoryUtils.DeleteIfExists(session, true);
+        DirectoryUtils.DeleteIfExists(session);
       } finally {
         GC.Collect();
       }

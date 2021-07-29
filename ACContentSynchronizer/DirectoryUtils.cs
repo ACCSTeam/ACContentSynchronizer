@@ -13,9 +13,9 @@ namespace ACContentSynchronizer {
       }
     }
 
-    public static void DeleteIfExists(string path, bool recursive = false) {
+    public static void DeleteIfExists(string path) {
       if (Directory.Exists(path)) {
-        Directory.Delete(path, recursive);
+        Directory.Delete(path, true);
       }
     }
 
@@ -52,7 +52,7 @@ namespace ACContentSynchronizer {
     public static void Move(string sourceDirName, string destDirName) {
       if (Path.GetPathRoot(sourceDirName) != Path.GetPathRoot(destDirName)) {
         Copy(sourceDirName, destDirName, true);
-        DeleteIfExists(sourceDirName, true);
+        DeleteIfExists(sourceDirName);
       } else {
         Directory.Move(sourceDirName, destDirName);
       }

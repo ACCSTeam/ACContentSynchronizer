@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -10,6 +11,7 @@ namespace ACContentSynchronizer.ServerWorker {
     private static IHostBuilder CreateHostBuilder(string[] args) {
       return Host.CreateDefaultBuilder(args)
         .ConfigureServices((_, services) => services.AddHostedService<Updater>())
+        .UseContentRoot(Directory.GetCurrentDirectory())
         .UseWindowsService();
     }
   }

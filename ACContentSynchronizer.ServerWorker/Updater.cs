@@ -44,18 +44,26 @@ namespace ACContentSynchronizer.ServerWorker {
 
           if (!string.IsNullOrEmpty(serverUrl) && releases?.Id > _latestRelease) {
             _logger.LogInformation($"Has new release {DateTime.Now}");
+
             var downloadClient = new WebClient();
             downloadClient.DownloadFileAsync(new(serverUrl), _archiveName);
+
             downloadClient.DownloadFileCompleted += (_, _) => {
               _logger.LogInformation($"Downloaded {DateTime.Now}");
+
+              DirectoryUtils.DeleteIfExists(Constants.DownloadsPath);
               ZipFile.ExtractToDirectory(_archiveName, Constants.DownloadsPath);
+              FileUtils.DeleteIfExists(_archiveName);
+
               StopServer();
+
               var files = Directory.GetFiles(Constants.DownloadsPath);
+              var serverPath = Path.Combine(Directory.GetCurrentDirectory(), ServerName);
+
+              DirectoryUtils.CreateIfNotExists(serverPath);
 
               foreach (var file in files) {
-                var destinationPath = Path.Combine(Directory.GetCurrentDirectory(),
-                  ServerName, DirectoryUtils.Name(file));
-
+                var destinationPath = Path.Combine(serverPath, DirectoryUtils.Name(file));
                 File.Move(file, destinationPath, true);
               }
 
@@ -76,7 +84,9 @@ namespace ACContentSynchronizer.ServerWorker {
       try {
         var path = Path.Combine(Directory.GetCurrentDirectory(),
           $"{ServerName}/{_executableName}");
+
         ContentUtils.ExecuteCommand(path);
+
         _logger.LogInformation($"Server started {DateTime.Now}");
       } catch (Exception e) {
         _logger.LogInformation(e.Message);
@@ -88,6 +98,7 @@ namespace ACContentSynchronizer.ServerWorker {
 
       if (runningProcess != null) {
         runningProcess.Kill();
+
         _logger.LogInformation($"Server stopped  {DateTime.Now}");
       } else {
         _logger.LogInformation($"Server not in running state {DateTime.Now}");

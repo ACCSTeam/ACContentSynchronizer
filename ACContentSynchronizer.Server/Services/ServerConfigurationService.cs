@@ -39,7 +39,7 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public async Task GetArchive(HttpRequest request, string connectionId, string client) {
-      DirectoryUtils.DeleteIfExists(connectionId, true);
+      DirectoryUtils.DeleteIfExists(connectionId);
       DirectoryUtils.CreateIfNotExists(connectionId);
 
       var sessionPath = Path.Combine(connectionId, Constants.ContentArchive);

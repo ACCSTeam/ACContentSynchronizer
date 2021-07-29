@@ -65,7 +65,7 @@ jobs:
       - name: Create worker archive win-x64
         run: Compress-Archive -Path ${{ env.WorkerBuild }}\* -DestinationPath ${{ env.WorkerArchive }}
 
-      - name: Create server archive win-x64
+      - name: Create client archive win-x64
         run: Compress-Archive -Path ${{ env.ClientBuild }}\* -DestinationPath ${{ env.ClientArchive }}
 
       - name: Create release
