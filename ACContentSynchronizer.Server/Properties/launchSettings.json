@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "ACContentSynchronizer.ServerWorker": {
+    "ACContentSynchronizer.Server": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "environmentVariables": {

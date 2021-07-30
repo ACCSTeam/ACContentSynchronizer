@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
+using Serilog;
 
 namespace ACContentSynchronizer.Server {
   public class Startup {
@@ -38,6 +39,7 @@ namespace ACContentSynchronizer.Server {
       app.UseSwagger();
       app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ACContentSynchronizer.Server v1"));
 
+      app.UseSerilogRequestLogging();
       app.UseRouting();
 
       app.UseAuthorization();

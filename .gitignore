@@ -8,6 +8,7 @@ content/
 deploy/
 downloads/
 Runner/
+logs/
 *.zip
 appsettings.*.json
 pvs-output
