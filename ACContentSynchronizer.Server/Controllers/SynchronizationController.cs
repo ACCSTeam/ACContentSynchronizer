@@ -25,11 +25,6 @@ namespace ACContentSynchronizer.Server.Controllers {
       _hub = hubContext;
     }
 
-    [HttpGet("rofl")]
-    public string Rolf() {
-      return "mem";
-    }
-
     [HttpGet("getManifest")]
     public Manifest GetManifest() {
       var gamePath = _configuration.GetValue<string>("GamePath");
@@ -45,7 +40,7 @@ namespace ACContentSynchronizer.Server.Controllers {
 
     [HttpPost("prepareContent")]
     public async Task<string> PrepareContent(Manifest manifest) {
-      await _hub.Clients.All.SendAsync(HubMethods.Message.ToString(), "Content uploaded");
+      await _hub.Clients.All.SendAsync(HubMethods.Message, "Content uploaded");
       var gamePath = _configuration.GetValue<string>("GamePath");
 
       var content = ContentUtils.PrepareContent(gamePath, manifest);
@@ -63,8 +58,8 @@ namespace ACContentSynchronizer.Server.Controllers {
         return;
       }
 
-      content.OnProgress += async (progress, entry) => {
-        await _hub.Clients.Client(client).SendAsync(HubMethods.PackProgress.ToString(), progress, entry);
+      content.OnProgress += async (progress, message) => {
+        await _hub.Clients.Client(client).SendAsync(HubMethods.ProgressMessage, progress, message);
       };
       await content.Pack(HttpContext.Connection.Id);
       ProcessedContent.AvailableContents.Remove(content);
@@ -87,8 +82,7 @@ namespace ACContentSynchronizer.Server.Controllers {
       await using var fileStream = System.IO.File.OpenRead(path);
 
       await _hub.Clients.Client(client)
-        .SendAsync(HubMethods.PackProgress
-          .ToString(), 0, $"content size {fileStream.Length}");
+        .SendAsync(HubMethods.Message, $"content size {fileStream.Length}");
 
       Response.Headers["Content-Type"] = Constants.ContentType;
       Response.Headers["Content-Length"] = fileStream.Length.ToString();
@@ -117,7 +111,7 @@ namespace ACContentSynchronizer.Server.Controllers {
       ContentUtils.UnpackContent(HttpContext.Connection.Id);
       ContentUtils.ApplyContent(gamePath, HttpContext.Connection.Id);
 
-      await _hub.Clients.All.SendAsync(HubMethods.Message.ToString(), "Content uploaded");
+      await _hub.Clients.All.SendAsync(HubMethods.Message, "Content uploaded");
     }
 
     [HttpPost("refreshServer")]
@@ -127,7 +121,7 @@ namespace ACContentSynchronizer.Server.Controllers {
       await _serverConfiguration.UpdateConfig(manifest);
       await _serverConfiguration.RunServer();
 
-      await _hub.Clients.All.SendAsync(HubMethods.Message.ToString(), "Server rebooted");
+      await _hub.Clients.All.SendAsync(HubMethods.Message, "Server rebooted");
     }
 
     [HttpGet("getServerProps")]

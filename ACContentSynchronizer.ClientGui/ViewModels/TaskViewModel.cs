@@ -1,9 +1,33 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using ACContentSynchronizer.ClientGui.Models;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
   public abstract class TaskViewModel : ViewModelBase, IDisposable {
+    protected TaskViewModel(ServerEntry server) {
+      Server = server;
+
+      ReactiveCommand.CreateFromTask(async () => {
+        ClientId = await Hubs.NotificationHub<double, HubMethods>(Server, HubMethods.Progress, progress => {
+          Progress = progress;
+          return Task.CompletedTask;
+        });
+
+        await Hubs.NotificationHub<string, HubMethods>(Server, HubMethods.Message, message => {
+          State = message;
+          return Task.CompletedTask;
+        });
+
+        await Hubs.NotificationHub<double, string, HubMethods>(Server, HubMethods.ProgressMessage, (progress, message) => {
+          Progress = progress;
+          State = message;
+          return Task.CompletedTask;
+        });
+      });
+    }
+
     private double _progress;
 
     private string _state = "";
@@ -18,12 +42,23 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
       set => this.RaiseAndSetIfChanged(ref _state, value);
     }
 
-    public Task Worker { get; set; } = new(() => { });
+    public Task Worker { get; protected set; } = new(() => { });
 
-    public abstract void Dispose();
+    protected CancellationTokenSource Canceller { get; set; } = new();
+
+    protected ServerEntry Server { get; }
+
+    protected string ClientId { get; private set; } = "";
 
     public abstract void Run();
 
-    public abstract void Cancel();
+    public void Cancel() {
+      Canceller.Cancel();
+    }
+
+    public void Dispose() {
+      Worker.Dispose();
+      Canceller.Dispose();
+    }
   }
 }

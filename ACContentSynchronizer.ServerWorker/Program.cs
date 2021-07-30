@@ -12,7 +12,7 @@ namespace ACContentSynchronizer.ServerWorker {
       Log.Logger = new LoggerConfiguration()
         .Enrich.FromLogContext()
         .WriteTo.Console()
-        .WriteTo.File(new RenderedCompactJsonFormatter(), "logs/log.ndjson")
+        .WriteTo.File(new RenderedCompactJsonFormatter(), "logs/Worker.ndjson")
         .WriteTo.Seq(Environment.GetEnvironmentVariable("SEQ_URL")
                      ?? "http://localhost:5341")
         .CreateLogger();

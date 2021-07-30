@@ -11,22 +11,15 @@ using ACContentSynchronizer.Models;
 namespace ACContentSynchronizer.ClientGui.Tasks {
   public class UploadTask : TaskViewModel {
     private readonly UploadViewModel _content;
-    private readonly ServerEntry _server;
 
-    public UploadTask(ServerEntry server, UploadViewModel content) {
-      _server = server;
+    public UploadTask(ServerEntry server, UploadViewModel content) : base(server) {
       _content = content;
-    }
-
-    public override void Dispose() {
-      _content.Dispose();
-      Worker.Dispose();
     }
 
     public override void Run() {
       Worker = Task.Run(async () => {
         try {
-          var dataReceiver = new DataReceiver(_server.Http);
+          var dataReceiver = new DataReceiver(Server.Http);
           var settings = Settings.Instance;
           await settings.SaveAsync();
 
@@ -42,6 +35,7 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
               _content.SelectedTrack.SelectedVariation);
           }
 
+          Canceller.Token.ThrowIfCancellationRequested();
           State = "Content comparing";
           var comparedManifest = await dataReceiver.GetUpdateManifest(manifest);
           State = "Pack content...";
@@ -50,8 +44,9 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
             await UpdateContent(dataReceiver, settings.GamePath, comparedManifest);
           }
 
+          Canceller.Token.ThrowIfCancellationRequested();
           State = "Refreshing server...";
-          await dataReceiver.RefreshServer(_server.Password, manifest);
+          await dataReceiver.RefreshServer(Server.Password, manifest);
           State = "Server refreshed";
         } catch (Exception e) {
           State = $"ERROR: {e.Message}";
@@ -60,19 +55,18 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
     }
 
     private async Task UpdateContent(DataReceiver dataReceiver, string gamePath, Manifest manifest) {
+      Canceller.Token.ThrowIfCancellationRequested();
       var content = ContentUtils.PrepareContent(gamePath, manifest);
       content.OnProgress += Pack;
+
+      Canceller.Token.ThrowIfCancellationRequested();
       await content.Pack(Constants.Client);
       var contentArchive = Path.Combine(Constants.Client, Constants.ContentArchive);
 
+      Canceller.Token.ThrowIfCancellationRequested();
       State = "Uploading...";
-      var client = await Hubs.NotificationHub<double, HubMethods>(_server, HubMethods.Progress, progress => {
-        Progress = progress;
-        return Task.CompletedTask;
-      });
-
       await using var stream = File.OpenRead(contentArchive);
-      await dataReceiver.Client.PostAsync($"updateContent?adminPassword={_server.Password}&client={client}",
+      await dataReceiver.Client.PostAsync($"updateContent?adminPassword={Server.Password}&client={ClientId}",
         new StreamContent(stream));
 
       content.OnProgress -= Pack;
@@ -81,9 +75,6 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
     private void Pack(double progress, string entry) {
       Progress = progress;
       State = entry;
-    }
-
-    public override void Cancel() {
     }
   }
 }

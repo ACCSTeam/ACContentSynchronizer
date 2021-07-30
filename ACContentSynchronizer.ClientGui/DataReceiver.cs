@@ -89,10 +89,6 @@ namespace ACContentSynchronizer.ClientGui {
       await Client.PostAsJsonAsync($"refreshServer?adminPassword={adminPassword}", manifest);
     }
 
-    public Task<Dictionary<string, Dictionary<string, string>>?> GetServerInfo() {
-      return Client.GetJson<Dictionary<string, Dictionary<string, string>>>("getServerInfo");
-    }
-
     public Task<ServerProps?> GetServerProps() {
       return Client.GetJson<ServerProps>("getServerProps");
     }

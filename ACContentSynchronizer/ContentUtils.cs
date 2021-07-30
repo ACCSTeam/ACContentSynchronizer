@@ -127,7 +127,7 @@ namespace ACContentSynchronizer {
     }
 
     public static void ExecuteCommand(string command) {
-      Task.Run(() => {
+      Task.Run(async () => {
         ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command}\"") {
           CreateNoWindow = true,
           UseShellExecute = false,
@@ -137,15 +137,7 @@ namespace ACContentSynchronizer {
         };
 
         var process = Process.Start(processInfo);
-
-        var output = process?.StandardOutput.ReadToEnd();
-        var error = process?.StandardError.ReadToEnd();
-
-        var exitCode = process?.ExitCode;
-
-        Console.WriteLine("output>>" + (string.IsNullOrEmpty(output) ? "(none)" : output));
-        Console.WriteLine("error>>" + (string.IsNullOrEmpty(error) ? "(none)" : error));
-        Console.WriteLine("ExitCode: " + exitCode, "ExecuteCommand");
+        await Task.Delay(TimeSpan.FromSeconds(15));
         process?.Close();
       });
     }
