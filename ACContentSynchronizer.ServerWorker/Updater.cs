@@ -64,7 +64,10 @@ namespace ACContentSynchronizer.ServerWorker {
 
               foreach (var file in files) {
                 var destinationPath = Path.Combine(serverPath, DirectoryUtils.Name(file));
-                File.Move(file, destinationPath, true);
+                ContentUtils.GrantAccess(() => {
+                  File.Move(file, destinationPath, true);
+                  return Task.CompletedTask;
+                }, TimeSpan.FromMinutes(1));
               }
 
               DirectoryUtils.DeleteIfExists(Constants.DownloadsPath);

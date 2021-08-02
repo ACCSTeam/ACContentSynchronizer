@@ -296,5 +296,20 @@ namespace ACContentSynchronizer {
         return new();
       }
     }
+
+    public static async Task GrantAccess(Func<Task> action, TimeSpan timeout) {
+      var time = Stopwatch.StartNew();
+      while (time.ElapsedMilliseconds < timeout.TotalMilliseconds) {
+        try {
+          await action();
+          return;
+        } catch (IOException e) {
+          if (e.HResult != -2147024864) {
+            throw;
+          }
+        }
+      }
+      throw new("Failed perform action within allotted time.");
+    }
   }
 }

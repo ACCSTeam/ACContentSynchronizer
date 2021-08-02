@@ -79,7 +79,7 @@ namespace ACContentSynchronizer.Models {
             file.FullName.Replace(path + Path.DirectorySeparatorChar, "")));
           var entryStream = entry.Open();
 
-          await GrantAccess(async () => {
+          await ContentUtils.GrantAccess(async () => {
             await using var fileStream = File.Open(file.FullName, FileMode.Open);
             await fileStream.CopyToAsync(entryStream);
           }, TimeSpan.FromMinutes(1));
@@ -88,21 +88,6 @@ namespace ACContentSynchronizer.Models {
           throw;
         }
       }
-    }
-
-    private async Task GrantAccess(Func<Task> action, TimeSpan timeout) {
-      var time = Stopwatch.StartNew();
-      while (time.ElapsedMilliseconds < timeout.TotalMilliseconds) {
-        try {
-          await action();
-          return;
-        } catch (IOException e) {
-          if (e.HResult != -2147024864) {
-            throw;
-          }
-        }
-      }
-      throw new("Failed perform action within allotted time.");
     }
   }
 }
