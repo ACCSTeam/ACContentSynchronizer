@@ -74,7 +74,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ env.NBGV_Version }}${{ env.NBGV_PrereleaseVersion }}
+          tag_name: ${{ env.NBGV_SemVer1 }}
           release_name: ${{ env.NBGV_Version }}${{ env.NBGV_PrereleaseVersion }}
           draft: false
           prerelease: false

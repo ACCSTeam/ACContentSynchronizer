@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -12,9 +13,13 @@ namespace ACContentSynchronizer.Server {
       Log.Logger = new LoggerConfiguration()
         .Enrich.FromLogContext()
         .WriteTo.Console()
-        .WriteTo.File(new RenderedCompactJsonFormatter(), "logs/Server.ndjson")
+        .WriteTo.File(new RenderedCompactJsonFormatter(), "logs/Server.json")
         .WriteTo.Seq(Environment.GetEnvironmentVariable("SEQ_URL")
                      ?? "http://localhost:5341")
+        .Filter.ByExcluding(logEvent => logEvent.Properties
+          .Any(prop => prop.Value
+            .ToString()
+            .Contains("metrics")))
         .CreateLogger();
 
       try {
