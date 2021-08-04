@@ -4,8 +4,9 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
-namespace ACContentSynchronizer.ClientGui.Views {
+namespace ACContentSynchronizer.ClientGui.Components.Server {
   public class Upload : UserControl, IDisposable {
+    private static Upload? _instance;
     private readonly UploadViewModel _vm;
 
     public Upload() {
@@ -13,8 +14,9 @@ namespace ACContentSynchronizer.ClientGui.Views {
       InitializeComponent();
     }
 
+    public static Upload Instance => _instance ??= new();
+
     public void Dispose() {
-      _vm.Dispose();
     }
 
     private void InitializeComponent() {

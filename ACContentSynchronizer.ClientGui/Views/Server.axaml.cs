@@ -1,11 +1,10 @@
-using System;
+using ACContentSynchronizer.ClientGui.Components.Server;
 using ACContentSynchronizer.ClientGui.Models;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views {
-  public class Server : UserControl, IDisposable {
+  public class Server : UserControl {
     private static Server? _instance;
     private readonly ServerViewModel _vm;
 
@@ -16,11 +15,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     public static Server Instance => _instance ??= new();
 
-    public ServerEntry GetServer => _vm.ServerEntry;
-
-    public void Dispose() {
-      _vm.Dispose();
-    }
+    public static ServerEntry GetServer => Instance._vm.ServerEntry;
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
@@ -28,11 +23,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
 
     public void SetServer(ServerEntry serverEntry) {
       _vm.ServerEntry = serverEntry;
-      ReactiveCommand.CreateFromTask(_vm.Refresh).Execute();
-    }
-
-    private void UpdateCars(object? sender, SelectionChangedEventArgs e) {
-      ReactiveCommand.CreateFromTask(_vm.UpdateCars).Execute();
+      Race.Instance.Refresh();
     }
   }
 }

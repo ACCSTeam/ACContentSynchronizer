@@ -5,23 +5,23 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <DebugSymbols>false</DebugSymbols>
-      <DebugType>none</DebugType>
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>none</DebugType>
     </PropertyGroup>
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.6" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.6" />
-        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.6" />
-        <PackageReference Include="Avalonia.Svg" Version="0.10.6.2" />
-        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.6.10" />
-        <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.8" />
-        <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-        <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+        <PackageReference Include="Avalonia" Version="0.10.6"/>
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.6"/>
+        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6"/>
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.6"/>
+        <PackageReference Include="Avalonia.Svg" Version="0.10.6.2"/>
+        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.6.10"/>
+        <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.8"/>
+        <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0"/>
+        <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0"/>
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Windows\StatusBar.axaml.cs">
@@ -33,42 +33,64 @@
             <SubType>Code</SubType>
         </Compile>
         <Compile Update="Views\MainViewModel.cs">
-        <DependentUpon>Main.axaml</DependentUpon>
-          <SubType>Code</SubType>
-      </Compile>
+            <DependentUpon>Main.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
         <Compile Update="Views\SideBarViewModel.cs">
-          <DependentUpon>Sidebar.axaml</DependentUpon>
+            <DependentUpon>Sidebar.axaml</DependentUpon>
         </Compile>
         <Compile Update="Modals\AddNewServer.axaml.cs">
-          <DependentUpon>AddNewServer.axaml</DependentUpon>
-          <SubType>Code</SubType>
+            <DependentUpon>AddNewServer.axaml</DependentUpon>
+            <SubType>Code</SubType>
         </Compile>
         <Compile Update="Modals\AddNewServerViewModel.cs">
-          <DependentUpon>AddNewServer.axaml</DependentUpon>
+            <DependentUpon>AddNewServer.axaml</DependentUpon>
         </Compile>
         <Compile Update="Modals\InitRunViewModel.cs">
-          <DependentUpon>InitRun.axaml</DependentUpon>
+            <DependentUpon>InitRun.axaml</DependentUpon>
         </Compile>
         <Compile Update="Modals\ToastViewModel.cs">
-          <DependentUpon>Toast.axaml</DependentUpon>
+            <DependentUpon>Toast.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\ServerViewModel.cs">
-          <DependentUpon>Server.axaml</DependentUpon>
+            <DependentUpon>Server.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\StatusBarViewModel.cs">
-          <DependentUpon>StatusBar.axaml</DependentUpon>
+            <DependentUpon>StatusBar.axaml</DependentUpon>
         </Compile>
         <Compile Update="Components\StatusBarEntryViewModel.cs">
-          <DependentUpon>StatusBarEntry.axaml</DependentUpon>
-        </Compile>
-        <Compile Update="Views\UploadViewModel.cs">
-          <DependentUpon>Upload.axaml</DependentUpon>
+            <DependentUpon>StatusBarEntry.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\LayoutViewModel.cs">
-          <DependentUpon>Layout.axaml</DependentUpon>
+            <DependentUpon>Layout.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Components\Server\Upload.axaml.cs">
+            <DependentUpon>Upload.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Components\Server\UploadViewModel.cs">
+            <DependentUpon>Upload.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Components\Server\RaceViewModel.cs">
+            <DependentUpon>Race.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Components\Server\ServerSettingsViewModel.cs">
+            <DependentUpon>ServerSettings.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Components\Server\ServerMainViewModel.cs">
+            <DependentUpon>ServerMain.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Components\Server\ServerConditionsViewModel.cs">
+            <DependentUpon>ServerConditions.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Components\Server\ServerRulesViewModel.cs">
+            <DependentUpon>ServerRules.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Components\Server\ServerSessionsViewModel.cs">
+            <DependentUpon>ServerSessions.axaml</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\ACContentSynchronizer\ACContentSynchronizer.csproj" />
+        <ProjectReference Include="..\ACContentSynchronizer\ACContentSynchronizer.csproj"/>
     </ItemGroup>
 </Project>

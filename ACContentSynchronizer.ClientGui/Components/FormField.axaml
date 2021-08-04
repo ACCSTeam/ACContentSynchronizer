@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ACContentSynchronizer.ClientGui.Components.FormField">
+  <UserControl.Styles>
+    <Style Selector="components|FormField">
+      <Setter Property="Template">
+        <ControlTemplate>
+          <DockPanel>
+            <TextBlock DockPanel.Dock="Left"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"
+                       Text="{TemplateBinding Label}"
+                       Width="{TemplateBinding LabelWidth}" />
+            <ContentPresenter DockPanel.Dock="Right"
+                              Content="{TemplateBinding Content}" />
+          </DockPanel>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+  </UserControl.Styles>
+</UserControl>

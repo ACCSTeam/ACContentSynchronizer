@@ -9,7 +9,6 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
     public ValidationTask(ServerEntry server) : base(server) {
     }
 
-
     private void SetProgress(double progress) {
       Canceller.Token.ThrowIfCancellationRequested();
       Progress = progress;

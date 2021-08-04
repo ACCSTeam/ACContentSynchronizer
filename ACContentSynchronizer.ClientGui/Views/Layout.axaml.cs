@@ -24,7 +24,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public void SetTheme(Themes theme) {
-      _vm.SelectedTheme = theme;
+      _vm.SelectedTheme = Themes.Compact;
     }
   }
 }

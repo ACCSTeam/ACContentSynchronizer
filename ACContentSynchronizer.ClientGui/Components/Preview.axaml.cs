@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Linq;
+using ACContentSynchronizer.ClientGui.Models;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -9,6 +11,12 @@ using SkiaSharp;
 
 namespace ACContentSynchronizer.ClientGui.Components {
   public class Preview : UserControl, IDisposable {
+    public static readonly DirectProperty<Preview, string> PlaceholderProperty =
+      AvaloniaProperty.RegisterDirect<Preview, string>(
+        nameof(Placeholder),
+        o => o.Placeholder,
+        (o, v) => o.Placeholder = v);
+
     public static readonly DirectProperty<Preview, string> PreviewNameProperty =
       AvaloniaProperty.RegisterDirect<Preview, string>(
         nameof(PreviewName),
@@ -34,12 +42,19 @@ namespace ACContentSynchronizer.ClientGui.Components {
 
     private int _blurAmount = 10;
 
+    private string _placeholder = "";
+
     private string _previewName = "";
 
     private Bitmap? _source;
 
     public Preview() {
       InitializeComponent();
+    }
+
+    public string Placeholder {
+      get => _placeholder;
+      set => SetAndRaise(PlaceholderProperty, ref _placeholder, value);
     }
 
     public string PreviewName {
@@ -91,6 +106,41 @@ namespace ACContentSynchronizer.ClientGui.Components {
 
     public void Dispose() {
       _source?.Dispose();
+    }
+
+    public static Bitmap? GetCarPreview(string entry, string? skinName = null) {
+      var carDirectory = ContentUtils.GetCarDirectory(entry, Settings.Instance.GamePath);
+      if (string.IsNullOrEmpty(carDirectory)) {
+        return null;
+      }
+      var carSkinsDirectory = Path.Combine(carDirectory, "skins");
+      if (!Directory.Exists(carSkinsDirectory)) {
+        return null;
+      }
+
+      if (!string.IsNullOrEmpty(skinName)) {
+        return new(Path.Combine(carSkinsDirectory, skinName, "preview.jpg"));
+      }
+
+      var skins = Directory.GetDirectories(carSkinsDirectory);
+      var rnd = new Random();
+      var skin = skins[rnd.Next(0, skins.Length)];
+      return new
+        (Path.Combine(skin, "preview.jpg"));
+    }
+
+    public static Bitmap? GetTrackPreview(string entry) {
+      var trackDirectory = ContentUtils.GetTrackDirectories(entry, Settings.Instance.GamePath)
+        .FirstOrDefault();
+      if (string.IsNullOrEmpty(trackDirectory)) {
+        return null;
+      }
+      var trackPreview = Path.Combine(trackDirectory, "preview.png");
+      if (!File.Exists(trackPreview)) {
+        return null;
+      }
+
+      return new(trackPreview);
     }
 
     private void InitializeComponent() {
