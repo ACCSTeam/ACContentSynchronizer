@@ -3,13 +3,12 @@ using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Components.Server {
   public class ServerSettings : UserControl {
-    private static ServerSettings? _instance;
+    private readonly ServerSettingsViewModel _vm;
 
     public ServerSettings() {
+      DataContext = _vm = new();
       InitializeComponent();
     }
-
-    public static ServerSettings Instance => _instance ??= new();
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);

@@ -24,6 +24,19 @@ namespace ACContentSynchronizer.ClientGui.Components {
       InitializeComponent();
     }
 
+    public static readonly DirectProperty<FormField, Classes?> LabelStyleProperty =
+      AvaloniaProperty.RegisterDirect<FormField, Classes?>(
+        nameof(LabelStyle),
+        o => o.LabelStyle,
+        (o, v) => o.LabelStyle = v);
+
+    public Classes? LabelStyle {
+      get => _labelStyle;
+      set => SetAndRaise(LabelStyleProperty, ref _labelStyle, value);
+    }
+
+    private Classes? _labelStyle;
+
     public string Label {
       get => _label;
       set => SetAndRaise(LabelProperty, ref _label, value);

@@ -17,5 +17,6 @@
     <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/ModalDialog.axaml" />
     <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/Logo.axaml" />
     <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/HeaderText.axaml" />
+    <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/GreyButton.axaml" />
   </Application.Styles>
 </Application>

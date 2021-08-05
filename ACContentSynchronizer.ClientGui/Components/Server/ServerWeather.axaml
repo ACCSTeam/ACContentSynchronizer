@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ACContentSynchronizer.ClientGui.Components.Server.ServerWeather"
+             MinWidth="300">
+
+  <Design.DataContext>
+    <server:ServerWeatherViewModel />
+  </Design.DataContext>
+
+  <StackPanel Spacing="10">
+    <components:FormField Label="Weather preset">
+      <ComboBox Items="{Binding AllowedWeathers}"
+                SelectedItem="{Binding SelectedWeather}" />
+    </components:FormField>
+
+    <components:FormField Label="{Binding AmbientTemperatureLabel}">
+      <Slider Value="{Binding  AmbientTemperature}" />
+    </components:FormField>
+
+    <components:FormField Label="{Binding AmbientVariationLabel}">
+      <Slider Value="{Binding AmbientVariation}" />
+    </components:FormField>
+
+    <components:FormField Label="{Binding RoadTemperatureLabel}">
+      <Slider Value="{Binding RoadTemperature}" />
+    </components:FormField>
+
+    <components:FormField Label="{Binding RoadVariationLabel}">
+      <Slider Value="{Binding RoadVariation}" />
+    </components:FormField>
+  </StackPanel>
+
+</UserControl>

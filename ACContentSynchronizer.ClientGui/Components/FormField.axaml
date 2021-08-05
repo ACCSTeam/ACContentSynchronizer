@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             xmlns:behaviors="clr-namespace:ACContentSynchronizer.ClientGui.Behaviors"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Components.FormField">
   <UserControl.Styles>
@@ -14,7 +15,12 @@
                        TextWrapping="Wrap"
                        VerticalAlignment="Center"
                        Text="{TemplateBinding Label}"
-                       Width="{TemplateBinding LabelWidth}" />
+                       Width="{TemplateBinding LabelWidth}" >
+              <Interaction.Behaviors>
+                <behaviors:AddClassBehavior
+                  Classes="{Binding LabelStyleProperty, RelativeSource={RelativeSource TemplatedParent}}" />
+              </Interaction.Behaviors>
+            </TextBlock>
             <ContentPresenter DockPanel.Dock="Right"
                               Content="{TemplateBinding Content}" />
           </DockPanel>

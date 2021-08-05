@@ -17,7 +17,7 @@
 
   <Style Selector="Slider">
     <Setter Property="TickFrequency" Value="1" />
-    <Setter Property="TickPlacement" Value="Outside" />
+    <Setter Property="TickPlacement" Value="None" />
     <Setter Property="IsSnapToTickEnabled" Value="True" />
   </Style>
 
@@ -48,6 +48,10 @@
 
   <Style Selector="TextBox">
     <Setter Property="Background" Value="Transparent" />
+  </Style>
+
+  <Style Selector="ComboBox">
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
   </Style>
 
   <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">

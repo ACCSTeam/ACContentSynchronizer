@@ -52,7 +52,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
       var cfgPath = Path.Combine(documents, "Assetto Corsa", "cfg");
       var iniProvider = new IniProvider(cfgPath);
-      var config = iniProvider.GetConfig("race.ini");
+      var config = iniProvider.GetConfig("race");
       var server = Views.Server.GetServer;
 
       if (car != null && !string.IsNullOrEmpty(car.Variation)) {
@@ -74,7 +74,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
         race["CONFIG_TRACK"] = Track.Variation ?? "";
         config["RACE"] = race;
 
-        await iniProvider.SaveConfig("race.ini", config);
+        await iniProvider.SaveConfig("race", config);
         var gamePath = Path.Combine(Settings.Instance.GamePath, "acs.exe");
         var process = new Process {
           StartInfo = {

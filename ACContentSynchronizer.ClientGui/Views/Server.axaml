@@ -17,7 +17,7 @@
       <ContentPresenter Content="{x:Static  server:Race.Instance}" />
     </TabItem>
     <TabItem Header="Settings">
-      <ContentPresenter Content="{x:Static server:ServerSettings.Instance}" />
+      <server:ServerSettings />
     </TabItem>
   </TabControl>
 </UserControl>

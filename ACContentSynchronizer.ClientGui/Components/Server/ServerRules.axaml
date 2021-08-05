@@ -3,8 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Components.Server.ServerRules">
+
+  <Design.DataContext>
+    <server:ServerRulesViewModel />
+  </Design.DataContext>
 
   <UserControl.Styles>
     <Style Selector="ComboBox">
@@ -28,45 +33,47 @@
           <TextBlock Text="Assists"
                      Classes="H4" />
           <components:FormField Label="ABS:">
-            <ComboBox />
+            <ComboBox Items="{Binding AvailableAssistModes}"
+                      SelectedItem="{Binding AbsMode}" />
           </components:FormField>
           <components:FormField Label="TC:">
-            <ComboBox />
+            <ComboBox Items="{Binding AvailableAssistModes}"
+                      SelectedItem="{Binding TcMode}" />
           </components:FormField>
           <components:FormField Label="Stability control:">
-            <ToggleSwitch />
+            <ToggleSwitch IsChecked="{Binding StabilityControl}" />
           </components:FormField>
           <components:FormField Label="Automatic clutch:">
-            <ToggleSwitch />
+            <ToggleSwitch IsChecked="{Binding AutomaticClutch}" />
           </components:FormField>
           <components:FormField Label="Tyre blankets:">
-            <ToggleSwitch />
+            <ToggleSwitch IsChecked="{Binding TyreBlankets}" />
           </components:FormField>
           <components:FormField Label="Virtual mirror:">
-            <ToggleSwitch />
+            <ToggleSwitch IsChecked="{Binding VirtualMirror}" />
           </components:FormField>
         </StackPanel>
         <StackPanel Grid.Row="2">
           <TextBlock Text="Voting and banning"
                      Classes="H4" />
           <components:FormField Label="Kick vote quorum:">
-            <Slider />
+            <Slider Value="{Binding KickVoteQuorum}" />
           </components:FormField>
 
           <components:FormField Label="Session vote quorum:">
-            <Slider />
+            <Slider Value="{Binding SessionVoteQuorum}" />
           </components:FormField>
 
           <components:FormField Label="Vote duration:">
-            <Slider />
+            <Slider Value="{Binding  VoteDuration}" />
           </components:FormField>
 
           <components:FormField Label="Kick players until restart:">
-            <ToggleSwitch />
+            <ToggleSwitch IsChecked="{Binding KickUntilRestart}" />
           </components:FormField>
 
           <components:FormField Label="Max contacts per km:">
-            <Slider />
+            <Slider Value="{Binding  MaxContacts}" />
           </components:FormField>
         </StackPanel>
       </Grid>
@@ -76,31 +83,32 @@
                    Classes="H4" />
 
         <components:FormField Label="Fuel rate:">
-          <Slider />
+          <Slider Value="{Binding FuelRate}" />
         </components:FormField>
 
         <components:FormField Label="Damage rate:">
-          <Slider />
+          <Slider Value="{Binding DamageRate}" />
         </components:FormField>
 
         <components:FormField Label="Tyres wear rate:">
-          <Slider />
+          <Slider Value="{Binding TyresWearRate}" />
         </components:FormField>
 
         <components:FormField Label="Allowed tyres out:">
-          <Slider />
+          <Slider Value="{Binding TyresOut}" />
         </components:FormField>
 
         <components:FormField Label="Max ballast:">
-          <Slider />
+          <Slider Value="{Binding MaxBallast}" />
         </components:FormField>
 
         <components:FormField Label="Jump start:">
-          <ComboBox />
+          <ComboBox Items="{Binding AvailableSpawnTypes}"
+                    SelectedItem="{Binding SpawnType}" />
         </components:FormField>
 
         <components:FormField Label="Disable gas cut penalty:">
-          <ToggleSwitch />
+          <ToggleSwitch IsChecked="{Binding  DisableGasCut}" />
         </components:FormField>
       </StackPanel>
     </Grid>

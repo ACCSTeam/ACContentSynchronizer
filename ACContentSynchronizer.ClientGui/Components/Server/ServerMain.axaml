@@ -23,9 +23,6 @@
     <Style Selector="ListBoxItem > Grid > TextBox">
       <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
-    <Style Selector="ListBoxItem > Grid > ComboBox">
-      <Setter Property="Width" Value="100" />
-    </Style>
   </UserControl.Styles>
 
   <ScrollViewer>
@@ -37,7 +34,7 @@
              IsLightDismissEnabled="True">
         <Border BorderThickness="10"
                 BorderBrush="{StaticResource UiGrayLight}">
-          <DockPanel>
+          <DockPanel Background="{StaticResource UiGrayLight}">
             <TextBox DockPanel.Dock="Top"
                      Text="{Binding TrackSearch}" />
             <ListBox DockPanel.Dock="Bottom"
