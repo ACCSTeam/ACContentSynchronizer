@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
              xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
+             xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Components.Server.ServerRules">
 
@@ -12,10 +13,6 @@
   </Design.DataContext>
 
   <UserControl.Styles>
-    <Style Selector="ComboBox">
-      <Setter Property="Width" Value="200" />
-    </Style>
-
     <Style Selector="StackPanel">
       <Setter Property="Spacing" Value="10" />
     </Style>
@@ -26,7 +23,7 @@
   </UserControl.Styles>
 
   <ScrollViewer>
-    <Grid ColumnDefinitions="Auto,20,Auto">
+    <Grid ColumnDefinitions="*,20,*">
       <Grid Grid.Column="0"
             RowDefinitions="Auto,20,Auto">
         <StackPanel Grid.Row="0">
@@ -56,24 +53,32 @@
         <StackPanel Grid.Row="2">
           <TextBlock Text="Voting and banning"
                      Classes="H4" />
-          <components:FormField Label="Kick vote quorum:">
-            <Slider Value="{Binding KickVoteQuorum}" />
+          <components:FormField Label="{Binding KickVoteQuorumLabel}">
+            <Slider Minimum="{Binding VoteQuorumMinimum}"
+                    Maximum="{Binding VoteQuorumMaximum}"
+                    Value="{Binding KickVoteQuorum}" />
           </components:FormField>
 
-          <components:FormField Label="Session vote quorum:">
-            <Slider Value="{Binding SessionVoteQuorum}" />
+          <components:FormField Label="{Binding SessionVoteQuorumLabel}">
+            <Slider Minimum="{Binding VoteQuorumMinimum}"
+                    Maximum="{Binding VoteQuorumMaximum}"
+                    Value="{Binding SessionVoteQuorum}" />
           </components:FormField>
 
-          <components:FormField Label="Vote duration:">
-            <Slider Value="{Binding  VoteDuration}" />
+          <components:FormField Label="{Binding VoteDurationLabel}">
+            <Slider
+              Value="{Binding  VoteDuration,
+            Converter={x:Static clientGui:ValueConverters.SliderTimeSpanMinutes}}" />
           </components:FormField>
 
           <components:FormField Label="Kick players until restart:">
             <ToggleSwitch IsChecked="{Binding KickUntilRestart}" />
           </components:FormField>
 
-          <components:FormField Label="Max contacts per km:">
-            <Slider Value="{Binding  MaxContacts}" />
+          <components:FormField Label="{Binding MaxContactsPerKmLabel}">
+            <Slider Minimum="{Binding MaxContactsPerKmMinimum}"
+                    Maximum="{Binding MaxContactsPerKmMaximum}"
+                    Value="{Binding  MaxContactsPerKm}" />
           </components:FormField>
         </StackPanel>
       </Grid>
@@ -82,24 +87,34 @@
         <TextBlock Text="Realism"
                    Classes="H4" />
 
-        <components:FormField Label="Fuel rate:">
-          <Slider Value="{Binding FuelRate}" />
+        <components:FormField Label="{Binding FuelRateLabel}">
+          <Slider Minimum="{Binding RealismMinimum}"
+                  Maximum="{Binding RealismMaximum}"
+                  Value="{Binding FuelRate}" />
         </components:FormField>
 
-        <components:FormField Label="Damage rate:">
-          <Slider Value="{Binding DamageRate}" />
+        <components:FormField Label="{Binding DamageRateLabel}">
+          <Slider Minimum="{Binding RealismMinimum}"
+                  Maximum="{Binding RealismMaximum}"
+                  Value="{Binding DamageRate}" />
         </components:FormField>
 
-        <components:FormField Label="Tyres wear rate:">
-          <Slider Value="{Binding TyresWearRate}" />
+        <components:FormField Label="{Binding TyresWearRateLabel}">
+          <Slider Minimum="{Binding RealismMinimum}"
+                  Maximum="{Binding RealismMaximum}"
+                  Value="{Binding TyresWearRate}" />
         </components:FormField>
 
-        <components:FormField Label="Allowed tyres out:">
-          <Slider Value="{Binding TyresOut}" />
+        <components:FormField Label="{Binding AllowedTyresOutLabel}">
+          <Slider Minimum="{Binding AllowedTyresOutMinimum}"
+                  Maximum="{Binding AllowedTyresOutMaximum}"
+                  Value="{Binding AllowedTyresOut}" />
         </components:FormField>
 
-        <components:FormField Label="Max ballast:">
-          <Slider Value="{Binding MaxBallast}" />
+        <components:FormField Label="{Binding MaxBallastLabel}">
+          <Slider Minimum="{Binding RealismMinimum}"
+                  Maximum="{Binding RealismMaximum}"
+                  Value="{Binding MaxBallast}" />
         </components:FormField>
 
         <components:FormField Label="Jump start:">

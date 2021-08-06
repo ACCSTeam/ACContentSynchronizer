@@ -18,23 +18,23 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       AvaloniaXamlLoader.Load(this);
     }
 
-    public Dictionary<string, Dictionary<string, string>> ToConfig(
-      Dictionary<string, Dictionary<string, string>> source) {
-      source["SERVER"]["KICK_QUORUM"] = _vm.KickVoteQuorum.ToString();
-      source["SERVER"]["VOTING_QUORUM"] = _vm.SessionVoteQuorum.ToString();
-      source["SERVER"]["VOTE_DURATION"] = _vm.VoteDuration.ToString();
-      source["SERVER"]["FUEL_RATE"] = _vm.FuelRate.ToString();
-      source["SERVER"]["DAMAGE_MULTIPLIER"] = _vm.DamageRate.ToString();
-      source["SERVER"]["TYRE_WEAR_RATE"] = _vm.TyresWearRate.ToString();
-      source["SERVER"]["ALLOWED_TYRES_OUT"] = _vm.TyresOut.ToString();
-      source["SERVER"]["ABS_ALLOWED"] = _vm.AbsMode.ToString();
-      source["SERVER"]["TC_ALLOWED"] = _vm.TcMode.ToString();
-      source["SERVER"]["START_RULE"] = _vm.SpawnType.ToString();
+    public Dictionary<string, Dictionary<string, object>> ToConfig(
+      Dictionary<string, Dictionary<string, object>> source) {
+      source["SERVER"]["KICK_QUORUM"] = _vm.KickVoteQuorum;
+      source["SERVER"]["VOTING_QUORUM"] = _vm.SessionVoteQuorum;
+      source["SERVER"]["VOTE_DURATION"] = _vm.VoteDuration;
+      source["SERVER"]["FUEL_RATE"] = _vm.FuelRate;
+      source["SERVER"]["DAMAGE_MULTIPLIER"] = _vm.DamageRate;
+      source["SERVER"]["TYRE_WEAR_RATE"] = _vm.TyresWearRate;
+      source["SERVER"]["ALLOWED_TYRES_OUT"] = _vm.AllowedTyresOut;
+      source["SERVER"]["ABS_ALLOWED"] = _vm.AbsMode;
+      source["SERVER"]["TC_ALLOWED"] = _vm.TcMode;
+      source["SERVER"]["START_RULE"] = _vm.SpawnType;
       source["SERVER"]["STABILITY_ALLOWED"] = _vm.StabilityControl ? "1" : "0";
       source["SERVER"]["AUTOCLUTCH_ALLOWED"] = _vm.AutomaticClutch ? "1" : "0";
       source["SERVER"]["TYRE_BLANKETS_ALLOWED"] = _vm.TyreBlankets ? "1" : "0";
       source["SERVER"]["FORCE_VIRTUAL_MIRROR"] = _vm.VirtualMirror ? "1" : "0";
-      source["SERVER"]["MAX_BALLAST_KG"] = _vm.MaxBallast.ToString();
+      source["SERVER"]["MAX_BALLAST_KG"] = _vm.MaxBallast;
 
       return source;
     }

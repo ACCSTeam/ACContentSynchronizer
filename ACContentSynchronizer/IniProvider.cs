@@ -15,23 +15,23 @@ namespace ACContentSynchronizer {
         : throw new("Wrong folder");
     }
 
-    public Dictionary<string, Dictionary<string, string>> GetConfig(string config) {
+    public Dictionary<string, Dictionary<string, object>> GetConfig(string config) {
       var serverCfgPath = Path.Combine(_folderPath, $"{config}.ini");
       return IniToDictionary(serverCfgPath);
     }
 
-    public Dictionary<string, Dictionary<string, string>> GetServerConfig() {
+    public Dictionary<string, Dictionary<string, object>> GetServerConfig() {
       return GetConfig(Constants.ServerCfg);
     }
 
-    private static Dictionary<string, Dictionary<string, string>> IniToDictionary(string path) {
+    private static Dictionary<string, Dictionary<string, object>> IniToDictionary(string path) {
       var lines = File.ReadAllLines(path)
         .Where(line => !string.IsNullOrEmpty(line))
         .ToList();
 
       var lastIndex = 0;
       var sections = new List<int>();
-      var ini = new Dictionary<string, Dictionary<string, string>>();
+      var ini = new Dictionary<string, Dictionary<string, object>>();
 
       while (true) {
         lastIndex = lines.FindIndex(lastIndex,
@@ -56,7 +56,7 @@ namespace ACContentSynchronizer {
             .Replace("[", "")
             .Replace("]", "")),
           sectionLines.ToDictionary(entry => RemoveComment(entry[..entry.IndexOf("=", StringComparison.Ordinal)]),
-            entry => RemoveComment(entry[(entry.IndexOf("=", StringComparison.Ordinal) + 1)..])));
+            entry => (object)RemoveComment(entry[(entry.IndexOf("=", StringComparison.Ordinal) + 1)..])));
       }
 
       return ini;
@@ -72,13 +72,22 @@ namespace ACContentSynchronizer {
     public string? GetStringValue(string section, string key) {
       try {
         var serverCfg = GetServerConfig();
-        return serverCfg[section][key];
+        return serverCfg[section][key].ToString();
       } catch {
         return null;
       }
     }
 
-    public async Task SaveConfig(string cfg, Dictionary<string, Dictionary<string, string>> data) {
+    public T? GetValue<T>(string section, string key) {
+      try {
+        var serverCfg = GetServerConfig();
+        return (T)serverCfg[section][key];
+      } catch {
+        return default;
+      }
+    }
+
+    public async Task SaveConfig(string cfg, Dictionary<string, Dictionary<string, object>> data) {
       var cfgPath = Path.Combine(_folderPath, $"{cfg}.ini");
       var config = new StringBuilder();
 

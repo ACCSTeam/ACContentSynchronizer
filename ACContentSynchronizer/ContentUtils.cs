@@ -321,7 +321,7 @@ namespace ACContentSynchronizer {
           var name = DirectoryUtils.Name(x);
 
           try {
-            name = config["LAUNCHER"]["NAME"];
+            name = config["LAUNCHER"]["NAME"].ToString()!;
           } catch {
             // ignored
           }

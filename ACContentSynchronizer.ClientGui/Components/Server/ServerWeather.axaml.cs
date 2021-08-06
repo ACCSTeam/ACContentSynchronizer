@@ -18,14 +18,14 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       AvaloniaXamlLoader.Load(this);
     }
 
-    public Dictionary<string, Dictionary<string, string>> ToConfig(
-      Dictionary<string, Dictionary<string, string>> source, int index) {
+    public Dictionary<string, Dictionary<string, object>> ToConfig(
+      Dictionary<string, Dictionary<string, object>> source, int index) {
       source.Add($"WEATHER_{index}", new() {
         ["GRAPHICS"] = _vm.Graphics,
-        ["BASE_TEMPERATURE_AMBIENT"] = _vm.AmbientTemperature.ToString(CultureInfo.InvariantCulture),
-        ["BASE_TEMPERATURE_ROAD"] = _vm.RoadTemperature.ToString(CultureInfo.InvariantCulture),
-        ["VARIATION_AMBIENT"] = _vm.AmbientVariation.ToString(CultureInfo.InvariantCulture),
-        ["VARIATION_ROAD"] = _vm.RoadVariation.ToString(CultureInfo.InvariantCulture),
+        ["BASE_TEMPERATURE_AMBIENT"] = _vm.AmbientTemperature,
+        ["BASE_TEMPERATURE_ROAD"] = _vm.RoadTemperature,
+        ["VARIATION_AMBIENT"] = _vm.AmbientVariation,
+        ["VARIATION_ROAD"] = _vm.RoadVariation,
       });
 
       return source;

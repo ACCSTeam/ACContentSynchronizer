@@ -73,7 +73,7 @@ namespace ACContentSynchronizer.Server.Services {
 
     public async Task UpdateConfig(Manifest manifest) {
       var serverConfig = _iniProvider.GetServerConfig();
-      var entryList = new Dictionary<string, Dictionary<string, string>>();
+      var entryList = new Dictionary<string, Dictionary<string, object>>();
 
       if (!string.IsNullOrEmpty(manifest.Track?.Name)) {
         serverConfig["SERVER"]["TRACK"] = manifest.Track.Name;
@@ -127,7 +127,7 @@ namespace ACContentSynchronizer.Server.Services {
       ContentUtils.ExecuteCommand(serverExecutablePath);
     }
 
-    public Dictionary<string, Dictionary<string, string>> GetServerInfo() {
+    public Dictionary<string, Dictionary<string, object>> GetServerInfo() {
       return _iniProvider.GetServerConfig();
     }
 

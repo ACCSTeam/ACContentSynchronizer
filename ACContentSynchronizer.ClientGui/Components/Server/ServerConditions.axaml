@@ -33,7 +33,8 @@
         Minimum="{Binding TimeMinimum}"
         Maximum="{Binding TimeMaximum}"
         TickFrequency="{Binding TickFrequency}"
-        Value="{Binding Time, Converter={x:Static clientGui:ValueConverters.SliderTimeSpan}}" />
+        Value="{Binding Time,
+        Converter={x:Static clientGui:ValueConverters.SliderTimeSpanHours}}" />
 
       <TextBlock Text="{Binding TimeMultiplierLabel}"
                  TextAlignment="Center" />

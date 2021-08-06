@@ -29,20 +29,20 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       this.FindControl<Popup>("SelectTrack").Open();
     }
 
-    public Dictionary<string, Dictionary<string, string>> ToConfig(
-      Dictionary<string, Dictionary<string, string>> source) {
+    public Dictionary<string, Dictionary<string, object>> ToConfig(
+      Dictionary<string, Dictionary<string, object>> source) {
       source["SERVER"]["NAME"] = _vm.ServerName;
       source["SERVER"]["CARS"] = string.Join(';', _vm.SelectedCars.Select(x => DirectoryUtils.Name(x.Path)).Distinct());
       source["SERVER"]["TRACK"] = _vm.SelectedTrack != null ? DirectoryUtils.Name(_vm.SelectedTrack.Path) : "";
       source["SERVER"]["CONFIG_TRACK"] = _vm.SelectedTrack?.SelectedVariation ?? "";
       source["SERVER"]["PASSWORD"] = _vm.Password;
       source["SERVER"]["ADMIN_PASSWORD"] = _vm.AdminPassword;
-      source["SERVER"]["UDP_PORT"] = _vm.UdpPort.ToString();
-      source["SERVER"]["TCP_PORT"] = _vm.TcpPort.ToString();
-      source["SERVER"]["HTTP_PORT"] = _vm.HttpPort.ToString();
-      source["SERVER"]["MAX_CLIENTS"] = _vm.SelectedCars.Count.ToString();
-      source["SERVER"]["NUM_THREADS"] = _vm.Threads.ToString();
-      source["SERVER"]["CLIENT_SEND_INTERVAL_HZ"] = _vm.PacketSize.ToString();
+      source["SERVER"]["UDP_PORT"] = _vm.UdpPort;
+      source["SERVER"]["TCP_PORT"] = _vm.TcpPort;
+      source["SERVER"]["HTTP_PORT"] = _vm.HttpPort;
+      source["SERVER"]["MAX_CLIENTS"] = _vm.SelectedCars.Count;
+      source["SERVER"]["NUM_THREADS"] = _vm.Threads;
+      source["SERVER"]["CLIENT_SEND_INTERVAL_HZ"] = _vm.PacketSize;
       source["SERVER"]["REGISTER_TO_LOBBY"] = _vm.PublicServer ? "1" : "0";
 
       return source;

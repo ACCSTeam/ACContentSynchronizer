@@ -130,7 +130,7 @@ namespace ACContentSynchronizer.Server.Controllers {
     }
 
     [HttpGet("getServerInfo")]
-    public Dictionary<string, Dictionary<string, string>> GetServerInfo() {
+    public Dictionary<string, Dictionary<string, object>> GetServerInfo() {
       return _serverConfiguration.GetServerInfo();
     }
   }

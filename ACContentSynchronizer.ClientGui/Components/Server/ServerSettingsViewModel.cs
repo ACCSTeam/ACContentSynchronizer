@@ -4,7 +4,7 @@ using ACContentSynchronizer.ClientGui.ViewModels;
 namespace ACContentSynchronizer.ClientGui.Components.Server {
   public class ServerSettingsViewModel : ViewModelBase {
     public void Save() {
-      var serverConfig = new Dictionary<string, Dictionary<string, string>> {
+      var serverConfig = new Dictionary<string, Dictionary<string, object>> {
         ["SERVER"] = new() {
         },
         ["FTP"] = new() {

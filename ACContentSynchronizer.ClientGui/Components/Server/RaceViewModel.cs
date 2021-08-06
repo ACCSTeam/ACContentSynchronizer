@@ -12,7 +12,7 @@ using Avalonia.Collections;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Components.Server {
-  public class RaceViewModel : ViewModelBase {
+  public class RaceViewModel : ViewModelBase, IDisposable {
     private AvaloniaList<ContentEntry> _cars = new();
 
     private ContentEntry? _selectedCar;
