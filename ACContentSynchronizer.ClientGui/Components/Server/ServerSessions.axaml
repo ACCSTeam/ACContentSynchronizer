@@ -2,8 +2,159 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
+             xmlns:converters="clr-namespace:ACContentSynchronizer.ClientGui.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Components.Server.ServerSessions">
-  Welcome to Avalonia!
-</UserControl>
 
+  <Design.DataContext>
+    <server:ServerSessionsViewModel />
+  </Design.DataContext>
+
+  <ScrollViewer>
+    <Grid RowDefinitions="Auto,20,*">
+      <StackPanel Grid.Row="0">
+        <components:FormField Label="Pickup mode">
+          <ToggleSwitch IsChecked="{Binding PickupMode}" />
+        </components:FormField>
+
+        <components:FormField Label="Locked entry list in pickup mode">
+          <ToggleSwitch IsChecked="{Binding LockedEntryListInPickupMode}" />
+        </components:FormField>
+
+        <components:FormField Label="Loop mode">
+          <ToggleSwitch IsChecked="{Binding LoopMode}" />
+        </components:FormField>
+      </StackPanel>
+
+      <Grid Grid.Row="2"
+            ColumnDefinitions="*,20,*">
+        <StackPanel Grid.Column="0">
+          <components:FormField Label="Booking"
+                                LabelStyle="H4">
+            <ToggleSwitch IsChecked="{Binding Booking}" />
+          </components:FormField>
+
+          <components:FormField Label="Booking time"
+                                Value="{Binding BookingTime}">
+            <Slider
+              Value="{Binding BookingTime,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+          </components:FormField>
+
+          <components:FormField Label="Practice"
+                                LabelStyle="H4">
+            <ToggleSwitch IsChecked="{Binding Practice}" />
+          </components:FormField>
+
+          <components:FormField Label="Practice time"
+                                Value="{Binding PracticeTime}">
+            <Slider
+              Value="{Binding PracticeTime,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+          </components:FormField>
+
+          <components:FormField Label="Can join">
+            <ToggleSwitch IsChecked="{Binding PracticeCanJoin}" />
+          </components:FormField>
+
+          <components:FormField Label="Qualification"
+                                LabelStyle="H4">
+            <ToggleSwitch IsChecked="{Binding Qualification}" />
+          </components:FormField>
+
+          <components:FormField Label="Qualification time"
+                                Value="{Binding QualificationTime}">
+            <Slider
+              Value="{Binding QualificationTime,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+          </components:FormField>
+
+          <components:FormField Label="Can join">
+            <ToggleSwitch IsChecked="{Binding QualificationCanJoin}" />
+          </components:FormField>
+
+          <components:FormField Label="Qualify limit"
+                                Value="{Binding QualifyLimit}"
+                                Postfix="%">
+            <Slider Value="{Binding QualifyLimit}" />
+          </components:FormField>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2">
+          <components:FormField Label="Race"
+                                LabelStyle="H4">
+            <ToggleSwitch IsChecked="{Binding Race}" />
+          </components:FormField>
+
+          <components:FormField Label="Limit by">
+            <ComboBox Items="{Binding AvailableRaceLimits}"
+                      SelectedItem="{Binding RaceLimit}" />
+          </components:FormField>
+
+          <components:FormField Label="Laps">
+            <Slider Value="{Binding Laps}" />
+          </components:FormField>
+
+          <components:FormField Label="Time"
+                                Value="{Binding Time}">
+            <Slider
+              Value="{Binding Time,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+          </components:FormField>
+
+          <components:FormField Label="Extra lap">
+            <ToggleSwitch IsChecked="{Binding ExtraLap}" />
+          </components:FormField>
+
+          <components:FormField Label="Initial delay"
+                                Value="{Binding InitialDelay}">
+            <Slider
+              Value="{Binding InitialDelay,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+          </components:FormField>
+
+          <components:FormField Label="Race over"
+                                Value="{Binding RaceOver}">
+            <Slider
+              Value="{Binding RaceOver,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+          </components:FormField>
+
+          <components:FormField Label="Result screen"
+                                Value="{Binding ResultScreen}">
+            <Slider
+              Value="{Binding ResultScreen,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+          </components:FormField>
+
+          <components:FormField Label="Join type">
+            <ComboBox Items="{Binding AvailableJoinTypes}"
+                      SelectedItem="{Binding JoinType}" />
+          </components:FormField>
+
+          <Grid ColumnDefinitions="Auto,Auto,Auto">
+            <components:FormField Grid.Column="0"
+                                  Label="Mandatory pit">
+              <ToggleSwitch IsChecked="{Binding MandatoryPits}" />
+            </components:FormField>
+
+            <components:FormField Grid.Column="1"
+                                  Label="From"
+                                  Value="{Binding From}" />
+
+            <components:FormField Grid.Column="2"
+                                  Label="To"
+                                  Value="{Binding To}" />
+          </Grid>
+
+          <components:FormField Label="Reversed grid"
+                                Value="{Binding ReversedGrid}" />
+        </StackPanel>
+      </Grid>
+    </Grid>
+  </ScrollViewer>
+
+</UserControl>

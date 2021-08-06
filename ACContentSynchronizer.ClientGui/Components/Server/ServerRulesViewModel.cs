@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
-using Avalonia.Collections;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Components.Server {
@@ -43,11 +43,10 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     private bool _disableGasCut;
 
-    public AvaloniaList<AssistMode> AvailableAssistModes =>
-      new(Enum.GetValues(typeof(AssistMode)).Cast<AssistMode>());
-
-    public AvaloniaList<SpawnType> AvailableSpawnTypes =>
-      new(Enum.GetValues(typeof(SpawnType)).Cast<SpawnType>());
+    public IEnumerable<AssistMode> AvailableAssistModes =>
+      Enum.GetValues(typeof(AssistMode)).Cast<AssistMode>();
+    public IEnumerable<SpawnType> AvailableSpawnTypes =>
+      Enum.GetValues(typeof(SpawnType)).Cast<SpawnType>();
 
     public SpawnType SpawnType {
       get => _spawnType;

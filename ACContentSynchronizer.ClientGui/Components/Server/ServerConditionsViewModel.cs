@@ -23,18 +23,12 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public TimeSpan Time {
       get => _time;
-      set {
-        this.RaiseAndSetIfChanged(ref _time, value);
-        this.RaisePropertyChanged(nameof(TimeLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _time, value);
     }
 
     public double TimeMultiplier {
       get => _timeMultiplier;
-      set {
-        this.RaiseAndSetIfChanged(ref _timeMultiplier, value);
-        this.RaisePropertyChanged(nameof(TimeMultiplierLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _timeMultiplier, value);
     }
 
     public bool DynamicTrack {
@@ -44,34 +38,22 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public short StartValue {
       get => _startValue;
-      set {
-        this.RaiseAndSetIfChanged(ref _startValue, value);
-        this.RaisePropertyChanged(nameof(StartValueLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _startValue, value);
     }
 
     public short Transferred {
       get => _transferred;
-      set {
-        this.RaiseAndSetIfChanged(ref _transferred, value);
-        this.RaisePropertyChanged(nameof(TransferredLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _transferred, value);
     }
 
     public short Randomness {
       get => _randomness;
-      set {
-        this.RaiseAndSetIfChanged(ref _randomness, value);
-        this.RaisePropertyChanged(nameof(RandomnessLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _randomness, value);
     }
 
     public short Laps {
       get => _laps;
-      set {
-        this.RaiseAndSetIfChanged(ref _laps, value);
-        this.RaisePropertyChanged(nameof(LapsLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _laps, value);
     }
 
     public ServerWeather? SelectedWeather {
@@ -89,20 +71,13 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
     public short TimeMinimum => 8;
     public short TimeMaximum => 18;
     public double TickFrequency => 0.0166666666667;
-    public string TimeLabel => $"Time: {Time:hh\\:mm}";
 
     public short TimeMultiplierMinimum => 0;
     public short TimeMultiplierMaximum => 60;
     public double TickMultiplierFrequency => 0.1;
-    public string TimeMultiplierLabel => $"Time Multiplier: {TimeMultiplier:0.0}x";
-
-    public string StartValueLabel => $"Start value: {StartValue}%";
-    public string TransferredLabel => $"Transferred: {Transferred}%";
-    public string RandomnessLabel => $"Randomness: {Randomness}%";
 
     public short LapsMinimum => 1;
     public short LapsMaximum => 81;
-    public string LapsLabel => $"Laps to improve: {Laps} laps";
 
     public bool CanRemoveWeather => SelectedWeather != null && Weathers.Count > 1;
 

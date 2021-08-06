@@ -12,7 +12,7 @@ using DynamicData;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Components.Server {
-  public class ServerMainViewModel : ViewModelBase {
+  public class ServerMainViewModel : ViewModelBase, IDisposable {
     private string _adminPassword = $"accsAdm{new Random().Next(100, 1000)}";
 
     private ReadOnlyObservableCollection<EntryViewModel> _cars;
@@ -206,6 +206,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
     public void Dispose() {
       AvailableCars.Dispose();
       AvailableTracks.Dispose();
+      _selectedTrack?.Dispose();
     }
   }
 }

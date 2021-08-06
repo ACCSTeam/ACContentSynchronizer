@@ -1,3 +1,4 @@
+using System;
 using ACContentSynchronizer.ClientGui.Tasks;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.ClientGui.Views;
@@ -5,7 +6,7 @@ using Avalonia.Collections;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Components.Server {
-  public class UploadViewModel : ViewModelBase {
+  public class UploadViewModel : ViewModelBase, IDisposable {
     private string _carSearch = "";
 
     private EntryViewModel? _selectedTrack;
@@ -39,6 +40,10 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public void Upload() {
       StatusBar.Instance.AddTask(new UploadTask(Views.Server.GetServer, this));
+    }
+
+    public void Dispose() {
+      _selectedTrack?.Dispose();
     }
   }
 }

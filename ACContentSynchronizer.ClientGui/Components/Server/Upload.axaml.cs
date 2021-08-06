@@ -17,6 +17,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
     public static Upload Instance => _instance ??= new();
 
     public void Dispose() {
+      _vm.Dispose();
     }
 
     private void InitializeComponent() {

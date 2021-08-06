@@ -6,17 +6,23 @@ using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Components.Server {
   public class ServerWeatherViewModel : ViewModelBase {
-    private double _ambientTemperature;
+    private double _ambientTemperature = 18;
 
-    private double _ambientVariation;
+    private double _ambientVariation = 1;
 
     private string _graphics = "";
 
-    private double _roadTemperature;
+    private double _roadTemperature = 24;
 
-    private double _roadVariation;
+    private double _roadVariation = 0.5;
 
     private string? _selectedWeather;
+
+    private double _wind;
+
+    private double _windDirection;
+
+    private double _windDirectionVariation;
 
     public ServerWeatherViewModel() {
       AllowedWeathers = ContentUtils.GetWeathers(Settings.Instance.GamePath);
@@ -67,6 +73,36 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
         this.RaisePropertyChanged(nameof(RoadVariationLabel));
       }
     }
+
+    public double Wind {
+      get => _wind;
+      set {
+        this.RaiseAndSetIfChanged(ref _wind, value);
+        this.RaisePropertyChanged(nameof(WindLabel));
+      }
+    }
+
+    public string WindLabel => $"Wind: {Wind} km/h";
+
+    public double WindDirection {
+      get => _windDirection;
+      set {
+        this.RaiseAndSetIfChanged(ref _windDirection, value);
+        this.RaisePropertyChanged(nameof(WindDirectionLabel));
+      }
+    }
+
+    public string WindDirectionLabel => $"Wind direction: {WindDirection}";
+
+    public double WindDirectionVariation {
+      get => _windDirectionVariation;
+      set {
+        this.RaiseAndSetIfChanged(ref _windDirectionVariation, value);
+        this.RaisePropertyChanged(nameof(WindDirectionVariationLabel));
+      }
+    }
+
+    public string WindDirectionVariationLabel => $"Wind direction variation: {WindDirectionVariation}";
 
     public IEnumerable<string> AllowedWeathers { get; set; }
 

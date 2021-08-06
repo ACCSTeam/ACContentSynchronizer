@@ -1,10 +1,11 @@
+using System;
 using System.Linq;
 using Avalonia.Collections;
 using Avalonia.Media.Imaging;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
-  public class EntryViewModel : ViewModelBase {
+  public class EntryViewModel : ViewModelBase, IDisposable {
     private string _name = "";
 
     private string _path = "";
@@ -76,6 +77,10 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
 
     public EntryViewModel Clone() {
       return new(Path, Name, Variations, SelectedVariation);
+    }
+
+    public void Dispose() {
+      _preview?.Dispose();
     }
   }
 }

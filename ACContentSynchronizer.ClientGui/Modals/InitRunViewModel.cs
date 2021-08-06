@@ -17,8 +17,8 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 
     private AvaloniaList<SteamProfile> _profiles = new();
 
-    public InitRunViewModel(InitRun instance) {
-      Instance = instance;
+    public InitRunViewModel(InitRun controlInstance) {
+      ControlInstance = controlInstance;
       var settings = Settings.Instance;
       Path = settings.GamePath;
       PlayerName = settings.PlayerName;

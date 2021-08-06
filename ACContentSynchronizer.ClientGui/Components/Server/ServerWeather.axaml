@@ -12,7 +12,7 @@
     <server:ServerWeatherViewModel />
   </Design.DataContext>
 
-  <StackPanel Spacing="10">
+  <StackPanel>
     <components:FormField Label="Weather preset">
       <ComboBox Items="{Binding AllowedWeathers}"
                 SelectedItem="{Binding SelectedWeather}" />
@@ -32,6 +32,18 @@
 
     <components:FormField Label="{Binding RoadVariationLabel}">
       <Slider Value="{Binding RoadVariation}" />
+    </components:FormField>
+
+    <components:FormField Label="{Binding WindLabel}">
+      <Slider Value="{Binding Wind}" />
+    </components:FormField>
+
+    <components:FormField Label="{Binding WindDirectionLabel}">
+      <Slider Value="{Binding WindDirection}" />
+    </components:FormField>
+
+    <components:FormField Label="{Binding WindDirectionVariationLabel}">
+      <Slider Value="{Binding WindDirectionVariation}" />
     </components:FormField>
   </StackPanel>
 

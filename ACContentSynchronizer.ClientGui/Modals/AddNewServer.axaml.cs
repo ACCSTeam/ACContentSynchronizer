@@ -7,14 +7,14 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 
     public AddNewServer() {
       DataContext = _vm = new() {
-        Instance = this,
+        ControlInstance = this,
       };
       InitializeComponent();
     }
 
     public AddNewServer(AddNewServerViewModel vm) {
       DataContext = _vm = vm;
-      _vm.Instance = this;
+      _vm.ControlInstance = this;
       InitializeComponent();
     }
 

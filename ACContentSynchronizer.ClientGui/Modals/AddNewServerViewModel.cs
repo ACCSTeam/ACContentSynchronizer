@@ -63,7 +63,7 @@ namespace ACContentSynchronizer.ClientGui.Modals {
         }
       } finally {
         Sidebar.Instance.Save(serverEntry);
-        Instance.Close();
+        ControlInstance.Close();
       }
     }
   }

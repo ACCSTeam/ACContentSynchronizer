@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Controls;
@@ -6,7 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Components.Server {
-  public class ServerMain : UserControl {
+  public class ServerMain : UserControl, IDisposable {
     private static ServerMain? _instance;
     private readonly ServerMainViewModel _vm;
 
@@ -46,6 +47,10 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       source["SERVER"]["REGISTER_TO_LOBBY"] = _vm.PublicServer ? "1" : "0";
 
       return source;
+    }
+
+    public void Dispose() {
+      _vm.Dispose();
     }
   }
 }

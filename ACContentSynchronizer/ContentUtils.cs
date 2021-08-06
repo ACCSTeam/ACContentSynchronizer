@@ -323,7 +323,7 @@ namespace ACContentSynchronizer {
           try {
             name = config["LAUNCHER"]["NAME"].ToString()!;
           } catch {
-            // ignored
+            Console.WriteLine(name);
           }
 
           return name;

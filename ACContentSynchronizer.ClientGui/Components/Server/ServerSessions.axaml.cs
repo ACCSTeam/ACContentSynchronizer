@@ -3,9 +3,11 @@ using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Components.Server {
   public class ServerSessions : UserControl {
+    private readonly ServerSessionsViewModel _vm;
     private static ServerSessions? _instance;
 
     public ServerSessions() {
+      DataContext = _vm = new();
       InitializeComponent();
     }
 

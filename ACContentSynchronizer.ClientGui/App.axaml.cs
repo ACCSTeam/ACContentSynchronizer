@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Reflection;
 using ACContentSynchronizer.ClientGui.Modals;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Views;
@@ -13,6 +17,14 @@ namespace ACContentSynchronizer.ClientGui {
     }
 
     public override void OnFrameworkInitializationCompleted() {
+      var singletons = Assembly
+        .GetExecutingAssembly()
+        .GetTypes()
+        .Where(x => x.GetProperties()
+          .Any(p => p.Name == "Instance"));
+      var instances = singletons.Select(x => x.GetProperty("Instance")?.GetValue(null, null))
+        .ToList();
+
       if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
         desktop.MainWindow = MainWindow.Instance;
       }
@@ -25,6 +37,8 @@ namespace ACContentSynchronizer.ClientGui {
       }
 
       Layout.Instance.SetTheme(settings.Theme);
+       // .Select(x=>((dynamic?)x)?.Instance);
+
       base.OnFrameworkInitializationCompleted();
     }
   }

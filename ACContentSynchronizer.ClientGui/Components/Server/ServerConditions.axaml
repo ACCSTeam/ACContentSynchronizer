@@ -6,6 +6,7 @@
              xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:converters="clr-namespace:ACContentSynchronizer.ClientGui.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Components.Server.ServerConditions">
 
@@ -26,18 +27,19 @@
 
   <ScrollViewer>
     <StackPanel Spacing="10">
-      <TextBlock Text="{Binding TimeLabel}"
-                 TextAlignment="Center" />
+      <components:FormField Label="Time"
+                            Value="{Binding Time}" />
 
       <Slider
         Minimum="{Binding TimeMinimum}"
         Maximum="{Binding TimeMaximum}"
         TickFrequency="{Binding TickFrequency}"
         Value="{Binding Time,
-        Converter={x:Static clientGui:ValueConverters.SliderTimeSpanHours}}" />
+        Converter={x:Static converters:ValueConverters.SliderTimeSpanHours}}" />
 
-      <TextBlock Text="{Binding TimeMultiplierLabel}"
-                 TextAlignment="Center" />
+      <components:FormField Label="Time multiplier"
+                            Value="{Binding TimeMultiplier}"
+                            Postfix="x" />
 
       <Slider
         Minimum="{Binding TimeMultiplierMinimum}"
@@ -52,21 +54,29 @@
 
       <Grid ColumnDefinitions="*,20,*">
         <StackPanel Grid.Column="0">
-          <components:FormField Label="{Binding StartValueLabel}">
+          <components:FormField Label="Start value"
+                                Value="{Binding StartValue}"
+                                Postfix="%">
             <Slider Value="{Binding StartValue}" />
           </components:FormField>
 
-          <components:FormField Label="{Binding  TransferredLabel}">
+          <components:FormField Label="Transferred"
+                                Value="{Binding Transferred}"
+                                Postfix="%">
             <Slider Value="{Binding Transferred}" />
           </components:FormField>
         </StackPanel>
 
         <StackPanel Grid.Column="2">
-          <components:FormField Label="{Binding RandomnessLabel}">
+          <components:FormField Label="Randomness"
+                                Value="{Binding Randomness}"
+                                Postfix="%">
             <Slider Value="{Binding Randomness}" />
           </components:FormField>
 
-          <components:FormField Label="{Binding LapsLabel}">
+          <components:FormField Label="Laps"
+                                Value="{Binding Laps}"
+                                Postfix="laps">
             <Slider Minimum="{Binding LapsMinimum}"
                     Maximum="{Binding LapsMaximum}"
                     Value="{Binding Laps}" />

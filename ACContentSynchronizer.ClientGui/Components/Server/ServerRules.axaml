@@ -5,6 +5,7 @@
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
              xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
              xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
+             xmlns:converters="clr-namespace:ACContentSynchronizer.ClientGui.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Components.Server.ServerRules">
 
@@ -68,7 +69,7 @@
           <components:FormField Label="{Binding VoteDurationLabel}">
             <Slider
               Value="{Binding  VoteDuration,
-            Converter={x:Static clientGui:ValueConverters.SliderTimeSpanMinutes}}" />
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
           </components:FormField>
 
           <components:FormField Label="Kick players until restart:">

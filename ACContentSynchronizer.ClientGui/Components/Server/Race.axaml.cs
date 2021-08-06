@@ -1,9 +1,10 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Components.Server {
-  public class Race : UserControl {
+  public class Race : UserControl, IDisposable {
     private static Race? _instance;
     private readonly RaceViewModel _vm;
 
@@ -24,6 +25,10 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public void Refresh() {
       ReactiveCommand.CreateFromTask(_vm.Refresh).Execute();
+    }
+
+    public void Dispose() {
+      _vm.Dispose();
     }
   }
 }
