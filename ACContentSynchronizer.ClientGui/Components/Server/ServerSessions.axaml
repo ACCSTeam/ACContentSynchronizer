@@ -38,8 +38,13 @@
           </components:FormField>
 
           <components:FormField Label="Booking time"
-                                Value="{Binding BookingTime}">
+                                Value="{Binding BookingTime}"
+                                IsEnabled="{Binding Booking}">
             <Slider
+              Minimum="{Binding TimeMin,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
+              Maximum="{Binding TimeMax,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
               Value="{Binding BookingTime,
             Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
           </components:FormField>
@@ -50,13 +55,19 @@
           </components:FormField>
 
           <components:FormField Label="Practice time"
-                                Value="{Binding PracticeTime}">
+                                Value="{Binding PracticeTime}"
+                                IsEnabled="{Binding Practice}">
             <Slider
+              Minimum="{Binding TimeMin,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
+              Maximum="{Binding TimeMax,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
               Value="{Binding PracticeTime,
             Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
           </components:FormField>
 
-          <components:FormField Label="Can join">
+          <components:FormField Label="Can join"
+                                IsEnabled="{Binding Practice}">
             <ToggleSwitch IsChecked="{Binding PracticeCanJoin}" />
           </components:FormField>
 
@@ -66,20 +77,29 @@
           </components:FormField>
 
           <components:FormField Label="Qualification time"
-                                Value="{Binding QualificationTime}">
+                                Value="{Binding QualificationTime}"
+                                IsEnabled="{Binding Qualification}">
             <Slider
+              Minimum="{Binding TimeMin,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
+              Maximum="{Binding TimeMax,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
               Value="{Binding QualificationTime,
             Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
           </components:FormField>
 
-          <components:FormField Label="Can join">
+          <components:FormField Label="Can join"
+                                IsEnabled="{Binding Qualification}">
             <ToggleSwitch IsChecked="{Binding QualificationCanJoin}" />
           </components:FormField>
 
           <components:FormField Label="Qualify limit"
                                 Value="{Binding QualifyLimit}"
-                                Postfix="%">
-            <Slider Value="{Binding QualifyLimit}" />
+                                Postfix="%"
+                                IsEnabled="{Binding Qualification}">
+            <Slider Minimum="{Binding QualifyLimitMin}"
+                    Maximum="{Binding QualifyLimitMax}"
+                    Value="{Binding QualifyLimit}" />
           </components:FormField>
         </StackPanel>
 
@@ -89,53 +109,85 @@
             <ToggleSwitch IsChecked="{Binding Race}" />
           </components:FormField>
 
-          <components:FormField Label="Limit by">
+          <components:FormField Label="Limit by"
+                                IsEnabled="{Binding Race}">
             <ComboBox Items="{Binding AvailableRaceLimits}"
                       SelectedItem="{Binding RaceLimit}" />
           </components:FormField>
 
-          <components:FormField Label="Laps">
-            <Slider Value="{Binding Laps}" />
+          <components:FormField Label="Laps"
+                                Value="{Binding Laps}"
+                                Postfix="laps"
+                                IsVisible="{Binding IsLimitByLaps}"
+                                IsEnabled="{Binding Race}">
+            <Slider Minimum="{Binding LapsMin}"
+                    Maximum="{Binding LapsMax}"
+                    Value="{Binding Laps}" />
           </components:FormField>
 
           <components:FormField Label="Time"
-                                Value="{Binding Time}">
+                                Value="{Binding Time}"
+                                IsVisible="{Binding !IsLimitByLaps}"
+                                IsEnabled="{Binding Race}">
             <Slider
+              Minimum="{Binding TimeMin,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
+              Maximum="{Binding TimeMax,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
               Value="{Binding Time,
             Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
           </components:FormField>
 
-          <components:FormField Label="Extra lap">
+          <components:FormField Label="Extra lap"
+                                IsVisible="{Binding !IsLimitByLaps}"
+                                IsEnabled="{Binding Race}">
             <ToggleSwitch IsChecked="{Binding ExtraLap}" />
           </components:FormField>
 
           <components:FormField Label="Initial delay"
-                                Value="{Binding InitialDelay}">
+                                Value="{Binding InitialDelay}"
+                                IsEnabled="{Binding Race}">
             <Slider
+              Minimum="{Binding InitialDelayMin,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}"
+              Maximum="{Binding InitialDelayMax,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}"
               Value="{Binding InitialDelay,
-            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}" />
           </components:FormField>
 
           <components:FormField Label="Race over"
-                                Value="{Binding RaceOver}">
+                                Value="{Binding RaceOver}"
+                                IsEnabled="{Binding Race}">
             <Slider
+              Minimum="{Binding RaceOverMin,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}"
+              Maximum="{Binding RaceOverMax,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}"
               Value="{Binding RaceOver,
-            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}" />
           </components:FormField>
 
           <components:FormField Label="Result screen"
-                                Value="{Binding ResultScreen}">
+                                Value="{Binding ResultScreen}"
+                                IsEnabled="{Binding Race}">
             <Slider
+              Minimum="{Binding ResultScreenMin,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}"
+              Maximum="{Binding ResultScreenMax,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}"
               Value="{Binding ResultScreen,
-            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}" />
           </components:FormField>
 
-          <components:FormField Label="Join type">
+          <components:FormField Label="Join type"
+                                IsEnabled="{Binding Race}">
             <ComboBox Items="{Binding AvailableJoinTypes}"
                       SelectedItem="{Binding JoinType}" />
           </components:FormField>
 
-          <Grid ColumnDefinitions="Auto,Auto,Auto">
+          <Grid ColumnDefinitions="Auto,Auto,Auto"
+                IsEnabled="{Binding Race}">
             <components:FormField Grid.Column="0"
                                   Label="Mandatory pit">
               <ToggleSwitch IsChecked="{Binding MandatoryPits}" />
@@ -143,15 +195,18 @@
 
             <components:FormField Grid.Column="1"
                                   Label="From"
-                                  Value="{Binding From}" />
+                                  Value="{Binding From}"
+                                  IsEnabled="{Binding MandatoryPits}" />
 
             <components:FormField Grid.Column="2"
                                   Label="To"
-                                  Value="{Binding To}" />
+                                  Value="{Binding To}"
+                                  IsEnabled="{Binding MandatoryPits}" />
           </Grid>
 
           <components:FormField Label="Reversed grid"
-                                Value="{Binding ReversedGrid}" />
+                                Value="{Binding ReversedGrid}"
+                                IsEnabled="{Binding Race}"/>
         </StackPanel>
       </Grid>
     </Grid>

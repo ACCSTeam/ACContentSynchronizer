@@ -15,45 +15,45 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     private short _from;
 
-    private TimeSpan _initialDelay;
+    private TimeSpan _initialDelay = TimeSpan.FromMinutes(1);
 
     private JoinTypes _joinType = JoinTypes.CloseAsStart;
 
-    private short _laps;
+    private short _laps = 5;
 
     private bool _lockedEntryListInPickupMode;
 
-    private bool _loopMode;
+    private bool _loopMode = true;
 
     private bool _mandatoryPits;
 
-    private bool _pickupMode;
+    private bool _pickupMode = true;
 
-    private bool _practice;
+    private bool _practice = true;
 
-    private bool _practiceCanJoin;
+    private bool _practiceCanJoin = true;
 
-    private TimeSpan _practiceTime;
+    private TimeSpan _practiceTime = TimeSpan.FromMinutes(10);
 
-    private bool _qualification;
+    private bool _qualification = true;
 
-    private bool _qualificationCanJoin;
+    private bool _qualificationCanJoin = true;
 
-    private TimeSpan _qualificationTime;
+    private TimeSpan _qualificationTime = TimeSpan.FromMinutes(10);
 
-    private double _qualifyLimit;
+    private double _qualifyLimit = 120;
 
-    private bool _race;
+    private bool _race = true;
 
-    private RaceLimits _raceLimit;
+    private RaceLimits _raceLimit = RaceLimits.Laps;
 
-    private TimeSpan _raceOver;
+    private TimeSpan _raceOver = TimeSpan.FromMinutes(1);
 
-    private TimeSpan _resultScreen;
+    private TimeSpan _resultScreen = TimeSpan.FromMinutes(1);
 
     private short _reversedGrid;
 
-    private TimeSpan _time;
+    private TimeSpan _time = TimeSpan.FromMinutes(10);
 
     private short _to;
 
@@ -124,7 +124,10 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public RaceLimits RaceLimit {
       get => _raceLimit;
-      set => this.RaiseAndSetIfChanged(ref _raceLimit, value);
+      set {
+        this.RaiseAndSetIfChanged(ref _raceLimit, value);
+        this.RaisePropertyChanged(nameof(IsLimitByLaps));
+      }
     }
 
     public short Laps {
@@ -187,5 +190,19 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public IEnumerable<RaceLimits> AvailableRaceLimits =>
       Enum.GetValues(typeof(RaceLimits)).Cast<RaceLimits>();
+
+    public bool IsLimitByLaps => RaceLimit == RaceLimits.Laps;
+    public TimeSpan TimeMin=>TimeSpan.FromMinutes(1);
+    public TimeSpan TimeMax=>TimeSpan.FromHours(1.5);
+    public short QualifyLimitMin => 100;
+    public short QualifyLimitMax => 200;
+    public short LapsMin => 1;
+    public short LapsMax => 120;
+    public TimeSpan InitialDelayMin => TimeSpan.FromSeconds(1);
+    public TimeSpan InitialDelayMax => TimeSpan.FromMinutes(2);
+    public TimeSpan RaceOverMin => TimeSpan.Zero;
+    public TimeSpan RaceOverMax => TimeSpan.FromMinutes(5);
+    public TimeSpan ResultScreenMin => TimeSpan.Zero;
+    public TimeSpan ResultScreenMax => TimeSpan.FromMinutes(2);
   }
 }

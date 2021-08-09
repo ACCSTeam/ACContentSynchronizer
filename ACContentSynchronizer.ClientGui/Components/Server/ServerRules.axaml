@@ -17,10 +17,6 @@
     <Style Selector="StackPanel">
       <Setter Property="Spacing" Value="10" />
     </Style>
-
-    <Style Selector="components|FormField">
-      <Setter Property="LabelWidth" Value="200" />
-    </Style>
   </UserControl.Styles>
 
   <ScrollViewer>
@@ -30,53 +26,63 @@
         <StackPanel Grid.Row="0">
           <TextBlock Text="Assists"
                      Classes="H4" />
-          <components:FormField Label="ABS:">
+          <components:FormField Label="ABS">
             <ComboBox Items="{Binding AvailableAssistModes}"
                       SelectedItem="{Binding AbsMode}" />
           </components:FormField>
-          <components:FormField Label="TC:">
+          <components:FormField Label="TC">
             <ComboBox Items="{Binding AvailableAssistModes}"
                       SelectedItem="{Binding TcMode}" />
           </components:FormField>
-          <components:FormField Label="Stability control:">
+          <components:FormField Label="Stability control">
             <ToggleSwitch IsChecked="{Binding StabilityControl}" />
           </components:FormField>
-          <components:FormField Label="Automatic clutch:">
+          <components:FormField Label="Automatic clutch">
             <ToggleSwitch IsChecked="{Binding AutomaticClutch}" />
           </components:FormField>
-          <components:FormField Label="Tyre blankets:">
+          <components:FormField Label="Tyre blankets">
             <ToggleSwitch IsChecked="{Binding TyreBlankets}" />
           </components:FormField>
-          <components:FormField Label="Virtual mirror:">
+          <components:FormField Label="Virtual mirror">
             <ToggleSwitch IsChecked="{Binding VirtualMirror}" />
           </components:FormField>
         </StackPanel>
         <StackPanel Grid.Row="2">
           <TextBlock Text="Voting and banning"
                      Classes="H4" />
-          <components:FormField Label="{Binding KickVoteQuorumLabel}">
+          <components:FormField Label="Kick vote quorum"
+                                Value="{Binding KickVoteQuorum}"
+                                Postfix="%">
             <Slider Minimum="{Binding VoteQuorumMinimum}"
                     Maximum="{Binding VoteQuorumMaximum}"
                     Value="{Binding KickVoteQuorum}" />
           </components:FormField>
 
-          <components:FormField Label="{Binding SessionVoteQuorumLabel}">
+          <components:FormField Label="Session vote quorum"
+                                Value="{Binding SessionVoteQuorum}"
+                                Postfix="%">
             <Slider Minimum="{Binding VoteQuorumMinimum}"
                     Maximum="{Binding VoteQuorumMaximum}"
                     Value="{Binding SessionVoteQuorum}" />
           </components:FormField>
 
-          <components:FormField Label="{Binding VoteDurationLabel}">
+          <components:FormField Label="Vote duration"
+                                Value="{Binding VoteDuration}">
             <Slider
+              Minimum="{Binding VoteDurationMin,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}"
+              Maximum="{Binding VoteDurationMax,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}"
               Value="{Binding  VoteDuration,
-            Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}" />
           </components:FormField>
 
-          <components:FormField Label="Kick players until restart:">
+          <components:FormField Label="Kick players until restart">
             <ToggleSwitch IsChecked="{Binding KickUntilRestart}" />
           </components:FormField>
 
-          <components:FormField Label="{Binding MaxContactsPerKmLabel}">
+          <components:FormField Label="Max contacts per km"
+                                Value="{Binding MaxContactsPerKm}">
             <Slider Minimum="{Binding MaxContactsPerKmMinimum}"
                     Maximum="{Binding MaxContactsPerKmMaximum}"
                     Value="{Binding  MaxContactsPerKm}" />
@@ -88,42 +94,52 @@
         <TextBlock Text="Realism"
                    Classes="H4" />
 
-        <components:FormField Label="{Binding FuelRateLabel}">
+        <components:FormField Label="Fuel rate"
+                              Value="{Binding FuelRate}"
+                              Postfix="%">
           <Slider Minimum="{Binding RealismMinimum}"
                   Maximum="{Binding RealismMaximum}"
                   Value="{Binding FuelRate}" />
         </components:FormField>
 
-        <components:FormField Label="{Binding DamageRateLabel}">
+        <components:FormField Label="Damage rate"
+                              Value="{Binding DamageRate}"
+                              Postfix="%">
           <Slider Minimum="{Binding RealismMinimum}"
                   Maximum="{Binding RealismMaximum}"
                   Value="{Binding DamageRate}" />
         </components:FormField>
 
-        <components:FormField Label="{Binding TyresWearRateLabel}">
+        <components:FormField Label="Tyres wear rate"
+                              Value="{Binding TyresWearRate}"
+                              Postfix="%">
           <Slider Minimum="{Binding RealismMinimum}"
                   Maximum="{Binding RealismMaximum}"
                   Value="{Binding TyresWearRate}" />
         </components:FormField>
 
-        <components:FormField Label="{Binding AllowedTyresOutLabel}">
+        <components:FormField Label="Allowed tyres out"
+                              Value="{Binding AllowedTyresOut}"
+                              Postfix="tyres">
           <Slider Minimum="{Binding AllowedTyresOutMinimum}"
                   Maximum="{Binding AllowedTyresOutMaximum}"
                   Value="{Binding AllowedTyresOut}" />
         </components:FormField>
 
-        <components:FormField Label="{Binding MaxBallastLabel}">
+        <components:FormField Label="Max ballast"
+                              Value="{Binding MaxBallast}"
+                              Postfix="kg">
           <Slider Minimum="{Binding RealismMinimum}"
                   Maximum="{Binding RealismMaximum}"
                   Value="{Binding MaxBallast}" />
         </components:FormField>
 
-        <components:FormField Label="Jump start:">
+        <components:FormField Label="Jump start">
           <ComboBox Items="{Binding AvailableSpawnTypes}"
                     SelectedItem="{Binding SpawnType}" />
         </components:FormField>
 
-        <components:FormField Label="Disable gas cut penalty:">
+        <components:FormField Label="Disable gas cut penalty">
           <ToggleSwitch IsChecked="{Binding  DisableGasCut}" />
         </components:FormField>
       </StackPanel>

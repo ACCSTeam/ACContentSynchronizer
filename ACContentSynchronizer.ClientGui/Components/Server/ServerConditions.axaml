@@ -52,7 +52,8 @@
         <ToggleSwitch IsChecked="{Binding DynamicTrack}" />
       </components:FormField>
 
-      <Grid ColumnDefinitions="*,20,*">
+      <Grid ColumnDefinitions="*,20,*"
+            IsEnabled="{Binding DynamicTrack}">
         <StackPanel Grid.Column="0">
           <components:FormField Label="Start value"
                                 Value="{Binding StartValue}"

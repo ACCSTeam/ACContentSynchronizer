@@ -9,39 +9,39 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
   public class ServerRulesViewModel : ViewModelBase {
     private AssistMode _absMode;
 
-    private AssistMode _tcMode;
-
-    private bool _stabilityControl;
+    private short _allowedTyresOut = 2;
 
     private bool _automaticClutch;
 
-    private bool _tyreBlankets;
+    private short _damageRate = 100;
 
-    private bool _virtualMirror;
-
-    private short _kickVoteQuorum = 85;
-
-    private short _sessionVoteQuorum = 80;
-
-    private TimeSpan _voteDuration = TimeSpan.FromSeconds(20);
-
-    private bool _kickUntilRestart = true;
-
-    private short _maxContactsPerKm = -1;
+    private bool _disableGasCut;
 
     private short _fuelRate = 100;
 
-    private short _damageRate = 100;
+    private bool _kickUntilRestart = true;
 
-    private short _tyresWearRate = 100;
-
-    private short _allowedTyresOut = 2;
+    private short _kickVoteQuorum = 85;
 
     private short _maxBallast;
 
+    private short _maxContactsPerKm = -1;
+
+    private short _sessionVoteQuorum = 80;
+
     private SpawnType _spawnType = SpawnType.Pits;
 
-    private bool _disableGasCut;
+    private bool _stabilityControl;
+
+    private AssistMode _tcMode;
+
+    private bool _tyreBlankets;
+
+    private short _tyresWearRate = 100;
+
+    private bool _virtualMirror;
+
+    private TimeSpan _voteDuration = TimeSpan.FromSeconds(20);
 
     public IEnumerable<AssistMode> AvailableAssistModes =>
       Enum.GetValues(typeof(AssistMode)).Cast<AssistMode>();
@@ -95,93 +95,49 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public short KickVoteQuorum {
       get => _kickVoteQuorum;
-      set {
-        this.RaiseAndSetIfChanged(ref _kickVoteQuorum, value);
-        this.RaisePropertyChanged(nameof(KickVoteQuorumLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _kickVoteQuorum, value);
     }
-
-    public string KickVoteQuorumLabel => $"Kick vote quorum: {KickVoteQuorum}%";
 
     public short SessionVoteQuorum {
       get => _sessionVoteQuorum;
-      set {
-        this.RaiseAndSetIfChanged(ref _sessionVoteQuorum, value);
-        this.RaisePropertyChanged(nameof(SessionVoteQuorumLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _sessionVoteQuorum, value);
     }
-
-    public string SessionVoteQuorumLabel => $"Session vote quorum: {SessionVoteQuorum}%";
 
     public TimeSpan VoteDuration {
       get => _voteDuration;
-      set {
-        this.RaiseAndSetIfChanged(ref _voteDuration, value);
-        this.RaisePropertyChanged(nameof(VoteDurationLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _voteDuration, value);
     }
-
-    public string VoteDurationLabel => $"Vote duration: {VoteDuration}";
 
     public short MaxContactsPerKm {
       get => _maxContactsPerKm;
-      set {
-        this.RaiseAndSetIfChanged(ref _maxContactsPerKm, value);
-        this.RaisePropertyChanged(nameof(MaxContactsPerKmLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _maxContactsPerKm, value);
     }
-
-    public string MaxContactsPerKmLabel => $"Max contacts per km: {MaxContactsPerKm}";
 
     public short FuelRate {
       get => _fuelRate;
-      set {
-        this.RaiseAndSetIfChanged(ref _fuelRate, value);
-        this.RaisePropertyChanged(nameof(FuelRateLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _fuelRate, value);
     }
-
-    public string FuelRateLabel => $"Fuel rate: {FuelRate}%";
 
     public short DamageRate {
       get => _damageRate;
-      set {
-        this.RaiseAndSetIfChanged(ref _damageRate, value);
-        this.RaisePropertyChanged(nameof(DamageRateLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _damageRate, value);
     }
-
-    public string DamageRateLabel => $"Damage rate: {DamageRate}%";
 
     public short TyresWearRate {
       get => _tyresWearRate;
-      set {
-        this.RaiseAndSetIfChanged(ref _tyresWearRate, value);
-        this.RaisePropertyChanged(nameof(TyresWearRateLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _tyresWearRate, value);
     }
-
-    public string TyresWearRateLabel => $"Tyres wear rate: {TyresWearRate}%";
 
     public short AllowedTyresOut {
       get => _allowedTyresOut;
-      set {
-        this.RaiseAndSetIfChanged(ref _allowedTyresOut, value);
-        this.RaisePropertyChanged(nameof(AllowedTyresOutLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _allowedTyresOut, value);
     }
-
-    public string AllowedTyresOutLabel => $"Allowed tyres out: {AllowedTyresOut} tyres";
 
     public short MaxBallast {
       get => _maxBallast;
-      set {
-        this.RaiseAndSetIfChanged(ref _maxBallast, value);
-        this.RaisePropertyChanged(nameof(MaxBallastLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _maxBallast, value);
     }
 
-    public string MaxBallastLabel => $"Max ballast: {MaxBallast} kg";
     public int VoteQuorumMinimum => 40;
     public int VoteQuorumMaximum => 90;
     public int MaxContactsPerKmMinimum => -1;
@@ -190,5 +146,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
     public int RealismMaximum => 200;
     public int AllowedTyresOutMinimum => -1;
     public int AllowedTyresOutMaximum => 3;
+    public TimeSpan VoteDurationMin => TimeSpan.FromSeconds(10);
+    public TimeSpan VoteDurationMax => TimeSpan.FromMinutes(1);
   }
 }
