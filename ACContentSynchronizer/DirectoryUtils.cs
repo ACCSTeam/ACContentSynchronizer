@@ -3,8 +3,10 @@ using System.Linq;
 
 namespace ACContentSynchronizer {
   public static class DirectoryUtils {
-    public static string Name(string path) {
-      return new DirectoryInfo(path).Name;
+    public static string Name(string? path) {
+      return string.IsNullOrEmpty(path)
+        ? string.Empty
+        : new DirectoryInfo(path).Name;
     }
 
     public static void CreateIfNotExists(string path) {

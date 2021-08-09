@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
-             xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              xmlns:converters="clr-namespace:ACContentSynchronizer.ClientGui.Converters"
@@ -31,11 +30,12 @@
                             Value="{Binding Time}" />
 
       <Slider
-        Minimum="{Binding TimeMinimum}"
-        Maximum="{Binding TimeMaximum}"
-        TickFrequency="{Binding TickFrequency}"
+        Minimum="{Binding TimeMinimum,
+        Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
+        Maximum="{Binding TimeMaximum,
+        Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
         Value="{Binding Time,
-        Converter={x:Static converters:ValueConverters.SliderTimeSpanHours}}" />
+        Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
 
       <components:FormField Label="Time multiplier"
                             Value="{Binding TimeMultiplier}"

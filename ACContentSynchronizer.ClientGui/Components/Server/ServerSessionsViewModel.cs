@@ -21,11 +21,9 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     private short _laps = 5;
 
-    private bool _lockedEntryListInPickupMode;
+    private bool _lockedEntryList;
 
     private bool _loopMode = true;
-
-    private bool _mandatoryPits;
 
     private bool _pickupMode = true;
 
@@ -41,7 +39,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     private TimeSpan _qualificationTime = TimeSpan.FromMinutes(10);
 
-    private double _qualifyLimit = 120;
+    private short _qualifyLimit = 120;
 
     private bool _race = true;
 
@@ -62,9 +60,9 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       set => this.RaiseAndSetIfChanged(ref _pickupMode, value);
     }
 
-    public bool LockedEntryListInPickupMode {
-      get => _lockedEntryListInPickupMode;
-      set => this.RaiseAndSetIfChanged(ref _lockedEntryListInPickupMode, value);
+    public bool LockedEntryList {
+      get => _lockedEntryList;
+      set => this.RaiseAndSetIfChanged(ref _lockedEntryList, value);
     }
 
     public bool LoopMode {
@@ -112,7 +110,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       set => this.RaiseAndSetIfChanged(ref _qualificationCanJoin, value);
     }
 
-    public double QualifyLimit {
+    public short QualifyLimit {
       get => _qualifyLimit;
       set => this.RaiseAndSetIfChanged(ref _qualifyLimit, value);
     }
@@ -165,11 +163,6 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       set => this.RaiseAndSetIfChanged(ref _joinType, value);
     }
 
-    public bool MandatoryPits {
-      get => _mandatoryPits;
-      set => this.RaiseAndSetIfChanged(ref _mandatoryPits, value);
-    }
-
     public short From {
       get => _from;
       set => this.RaiseAndSetIfChanged(ref _from, value);
@@ -185,24 +178,24 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       set => this.RaiseAndSetIfChanged(ref _reversedGrid, value);
     }
 
-    public IEnumerable<JoinTypes> AvailableJoinTypes =>
+    public static IEnumerable<JoinTypes> AvailableJoinTypes =>
       Enum.GetValues(typeof(JoinTypes)).Cast<JoinTypes>();
 
-    public IEnumerable<RaceLimits> AvailableRaceLimits =>
+    public static IEnumerable<RaceLimits> AvailableRaceLimits =>
       Enum.GetValues(typeof(RaceLimits)).Cast<RaceLimits>();
 
     public bool IsLimitByLaps => RaceLimit == RaceLimits.Laps;
-    public TimeSpan TimeMin=>TimeSpan.FromMinutes(1);
-    public TimeSpan TimeMax=>TimeSpan.FromHours(1.5);
-    public short QualifyLimitMin => 100;
-    public short QualifyLimitMax => 200;
-    public short LapsMin => 1;
-    public short LapsMax => 120;
-    public TimeSpan InitialDelayMin => TimeSpan.FromSeconds(1);
-    public TimeSpan InitialDelayMax => TimeSpan.FromMinutes(2);
-    public TimeSpan RaceOverMin => TimeSpan.Zero;
-    public TimeSpan RaceOverMax => TimeSpan.FromMinutes(5);
-    public TimeSpan ResultScreenMin => TimeSpan.Zero;
-    public TimeSpan ResultScreenMax => TimeSpan.FromMinutes(2);
+    public static TimeSpan TimeMin => TimeSpan.FromMinutes(1);
+    public static TimeSpan TimeMax => TimeSpan.FromHours(1.5);
+    public static short QualifyLimitMin => 100;
+    public static short QualifyLimitMax => 200;
+    public static short LapsMin => 1;
+    public static short LapsMax => 120;
+    public static TimeSpan InitialDelayMin => TimeSpan.FromSeconds(1);
+    public static TimeSpan InitialDelayMax => TimeSpan.FromMinutes(2);
+    public static TimeSpan RaceOverMin => TimeSpan.Zero;
+    public static TimeSpan RaceOverMax => TimeSpan.FromMinutes(5);
+    public static TimeSpan ResultScreenMin => TimeSpan.Zero;
+    public static TimeSpan ResultScreenMax => TimeSpan.FromMinutes(2);
   }
 }

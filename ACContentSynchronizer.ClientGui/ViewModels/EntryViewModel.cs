@@ -75,12 +75,12 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
       set => this.RaiseAndSetIfChanged(ref _preview, value);
     }
 
-    public EntryViewModel Clone() {
-      return new(Path, Name, Variations, SelectedVariation);
-    }
-
     public void Dispose() {
       _preview?.Dispose();
+    }
+
+    public EntryViewModel Clone() {
+      return new(Path, Name, Variations, SelectedVariation);
     }
   }
 }

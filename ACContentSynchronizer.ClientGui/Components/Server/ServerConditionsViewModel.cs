@@ -68,16 +68,15 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       new(),
     };
 
-    public short TimeMinimum => 8;
-    public short TimeMaximum => 18;
-    public double TickFrequency => 0.0166666666667;
+    public static TimeSpan TimeMinimum => TimeSpan.FromHours(8);
+    public static TimeSpan TimeMaximum => TimeSpan.FromHours(18);
 
-    public short TimeMultiplierMinimum => 0;
-    public short TimeMultiplierMaximum => 60;
-    public double TickMultiplierFrequency => 0.1;
+    public static short TimeMultiplierMinimum => 0;
+    public static short TimeMultiplierMaximum => 60;
+    public static double TickMultiplierFrequency => 0.1;
 
-    public short LapsMinimum => 1;
-    public short LapsMaximum => 81;
+    public static short LapsMinimum => 1;
+    public static short LapsMaximum => 81;
 
     public bool CanRemoveWeather => SelectedWeather != null && Weathers.Count > 1;
 

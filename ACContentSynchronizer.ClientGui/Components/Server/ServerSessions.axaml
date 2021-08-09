@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
-             xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
              xmlns:converters="clr-namespace:ACContentSynchronizer.ClientGui.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Components.Server.ServerSessions">
@@ -21,7 +20,7 @@
         </components:FormField>
 
         <components:FormField Label="Locked entry list in pickup mode">
-          <ToggleSwitch IsChecked="{Binding LockedEntryListInPickupMode}" />
+          <ToggleSwitch IsChecked="{Binding LockedEntryList}" />
         </components:FormField>
 
         <components:FormField Label="Loop mode">
@@ -186,27 +185,23 @@
                       SelectedItem="{Binding JoinType}" />
           </components:FormField>
 
-          <Grid ColumnDefinitions="Auto,Auto,Auto"
+          <Grid ColumnDefinitions="Auto,*,*"
                 IsEnabled="{Binding Race}">
             <components:FormField Grid.Column="0"
-                                  Label="Mandatory pit">
-              <ToggleSwitch IsChecked="{Binding MandatoryPits}" />
-            </components:FormField>
+                                  Label="Mandatory pit" />
 
             <components:FormField Grid.Column="1"
                                   Label="From"
-                                  Value="{Binding From}"
-                                  IsEnabled="{Binding MandatoryPits}" />
+                                  Value="{Binding From}" />
 
             <components:FormField Grid.Column="2"
                                   Label="To"
-                                  Value="{Binding To}"
-                                  IsEnabled="{Binding MandatoryPits}" />
+                                  Value="{Binding To}" />
           </Grid>
 
           <components:FormField Label="Reversed grid"
                                 Value="{Binding ReversedGrid}"
-                                IsEnabled="{Binding Race}"/>
+                                IsEnabled="{Binding Race}" />
         </StackPanel>
       </Grid>
     </Grid>

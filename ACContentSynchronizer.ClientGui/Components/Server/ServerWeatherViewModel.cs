@@ -18,11 +18,13 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     private string? _selectedWeather;
 
-    private double _wind;
+    private short _windDirection;
 
-    private double _windDirection;
+    private short _windDirectionVariation;
 
-    private double _windDirectionVariation;
+    private double _windMax;
+
+    private double _windMin;
 
     public ServerWeatherViewModel() {
       AllowedWeathers = ContentUtils.GetWeathers(Settings.Instance.GamePath);
@@ -36,80 +38,58 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public string Graphics {
       get => _graphics;
-      set {
-        this.RaiseAndSetIfChanged(ref _graphics, value);
-        this.RaisePropertyChanged(nameof(GraphicsLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _graphics, value);
     }
 
     public double AmbientTemperature {
       get => _ambientTemperature;
-      set {
-        this.RaiseAndSetIfChanged(ref _ambientTemperature, value);
-        this.RaisePropertyChanged(nameof(AmbientTemperatureLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _ambientTemperature, value);
     }
 
     public double RoadTemperature {
       get => _roadTemperature;
-      set {
-        this.RaiseAndSetIfChanged(ref _roadTemperature, value);
-        this.RaisePropertyChanged(nameof(RoadTemperatureLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _roadTemperature, value);
     }
 
     public double AmbientVariation {
       get => _ambientVariation;
-      set {
-        this.RaiseAndSetIfChanged(ref _ambientVariation, value);
-        this.RaisePropertyChanged(nameof(AmbientVariationLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _ambientVariation, value);
     }
 
     public double RoadVariation {
       get => _roadVariation;
-      set {
-        this.RaiseAndSetIfChanged(ref _roadVariation, value);
-        this.RaisePropertyChanged(nameof(RoadVariationLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _roadVariation, value);
     }
 
-    public double Wind {
-      get => _wind;
-      set {
-        this.RaiseAndSetIfChanged(ref _wind, value);
-        this.RaisePropertyChanged(nameof(WindLabel));
-      }
+    public double WindMin {
+      get => _windMin;
+      set => this.RaiseAndSetIfChanged(ref _windMin, value);
     }
 
-    public string WindLabel => $"Wind: {Wind} km/h";
+    public double WindMax {
+      get => _windMax;
+      set => this.RaiseAndSetIfChanged(ref _windMax, value);
+    }
 
-    public double WindDirection {
+    public short WindDirection {
       get => _windDirection;
-      set {
-        this.RaiseAndSetIfChanged(ref _windDirection, value);
-        this.RaisePropertyChanged(nameof(WindDirectionLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _windDirection, value);
     }
 
-    public string WindDirectionLabel => $"Wind direction: {WindDirection}";
-
-    public double WindDirectionVariation {
+    public short WindDirectionVariation {
       get => _windDirectionVariation;
-      set {
-        this.RaiseAndSetIfChanged(ref _windDirectionVariation, value);
-        this.RaisePropertyChanged(nameof(WindDirectionVariationLabel));
-      }
+      set => this.RaiseAndSetIfChanged(ref _windDirectionVariation, value);
     }
-
-    public string WindDirectionVariationLabel => $"Wind direction variation: {WindDirectionVariation}";
 
     public IEnumerable<string> AllowedWeathers { get; set; }
 
-    public string RoadVariationLabel => $"Road variation: {RoadVariation}";
-    public string AmbientVariationLabel => $"Temperature variation: {AmbientVariation}";
-    public string RoadTemperatureLabel => $"Road temperature: {RoadTemperature}";
-    public string AmbientTemperatureLabel => $"Temperature: {AmbientTemperature}";
-    public string GraphicsLabel => $"Weather pattern: {Graphics}";
+    public static short WindDirectionMin => 0;
+    public static short WindDirectionMax => 359;
+    public static short WindSpeedMin => 0;
+    public static short WindSpeedMax => 40;
+    public static short TemperatureMin => 0;
+    public static short TemperatureMax => 36;
+    public static short WindDirectionVariationMin => 0;
+    public static short WindDirectionVariationMax => 90;
   }
 }

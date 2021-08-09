@@ -30,6 +30,10 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       set => this.RaiseAndSetIfChanged(ref _trackSearch, value);
     }
 
+    public void Dispose() {
+      _selectedTrack?.Dispose();
+    }
+
     public void Add(EntryViewModel entry) {
       SelectedCars.Add(entry.Clone());
     }
@@ -40,10 +44,6 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public void Upload() {
       StatusBar.Instance.AddTask(new UploadTask(Views.Server.GetServer, this));
-    }
-
-    public void Dispose() {
-      _selectedTrack?.Dispose();
     }
   }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -90,6 +91,10 @@ namespace ACContentSynchronizer.ClientGui {
 
     public Task<ServerProps?> GetServerProps() {
       return Client.GetJson<ServerProps>("getServerProps");
+    }
+
+    public Task<IniFile?> GetServerInfo() {
+      return Client.GetJson<IniFile?>("getServerInfo");
     }
   }
 }

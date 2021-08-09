@@ -159,6 +159,12 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public string CarsCount => $"{SelectedCars.Count}/100";
 
+    public void Dispose() {
+      AvailableCars.Dispose();
+      AvailableTracks.Dispose();
+      _selectedTrack?.Dispose();
+    }
+
     private Task Load() {
       var settings = Settings.Instance;
       var carsDirectory = Path.Combine(settings.GamePath, Constants.ContentFolder, Constants.CarsFolder);
@@ -201,12 +207,6 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       }
 
       return t => t.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase);
-    }
-
-    public void Dispose() {
-      AvailableCars.Dispose();
-      AvailableTracks.Dispose();
-      _selectedTrack?.Dispose();
     }
   }
 }

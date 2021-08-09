@@ -138,15 +138,15 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       set => this.RaiseAndSetIfChanged(ref _maxBallast, value);
     }
 
-    public int VoteQuorumMinimum => 40;
-    public int VoteQuorumMaximum => 90;
-    public int MaxContactsPerKmMinimum => -1;
-    public int MaxContactsPerKmMaximum => 9;
-    public int RealismMinimum => 0;
-    public int RealismMaximum => 200;
-    public int AllowedTyresOutMinimum => -1;
-    public int AllowedTyresOutMaximum => 3;
-    public TimeSpan VoteDurationMin => TimeSpan.FromSeconds(10);
-    public TimeSpan VoteDurationMax => TimeSpan.FromMinutes(1);
+    public static int VoteQuorumMinimum => 40;
+    public static int VoteQuorumMaximum => 90;
+    public static int MaxContactsPerKmMinimum => -1;
+    public static int MaxContactsPerKmMaximum => 9;
+    public static int RealismMinimum => 0;
+    public static int RealismMaximum => 200;
+    public static int AllowedTyresOutMinimum => -1;
+    public static int AllowedTyresOutMaximum => 3;
+    public static TimeSpan VoteDurationMin => TimeSpan.FromSeconds(10);
+    public static TimeSpan VoteDurationMax => TimeSpan.FromMinutes(1);
   }
 }

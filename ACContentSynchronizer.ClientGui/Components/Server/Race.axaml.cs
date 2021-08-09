@@ -15,6 +15,10 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public static Race Instance => _instance ??= new();
 
+    public void Dispose() {
+      _vm.Dispose();
+    }
+
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
     }
@@ -25,10 +29,6 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     public void Refresh() {
       ReactiveCommand.CreateFromTask(_vm.Refresh).Execute();
-    }
-
-    public void Dispose() {
-      _vm.Dispose();
     }
   }
 }

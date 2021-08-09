@@ -73,7 +73,7 @@ namespace ACContentSynchronizer.Server.Services {
 
     public async Task UpdateConfig(Manifest manifest) {
       var serverConfig = _iniProvider.GetServerConfig();
-      var entryList = new Dictionary<string, Dictionary<string, object>>();
+      var entryList = new IniFile();
 
       if (!string.IsNullOrEmpty(manifest.Track?.Name)) {
         serverConfig["SERVER"]["TRACK"] = manifest.Track.Name;
@@ -94,7 +94,7 @@ namespace ACContentSynchronizer.Server.Services {
           }
 
           entryList.Add(
-            $"CAR_{i}", new() {
+            $"CAR_{i}", new(new() {
               { "MODEL", car.Name },
               { "SKIN", car.SelectedVariation },
               { "SPECTATOR_MODE", "0" },
@@ -103,7 +103,7 @@ namespace ACContentSynchronizer.Server.Services {
               { "GUID", "" },
               { "BALLAST", "0" },
               { "RESTRICTOR", "0" },
-            });
+            }));
         }
       }
 
@@ -127,7 +127,7 @@ namespace ACContentSynchronizer.Server.Services {
       ContentUtils.ExecuteCommand(serverExecutablePath);
     }
 
-    public Dictionary<string, Dictionary<string, object>> GetServerInfo() {
+    public IniFile GetServerInfo() {
       return _iniProvider.GetServerConfig();
     }
 
