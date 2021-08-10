@@ -18,8 +18,8 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       _serverConfig = await dataReceiver.GetServerConfig() ?? new();
       _entryList = await dataReceiver.GetEntryList() ?? new();
 
-      // ServerMain.Instance.Load(_serverConfig, _entryList);
-      // ServerRules.Instance.Load(_serverConfig);
+      ServerMain.Instance.Load(_serverConfig, _entryList);
+      ServerRules.Instance.Load(_serverConfig);
       // ServerConditions.Instance.Load(_serverConfig);
       // ServerSessions.Instance.Load(_serverConfig);
     }
