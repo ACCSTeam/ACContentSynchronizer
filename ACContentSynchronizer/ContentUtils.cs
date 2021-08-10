@@ -314,19 +314,16 @@ namespace ACContentSynchronizer {
 
     public static IEnumerable<string> GetWeathers(string gamePath) {
       var path = Path.Combine(gamePath, Constants.ContentFolder, Constants.WeatherFolder);
+      if (!Directory.Exists(path)) {
+        return Array.Empty<string>();
+      }
+
       var weathers = Directory.GetDirectories(path)
         .Select(x => {
           var iniProvider = new IniProvider(x);
           var config = iniProvider.GetConfig(Constants.WeatherFolder);
-          var name = DirectoryUtils.Name(x);
-
-          try {
-            name = config["LAUNCHER"]["NAME"].ToString()!;
-          } catch {
-            Console.WriteLine(name);
-          }
-
-          return name;
+          return config.V("LAUNCHER", "NAME", DirectoryUtils.Name(x));
+          ;
         });
 
       return weathers;
