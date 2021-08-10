@@ -9,13 +9,14 @@ namespace ACContentSynchronizer.ClientGui.Views {
     private readonly ServerViewModel _vm;
 
     public Server() {
+      _instance ??= this;
       DataContext = _vm = new();
       InitializeComponent();
     }
 
     public static Server Instance => _instance ??= new();
 
-    public static ServerEntry GetServer => Instance._vm.ServerEntry;
+    public ServerEntry GetServer => _vm.ServerEntry;
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);
@@ -24,6 +25,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
     public void SetServer(ServerEntry serverEntry) {
       _vm.ServerEntry = serverEntry;
       Race.Instance.Refresh();
+      ServerSettings.Instance.Load(serverEntry);
     }
   }
 }

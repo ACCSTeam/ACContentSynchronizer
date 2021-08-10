@@ -129,9 +129,14 @@ namespace ACContentSynchronizer.Server.Controllers {
       return _serverConfiguration.GetServerProps();
     }
 
-    [HttpGet("getServerInfo")]
-    public IniFile GetServerInfo() {
-      return _serverConfiguration.GetServerInfo();
+    [HttpGet("getServerConfig")]
+    public IniFile GetServerConfig() {
+      return _serverConfiguration.GetServerConfig();
+    }
+
+    [HttpGet("getEntryList")]
+    public IniFile GetEntryList() {
+      return _serverConfiguration.GetEntryList();
     }
   }
 }

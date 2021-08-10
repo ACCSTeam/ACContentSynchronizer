@@ -43,6 +43,8 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
 
     private short _udpPort = 9600;
 
+    private string _welcomeMessage = "";
+
     public ServerMainViewModel() {
       ReactiveCommand.CreateFromTask(Load).Execute();
       const int throttle = 500;
@@ -86,6 +88,11 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
     public string Password {
       get => _password;
       set => this.RaiseAndSetIfChanged(ref _password, value);
+    }
+
+    public string WelcomeMessage {
+      get => _welcomeMessage;
+      set => this.RaiseAndSetIfChanged(ref _welcomeMessage, value);
     }
 
     public string AdminPassword {

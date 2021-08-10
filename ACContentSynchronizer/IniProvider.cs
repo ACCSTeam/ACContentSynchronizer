@@ -24,6 +24,10 @@ namespace ACContentSynchronizer {
       return GetConfig(Constants.ServerCfg);
     }
 
+    public IniFile GetEntryList() {
+      return GetConfig(Constants.EntryList);
+    }
+
     private static IniFile IniToDictionary(string path) {
       var lines = File.ReadAllLines(path)
         .Where(line => !string.IsNullOrEmpty(line))
@@ -69,24 +73,6 @@ namespace ACContentSynchronizer {
         : source;
     }
 
-    public string? GetStringValue(string section, string key) {
-      try {
-        var serverCfg = GetServerConfig();
-        return serverCfg[section]?[key]?.ToString();
-      } catch {
-        return null;
-      }
-    }
-
-    public T? GetValue<T>(string section, string key) where T : class {
-      try {
-        var serverCfg = GetServerConfig();
-        return serverCfg[section]?.V<T?>(key);
-      } catch {
-        return default;
-      }
-    }
-
     public async Task SaveConfig(string cfg, IniFile data) {
       var cfgPath = Path.Combine(_folderPath, $"{cfg}.ini");
       var config = new StringBuilder();
@@ -95,10 +81,6 @@ namespace ACContentSynchronizer {
 
       foreach (var (section, values) in data) {
         config.Append($"[{section}]\n");
-
-        if (values == null) {
-          continue;
-        }
 
         foreach (var (key, value) in values) {
           config.Append($"{key}={value}\n");

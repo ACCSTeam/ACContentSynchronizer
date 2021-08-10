@@ -12,6 +12,8 @@ namespace ACContentSynchronizer {
       set => _source[key] = value;
     }
 
+    public int Count => _source.Count;
+
     public void Add(string key, IniSection section) {
       _source.Add(key, section);
     }
@@ -22,6 +24,12 @@ namespace ACContentSynchronizer {
 
     IEnumerator IEnumerable.GetEnumerator() {
       return GetEnumerator();
+    }
+
+    public T V<T>(string key, string value, T defaultValue) {
+      return _source.ContainsKey(key)
+        ? _source[key].V(value, defaultValue)
+        : defaultValue;
     }
   }
 
@@ -42,9 +50,15 @@ namespace ACContentSynchronizer {
       set => _source[key] = value;
     }
 
-    public T? V<T>(string key) {
+    public T V<T>(string key, T defaultValue) {
+      if (!_source.ContainsKey(key)) {
+        return defaultValue;
+      }
+
       var value = _source[key];
-      return (T?) value;
+      return value != null
+        ? (T) value
+        : defaultValue;
     }
 
     public IEnumerator<KeyValuePair<string, object?>> GetEnumerator() {

@@ -40,7 +40,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
     }
 
     private Task Booking(ContentEntry value) {
-      var server = Views.Server.GetServer;
+      var server = Views.Server.Instance.GetServer;
       using var kunosClient = new KunosClient(server.Ip, server.HttpPort);
       return kunosClient.Booking(value.DirectoryName, value.Variation ?? "", "fEst", "EE",
         Settings.Instance.SteamId.ToString(), server.Password);
@@ -53,7 +53,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
       var cfgPath = Path.Combine(documents, "Assetto Corsa", "cfg");
       var iniProvider = new IniProvider(cfgPath);
       var config = iniProvider.GetConfig("race");
-      var server = Views.Server.GetServer;
+      var server = Views.Server.Instance.GetServer;
 
       if (car != null && !string.IsNullOrEmpty(car.Variation)) {
         var remote = config["REMOTE"];
@@ -90,7 +90,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
     }
 
     public async Task Refresh() {
-      var server = Views.Server.GetServer;
+      var server = Views.Server.Instance.GetServer;
       var selectedCar = SelectedCar?.DirectoryName;
 
       Cars = new();
@@ -143,7 +143,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
     }
 
     public async Task ValidateContent() {
-      var validationTask = new ValidationTask(Views.Server.GetServer);
+      var validationTask = new ValidationTask(Views.Server.Instance.GetServer);
       StatusBar.Instance.AddTask(validationTask);
       await validationTask.Worker;
 
@@ -151,7 +151,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
     }
 
     public async Task UpdateCars() {
-      var server = Views.Server.GetServer;
+      var server = Views.Server.Instance.GetServer;
       var kunosClient = new KunosClient(server.Ip, server.HttpPort);
       var cars = await kunosClient.GetCars(Settings.Instance.SteamId);
       if (cars != null) {

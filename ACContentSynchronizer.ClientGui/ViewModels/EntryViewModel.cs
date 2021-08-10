@@ -82,5 +82,7 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
     public EntryViewModel Clone() {
       return new(Path, Name, Variations, SelectedVariation);
     }
+
+    public string EntryName => DirectoryUtils.Name(Path);
   }
 }

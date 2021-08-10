@@ -43,7 +43,7 @@ namespace ACContentSynchronizer.ClientGui.Components.Server {
     }
 
     public void Upload() {
-      StatusBar.Instance.AddTask(new UploadTask(Views.Server.GetServer, this));
+      StatusBar.Instance.AddTask(new UploadTask(Views.Server.Instance.GetServer, this));
     }
   }
 }
