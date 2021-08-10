@@ -1,0 +1,120 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:converters="clr-namespace:ACContentSynchronizer.ClientGui.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ACContentSynchronizer.ClientGui.Components.Server.ServerConditions">
+
+  <Design.DataContext>
+    <server:ServerConditionsViewModel />
+  </Design.DataContext>
+
+  <UserControl.Styles>
+    <Style Selector="ListBoxItem">
+      <Setter Property="Height" Value="{x:Static system:Double.NaN}" />
+      <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <Style Selector="ListBox > ListBoxItem:selected /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource UiAccentTransparent}" />
+    </Style>
+  </UserControl.Styles>
+
+  <ScrollViewer>
+    <StackPanel Spacing="10">
+      <components:FormField Label="Time"
+                            Value="{Binding Time}" />
+
+      <Slider
+        Minimum="{Binding TimeMinimum,
+        Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
+        Maximum="{Binding TimeMaximum,
+        Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}"
+        Value="{Binding Time,
+        Converter={x:Static converters:ValueConverters.SliderTimeSpanMinutes}}" />
+
+      <components:FormField Label="Time multiplier"
+                            Value="{Binding TimeMultiplier}"
+                            Postfix="x" />
+
+      <Slider
+        Minimum="{Binding TimeMultiplierMinimum}"
+        Maximum="{Binding TimeMultiplierMaximum}"
+        TickFrequency="{Binding TickMultiplierFrequency}"
+        Value="{Binding TimeMultiplier}" />
+
+      <components:FormField Label="Dynamic track"
+                            LabelStyle="H4">
+        <ToggleSwitch IsChecked="{Binding DynamicTrack}" />
+      </components:FormField>
+
+      <Grid ColumnDefinitions="*,20,*"
+            IsEnabled="{Binding DynamicTrack}">
+        <StackPanel Grid.Column="0">
+          <components:FormField Label="Start value"
+                                Value="{Binding StartValue}"
+                                Postfix="%">
+            <Slider Value="{Binding StartValue}" />
+          </components:FormField>
+
+          <components:FormField Label="Transferred"
+                                Value="{Binding Transferred}"
+                                Postfix="%">
+            <Slider Value="{Binding Transferred}" />
+          </components:FormField>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2">
+          <components:FormField Label="Randomness"
+                                Value="{Binding Randomness}"
+                                Postfix="%">
+            <Slider Value="{Binding Randomness}" />
+          </components:FormField>
+
+          <components:FormField Label="Laps"
+                                Value="{Binding Laps}"
+                                Postfix="laps">
+            <Slider Minimum="{Binding LapsMinimum}"
+                    Maximum="{Binding LapsMaximum}"
+                    Value="{Binding Laps}" />
+          </components:FormField>
+        </StackPanel>
+      </Grid>
+
+      <TextBlock Text="Weather"
+                 Classes="H4" />
+
+      <DockPanel>
+        <components:IconButton DockPanel.Dock="Right"
+                               Icon="Trash"
+                               Text="Remove Weather"
+                               Style="TransparentButton AccentButton"
+                               IsEnabled="{Binding CanRemoveWeather}"
+                               Command="{Binding RemoveWeather}" />
+        <components:IconButton DockPanel.Dock="Left"
+                               Icon="Plus"
+                               Text="Add Weather"
+                               Style="TransparentButton GreyButton"
+                               Command="{Binding AddWeather}" />
+      </DockPanel>
+
+      <ScrollViewer HorizontalScrollBarVisibility="Auto">
+        <ListBox VirtualizationMode="None"
+                 Items="{Binding Weathers}"
+                 SelectedItem="{Binding SelectedWeather}">
+          <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ListBox.ItemsPanel>
+        </ListBox>
+      </ScrollViewer>
+
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

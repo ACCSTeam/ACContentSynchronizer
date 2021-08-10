@@ -6,6 +6,10 @@ using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
   public abstract class TaskViewModel : ViewModelBase, IDisposable {
+    private double _progress;
+
+    private string _state = "";
+
     protected TaskViewModel(ServerEntry server) {
       Server = server;
 
@@ -20,17 +24,14 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
           return Task.CompletedTask;
         });
 
-        await Hubs.NotificationHub<double, string, HubMethods>(Server, HubMethods.ProgressMessage, (progress, message) => {
-          Progress = progress;
-          State = message;
-          return Task.CompletedTask;
-        });
+        await Hubs.NotificationHub<double, string, HubMethods>(Server, HubMethods.ProgressMessage,
+          (progress, message) => {
+            Progress = progress;
+            State = message;
+            return Task.CompletedTask;
+          });
       });
     }
-
-    private double _progress;
-
-    private string _state = "";
 
     public double Progress {
       get => _progress;
@@ -50,15 +51,15 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
 
     protected string ClientId { get; private set; } = "";
 
+    public void Dispose() {
+      Worker.Dispose();
+      Canceller.Dispose();
+    }
+
     public abstract void Run();
 
     public void Cancel() {
       Canceller.Cancel();
-    }
-
-    public void Dispose() {
-      Worker.Dispose();
-      Canceller.Dispose();
     }
   }
 }

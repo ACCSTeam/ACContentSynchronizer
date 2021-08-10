@@ -1,0 +1,148 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
+             xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
+             xmlns:converters="clr-namespace:ACContentSynchronizer.ClientGui.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ACContentSynchronizer.ClientGui.Components.Server.ServerRules">
+
+  <Design.DataContext>
+    <server:ServerRulesViewModel />
+  </Design.DataContext>
+
+  <UserControl.Styles>
+    <Style Selector="StackPanel">
+      <Setter Property="Spacing" Value="10" />
+    </Style>
+  </UserControl.Styles>
+
+  <ScrollViewer>
+    <Grid ColumnDefinitions="*,20,*">
+      <Grid Grid.Column="0"
+            RowDefinitions="Auto,20,Auto">
+        <StackPanel Grid.Row="0">
+          <TextBlock Text="Assists"
+                     Classes="H4" />
+          <components:FormField Label="ABS">
+            <ComboBox Items="{Binding AvailableAssistModes}"
+                      SelectedItem="{Binding AbsMode}" />
+          </components:FormField>
+          <components:FormField Label="TC">
+            <ComboBox Items="{Binding AvailableAssistModes}"
+                      SelectedItem="{Binding TcMode}" />
+          </components:FormField>
+          <components:FormField Label="Stability control">
+            <ToggleSwitch IsChecked="{Binding StabilityControl}" />
+          </components:FormField>
+          <components:FormField Label="Automatic clutch">
+            <ToggleSwitch IsChecked="{Binding AutomaticClutch}" />
+          </components:FormField>
+          <components:FormField Label="Tyre blankets">
+            <ToggleSwitch IsChecked="{Binding TyreBlankets}" />
+          </components:FormField>
+          <components:FormField Label="Virtual mirror">
+            <ToggleSwitch IsChecked="{Binding VirtualMirror}" />
+          </components:FormField>
+        </StackPanel>
+        <StackPanel Grid.Row="2">
+          <TextBlock Text="Voting and banning"
+                     Classes="H4" />
+          <components:FormField Label="Kick vote quorum"
+                                Value="{Binding KickVoteQuorum}"
+                                Postfix="%">
+            <Slider Minimum="{Binding VoteQuorumMinimum}"
+                    Maximum="{Binding VoteQuorumMaximum}"
+                    Value="{Binding KickVoteQuorum}" />
+          </components:FormField>
+
+          <components:FormField Label="Session vote quorum"
+                                Value="{Binding SessionVoteQuorum}"
+                                Postfix="%">
+            <Slider Minimum="{Binding VoteQuorumMinimum}"
+                    Maximum="{Binding VoteQuorumMaximum}"
+                    Value="{Binding SessionVoteQuorum}" />
+          </components:FormField>
+
+          <components:FormField Label="Vote duration"
+                                Value="{Binding VoteDuration}">
+            <Slider
+              Minimum="{Binding VoteDurationMin,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}"
+              Maximum="{Binding VoteDurationMax,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}"
+              Value="{Binding  VoteDuration,
+            Converter={x:Static converters:ValueConverters.SliderTimeSpanSeconds}}" />
+          </components:FormField>
+
+          <components:FormField Label="Kick players until restart">
+            <ToggleSwitch IsChecked="{Binding KickUntilRestart}" />
+          </components:FormField>
+
+          <components:FormField Label="Max contacts per km"
+                                Value="{Binding MaxContactsPerKm}">
+            <Slider Minimum="{Binding MaxContactsPerKmMinimum}"
+                    Maximum="{Binding MaxContactsPerKmMaximum}"
+                    Value="{Binding  MaxContactsPerKm}" />
+          </components:FormField>
+        </StackPanel>
+      </Grid>
+
+      <StackPanel Grid.Column="2">
+        <TextBlock Text="Realism"
+                   Classes="H4" />
+
+        <components:FormField Label="Fuel rate"
+                              Value="{Binding FuelRate}"
+                              Postfix="%">
+          <Slider Minimum="{Binding RealismMinimum}"
+                  Maximum="{Binding RealismMaximum}"
+                  Value="{Binding FuelRate}" />
+        </components:FormField>
+
+        <components:FormField Label="Damage rate"
+                              Value="{Binding DamageRate}"
+                              Postfix="%">
+          <Slider Minimum="{Binding RealismMinimum}"
+                  Maximum="{Binding RealismMaximum}"
+                  Value="{Binding DamageRate}" />
+        </components:FormField>
+
+        <components:FormField Label="Tyres wear rate"
+                              Value="{Binding TyresWearRate}"
+                              Postfix="%">
+          <Slider Minimum="{Binding RealismMinimum}"
+                  Maximum="{Binding RealismMaximum}"
+                  Value="{Binding TyresWearRate}" />
+        </components:FormField>
+
+        <components:FormField Label="Allowed tyres out"
+                              Value="{Binding AllowedTyresOut}"
+                              Postfix="tyres">
+          <Slider Minimum="{Binding AllowedTyresOutMinimum}"
+                  Maximum="{Binding AllowedTyresOutMaximum}"
+                  Value="{Binding AllowedTyresOut}" />
+        </components:FormField>
+
+        <components:FormField Label="Max ballast"
+                              Value="{Binding MaxBallast}"
+                              Postfix="kg">
+          <Slider Minimum="{Binding RealismMinimum}"
+                  Maximum="{Binding RealismMaximum}"
+                  Value="{Binding MaxBallast}" />
+        </components:FormField>
+
+        <components:FormField Label="Jump start">
+          <ComboBox Items="{Binding AvailableSpawnTypes}"
+                    SelectedItem="{Binding SpawnType}" />
+        </components:FormField>
+
+        <components:FormField Label="Disable gas cut penalty">
+          <ToggleSwitch IsChecked="{Binding  DisableGasCut}" />
+        </components:FormField>
+      </StackPanel>
+    </Grid>
+  </ScrollViewer>
+</UserControl>

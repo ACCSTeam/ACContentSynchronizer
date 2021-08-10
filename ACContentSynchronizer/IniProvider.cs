@@ -7,31 +7,35 @@ using System.Threading.Tasks;
 
 namespace ACContentSynchronizer {
   public class IniProvider {
-    private readonly string _serverPath;
+    private readonly string _folderPath;
 
-    public IniProvider(string serverPath) {
-      _serverPath = Directory.Exists(serverPath)
-        ? serverPath
-        : throw new("Wrong server path");
+    public IniProvider(string folderPath) {
+      _folderPath = Directory.Exists(folderPath)
+        ? folderPath
+        : throw new("Wrong folder");
     }
 
-    public Dictionary<string, Dictionary<string, string>> GetConfig(string config) {
-      var serverCfgPath = Path.Combine(_serverPath, config);
+    public IniFile GetConfig(string config) {
+      var serverCfgPath = Path.Combine(_folderPath, $"{config}.ini");
       return IniToDictionary(serverCfgPath);
     }
 
-    public Dictionary<string, Dictionary<string, string>> GetServerConfig() {
+    public IniFile GetServerConfig() {
       return GetConfig(Constants.ServerCfg);
     }
 
-    private static Dictionary<string, Dictionary<string, string>> IniToDictionary(string path) {
+    public IniFile GetEntryList() {
+      return GetConfig(Constants.EntryList);
+    }
+
+    private static IniFile IniToDictionary(string path) {
       var lines = File.ReadAllLines(path)
         .Where(line => !string.IsNullOrEmpty(line))
         .ToList();
 
       var lastIndex = 0;
       var sections = new List<int>();
-      var ini = new Dictionary<string, Dictionary<string, string>>();
+      var ini = new IniFile();
 
       while (true) {
         lastIndex = lines.FindIndex(lastIndex,
@@ -52,27 +56,25 @@ namespace ACContentSynchronizer {
           : sections[i + 1];
         var count = nextIndex - sections[i] - 1;
         var sectionLines = lines.GetRange(index + 1, count);
-        ini.Add(lines[index]
+        ini.Add(RemoveComment(lines[index]
             .Replace("[", "")
-            .Replace("]", ""),
-          sectionLines.ToDictionary(entry => entry[..entry.IndexOf("=", StringComparison.Ordinal)],
-            entry => entry[(entry.IndexOf("=", StringComparison.Ordinal) + 1)..]));
+            .Replace("]", "")),
+          new(sectionLines.ToDictionary(entry => RemoveComment(entry[..entry.IndexOf("=", StringComparison.Ordinal)]),
+            entry => (object?) RemoveComment(entry[(entry.IndexOf("=", StringComparison.Ordinal) + 1)..]))));
       }
 
       return ini;
     }
 
-    public string? GetStringValue(string section, string key) {
-      try {
-        var serverCfg = GetServerConfig();
-        return serverCfg[section][key];
-      } catch {
-        return null;
-      }
+    private static string RemoveComment(string source) {
+      var commentStartIndex = source.IndexOf(';');
+      return commentStartIndex > -1
+        ? source[..commentStartIndex]
+        : source;
     }
 
-    public async Task SaveConfig(string cfg, Dictionary<string, Dictionary<string, string>> data) {
-      var cfgPath = Path.Combine(_serverPath, cfg);
+    public async Task SaveConfig(string cfg, IniFile data) {
+      var cfgPath = Path.Combine(_folderPath, $"{cfg}.ini");
       var config = new StringBuilder();
 
       await FileUtils.CreateIfNotExistsAsync(cfgPath);

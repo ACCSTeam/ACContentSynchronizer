@@ -92,5 +92,13 @@ namespace ACContentSynchronizer.ClientGui {
     public Task<ServerProps?> GetServerProps() {
       return Client.GetJson<ServerProps>("getServerProps");
     }
+
+    public Task<IniFile?> GetServerConfig() {
+      return Client.GetJson<IniFile?>("getServerConfig");
+    }
+
+    public Task<IniFile?> GetEntryList() {
+      return Client.GetJson<IniFile?>("getEntryList");
+    }
   }
 }

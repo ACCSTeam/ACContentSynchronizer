@@ -9,7 +9,9 @@ namespace ACContentSynchronizer.ClientGui {
     public static IEnumerable<SteamProfile> FindUsers() {
       var steamPath = RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
         ? Path.Combine(Environment.GetEnvironmentVariable("HOME") ?? string.Empty, ".steam/steam")
-        : Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam")?.ToString();
+        : Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam")?
+          .GetValue("SteamPath", null)?
+          .ToString();
 
       if (string.IsNullOrEmpty(steamPath)) {
         yield break;

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Server">
 
@@ -12,53 +13,11 @@
   </Design.DataContext>
 
   <TabControl>
-    <TabItem Header="Server">
-      <Grid RowDefinitions="*,10,*,10,60"
-            ColumnDefinitions="*,30,*"
-            Margin="20,50,20,20">
-        <ListBox Grid.Row="0"
-                 Grid.Column="0"
-                 SelectionChanged="UpdateCars"
-                 Items="{Binding Cars}"
-                 SelectedItem="{Binding SelectedCar}">
-          <ListBox.ItemTemplate>
-            <DataTemplate>
-              <Grid ColumnDefinitions="*,60">
-                <TextBlock Grid.Column="0"
-                           Text="{Binding Name}" />
-                <TextBlock Grid.Column="1" Text="{Binding CarCount}" />
-              </Grid>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
-        <components:Preview Grid.Row="0"
-                            Grid.Column="2"
-                            Source="{Binding SelectedCar.Preview}"
-                            PreviewName="{Binding SelectedCar.Name}" />
-        <components:Preview Grid.Row="2"
-                            Grid.Column="2"
-                            Source="{Binding Track.Preview}"
-                            PreviewName="{Binding Track.Name}" />
-        <StackPanel Grid.Row="4"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Orientation="Horizontal"
-                    Spacing="10"
-                    HorizontalAlignment="Right">
-          <Button Classes="AccentButton"
-                  Content="Join"
-                  Command="{Binding Join}" />
-          <Button Classes="AccentButton"
-                  Content="Refresh"
-                  Command="{Binding Refresh}" />
-          <Button Classes="AccentButton"
-                  Content="Update content"
-                  Command="{Binding ValidateContent}" />
-        </StackPanel>
-      </Grid>
+    <TabItem Header="Race">
+      <ContentPresenter Content="{x:Static  server:Race.Instance}" />
     </TabItem>
-    <TabItem Header="Upload">
-      <views:Upload />
+    <TabItem Header="Settings">
+      <server:ServerSettings />
     </TabItem>
   </TabControl>
 </UserControl>

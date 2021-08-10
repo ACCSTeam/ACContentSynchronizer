@@ -10,6 +10,9 @@
       <Setter Property="Template">
         <ControlTemplate>
           <Panel>
+            <TextBlock TextWrapping="Wrap"
+                       VerticalAlignment="Center"
+                       Text="{TemplateBinding Placeholder}" />
             <Image Source="{TemplateBinding Blurred}"
                    Stretch="UniformToFill" />
             <Image Source="{TemplateBinding Source}"

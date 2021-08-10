@@ -1,12 +1,16 @@
+using System;
 using System.Linq;
 using Avalonia.Collections;
+using Avalonia.Media.Imaging;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
-  public class EntryViewModel : ViewModelBase {
+  public class EntryViewModel : ViewModelBase, IDisposable {
     private string _name = "";
 
     private string _path = "";
+
+    private Bitmap? _preview;
 
     private string? _selectedVariation;
 
@@ -24,17 +28,19 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
       SelectedVariation = variation;
     }
 
-    public EntryViewModel(string path, string name, string? variation) {
+    public EntryViewModel(string path, string name, string? variation, Bitmap? preview) {
       Path = path;
       Name = name;
       SelectedVariation = variation;
+      Preview = preview;
     }
 
-    public EntryViewModel(string path, string name, AvaloniaList<string> variations) {
+    public EntryViewModel(string path, string name, AvaloniaList<string> variations, Bitmap? preview) {
       Path = path;
       Name = name;
       Variations = variations;
       SelectedVariation = variations.FirstOrDefault();
+      Preview = preview;
     }
 
     public EntryViewModel(string path, string name, AvaloniaList<string> variations, string? selectedVariation) {
@@ -64,8 +70,19 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
       set => this.RaiseAndSetIfChanged(ref _selectedVariation, value);
     }
 
+    public Bitmap? Preview {
+      get => _preview;
+      set => this.RaiseAndSetIfChanged(ref _preview, value);
+    }
+
+    public void Dispose() {
+      _preview?.Dispose();
+    }
+
     public EntryViewModel Clone() {
       return new(Path, Name, Variations, SelectedVariation);
     }
+
+    public string EntryName => DirectoryUtils.Name(Path);
   }
 }

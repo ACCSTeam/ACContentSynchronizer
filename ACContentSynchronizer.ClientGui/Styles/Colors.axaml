@@ -16,6 +16,16 @@
     <SolidColorBrush x:Key="UiAccentTransparent">#55ff0000</SolidColorBrush>
     <SolidColorBrush x:Key="UiGrayLight">#8A6C686C</SolidColorBrush>
     <SolidColorBrush x:Key="TabItemHeaderSelectedPipeFill">#f00</SolidColorBrush>
+    <SolidColorBrush x:Key="SliderTrackValueFill">#f00</SolidColorBrush>
+    <SolidColorBrush x:Key="SliderTrackValue">#f00</SolidColorBrush>
+    <SolidColorBrush x:Key="SliderTrackValueFillPressed">#a00</SolidColorBrush>
+    <SolidColorBrush x:Key="SliderThumbBackground">#f00</SolidColorBrush>
+    <SolidColorBrush x:Key="SliderThumbBackgroundPressed">#a00</SolidColorBrush>
+    <SolidColorBrush x:Key="SliderThumbBackgroundPointerOver">#a00</SolidColorBrush>
+    <SolidColorBrush x:Key="ToggleSwitchFillOn">#f00</SolidColorBrush>
+    <SolidColorBrush x:Key="ToggleSwitchFillOnPointerOver">#a00</SolidColorBrush>
+    <SolidColorBrush x:Key="ToggleSwitchFillOnPressed">#a00</SolidColorBrush>
+    <SolidColorBrush x:Key="ToggleSwitchStrokeOnPointerOver">#a00</SolidColorBrush>
     <Image x:Key="CarPlaceholder" Source="avares://ACContentSynchronizer.ClientGui/Assets/CarPlaceholder.jpg" />
   </Styles.Resources>
 </Styles>

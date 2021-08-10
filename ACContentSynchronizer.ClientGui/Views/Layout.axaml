@@ -28,8 +28,8 @@
             VerticalAlignment="Top"
             IsEnabled="{Binding ServerSelected}"
             Command="{Binding GoBack}" />
-          <ComboBox Items="{Binding AllowedThemes}"
-                    SelectedItem="{Binding  SelectedTheme}" />
+          <!-- <ComboBox Items="{Binding AllowedThemes}" -->
+          <!--           SelectedItem="{Binding  SelectedTheme}" /> -->
         </StackPanel>
         <Panel Grid.Row="1">
           <ContentPresenter Content="{x:Static views:Main.Instance}"

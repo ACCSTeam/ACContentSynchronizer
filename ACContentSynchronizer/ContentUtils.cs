@@ -311,5 +311,25 @@ namespace ACContentSynchronizer {
       }
       throw new("Failed perform action within allotted time.");
     }
+
+    public static IEnumerable<string> GetWeathers(string gamePath) {
+      var path = Path.Combine(gamePath, Constants.ContentFolder, Constants.WeatherFolder);
+      var weathers = Directory.GetDirectories(path)
+        .Select(x => {
+          var iniProvider = new IniProvider(x);
+          var config = iniProvider.GetConfig(Constants.WeatherFolder);
+          var name = DirectoryUtils.Name(x);
+
+          try {
+            name = config["LAUNCHER"]["NAME"].ToString()!;
+          } catch {
+            Console.WriteLine(name);
+          }
+
+          return name;
+        });
+
+      return weathers;
+    }
   }
 }

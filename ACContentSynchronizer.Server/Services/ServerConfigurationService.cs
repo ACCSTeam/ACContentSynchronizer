@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -29,7 +28,7 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public void CheckAccess(string password) {
-      var adminPassword = _iniProvider.GetStringValue("SERVER", "ADMIN_PASSWORD");
+      var adminPassword = _iniProvider.GetServerConfig().V("SERVER", "ADMIN_PASSWORD", "");
 
       if (adminPassword == password) {
         return;
@@ -73,7 +72,7 @@ namespace ACContentSynchronizer.Server.Services {
 
     public async Task UpdateConfig(Manifest manifest) {
       var serverConfig = _iniProvider.GetServerConfig();
-      var entryList = new Dictionary<string, Dictionary<string, string>>();
+      var entryList = new IniFile();
 
       if (!string.IsNullOrEmpty(manifest.Track?.Name)) {
         serverConfig["SERVER"]["TRACK"] = manifest.Track.Name;
@@ -94,7 +93,7 @@ namespace ACContentSynchronizer.Server.Services {
           }
 
           entryList.Add(
-            $"CAR_{i}", new() {
+            $"CAR_{i}", new(new() {
               { "MODEL", car.Name },
               { "SKIN", car.SelectedVariation },
               { "SPECTATOR_MODE", "0" },
@@ -103,7 +102,7 @@ namespace ACContentSynchronizer.Server.Services {
               { "GUID", "" },
               { "BALLAST", "0" },
               { "RESTRICTOR", "0" },
-            });
+            }));
         }
       }
 
@@ -127,16 +126,16 @@ namespace ACContentSynchronizer.Server.Services {
       ContentUtils.ExecuteCommand(serverExecutablePath);
     }
 
-    public Dictionary<string, Dictionary<string, string>> GetServerInfo() {
+    public IniFile GetServerConfig() {
       return _iniProvider.GetServerConfig();
     }
 
-    private string GetLocalPort() {
-      const string defaultPort = "8081";
-      var port = _iniProvider.GetStringValue("SERVER", "HTTP_PORT")
-                 ?? defaultPort;
+    public IniFile GetEntryList() {
+      return _iniProvider.GetEntryList();
+    }
 
-      return port;
+    private string GetLocalPort() {
+      return _iniProvider.GetServerConfig().V("SERVER", "HTTP_PORT", "8081");
     }
 
     private KunosClient Client() {
@@ -154,20 +153,21 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public string? GetTrackName() {
-      return _iniProvider.GetStringValue("SERVER", "TRACK");
+      return _iniProvider.GetServerConfig().V<string?>("SERVER", "TRACK", null);
     }
 
     public ServerProps GetServerProps() {
+      var serverConfig = _iniProvider.GetServerConfig();
       return new() {
-        Name = _iniProvider.GetStringValue("SERVER",
-          "NAME") ?? "",
-        HttpPort = _iniProvider.GetStringValue("SERVER",
-          "HTTP_PORT") ?? "",
+        Name = serverConfig.V("SERVER",
+          "NAME", ""),
+        HttpPort = serverConfig.V("SERVER",
+          "HTTP_PORT", ""),
       };
     }
 
     public string[] GetCars() {
-      var cars = _iniProvider.GetStringValue("SERVER", "CARS");
+      var cars = _iniProvider.GetServerConfig().V("SERVER", "CARS", "");
 
       return string.IsNullOrEmpty(cars)
         ? Array.Empty<string>()

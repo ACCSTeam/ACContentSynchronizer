@@ -25,6 +25,7 @@ namespace ACContentSynchronizer.ClientGui {
       }
 
       Layout.Instance.SetTheme(settings.Theme);
+
       base.OnFrameworkInitializationCompleted();
     }
   }

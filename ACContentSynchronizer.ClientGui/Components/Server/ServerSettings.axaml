@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ACContentSynchronizer.ClientGui.Components.Server.ServerSettings">
+
+  <Design.DataContext>
+    <server:ServerSettingsViewModel />
+  </Design.DataContext>
+
+  <Grid RowDefinitions="*,10,Auto">
+    <TabControl Grid.Row="0">
+      <TabItem Header="Main">
+        <ContentPresenter Content="{x:Static server:ServerMain.Instance}" />
+      </TabItem>
+      <TabItem Header="Rules">
+        <ContentPresenter Content="{x:Static server:ServerRules.Instance}" />
+      </TabItem>
+      <TabItem Header="Conditions">
+        <ContentPresenter Content="{x:Static server:ServerConditions.Instance}" />
+      </TabItem>
+      <TabItem Header="Sessions">
+        <ContentPresenter Content="{x:Static server:ServerSessions.Instance}" />
+      </TabItem>
+    </TabControl>
+
+    <components:IconButton Grid.Row="2"
+                           Text="Save"
+                           Icon="ContentSave"
+                           Spacing="10"
+                           Style="AccentButton TransparentButton"
+                           Command="{Binding Save}" />
+  </Grid>
+</UserControl>

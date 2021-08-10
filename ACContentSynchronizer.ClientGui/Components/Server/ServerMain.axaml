@@ -1,0 +1,178 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Components.Server"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ACContentSynchronizer.ClientGui.Components.Server.ServerMain">
+
+  <Design.DataContext>
+    <server:ServerMainViewModel />
+  </Design.DataContext>
+
+  <UserControl.Styles>
+    <Style Selector="ListBoxItem">
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    </Style>
+    <Style Selector="ListBoxItem > Grid > :is(Control)">
+      <Setter Property="Margin" Value="10,0" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="ListBoxItem > Grid > TextBox">
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+  </UserControl.Styles>
+
+  <ScrollViewer>
+    <Panel>
+      <Popup Name="SelectTrack"
+             PlacementMode="AnchorAndGravity"
+             MaxHeight="500"
+             Width="600"
+             IsLightDismissEnabled="True">
+        <Border BorderThickness="10"
+                BorderBrush="{StaticResource UiGrayLight}">
+          <DockPanel Background="{StaticResource UiGrayLight}">
+            <TextBox DockPanel.Dock="Top"
+                     Text="{Binding TrackSearch}" />
+            <ListBox DockPanel.Dock="Bottom"
+                     Items="{Binding Tracks}"
+                     SelectedItem="{Binding SelectedTrack}">
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <StackPanel Orientation="Horizontal"
+                              Height="60"
+                              Spacing="10">
+                    <TextBlock VerticalAlignment="Center"
+                               Text="{Binding Name}" />
+                  </StackPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+        </Border>
+      </Popup>
+      <Popup Name="SelectCars"
+             PlacementMode="AnchorAndGravity"
+             MaxHeight="500"
+             Width="600"
+             IsLightDismissEnabled="True">
+        <Border BorderThickness="10"
+                BorderBrush="{StaticResource UiGrayLight}">
+          <DockPanel Background="{StaticResource UiGrayLight}">
+            <TextBox DockPanel.Dock="Top"
+                     Text="{Binding  CarSearch}" />
+            <ListBox DockPanel.Dock="Bottom"
+                     Items="{Binding Cars}">
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <Grid ColumnDefinitions="*, Auto, Auto">
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Name}" />
+                    <ComboBox Grid.Column="1"
+                              Items="{Binding Variations}"
+                              SelectedItem="{Binding SelectedVariation}" />
+                    <Button Grid.Column="2"
+                            Classes="TransparentButton ListButton"
+                            Command="{Binding ElementName=SelectCars, Path=DataContext.Add}"
+                            CommandParameter="{Binding}">
+                      <avalonia:MaterialIcon Kind="Plus" />
+                    </Button>
+                  </Grid>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+        </Border>
+      </Popup>
+      <Grid ColumnDefinitions="*,20,*"
+            RowDefinitions="200,20,*">
+        <Button Grid.Column="0"
+                Grid.Row="0"
+                Classes="TransparentButton"
+                Click="SelectTrack">
+          <components:Preview Placeholder="Please select a track"
+                              Source="{Binding SelectedTrack.Preview}"
+                              PreviewName="{Binding SelectedTrack.Name}" />
+        </Button>
+        <Grid Grid.Column="2"
+              Grid.Row="0"
+              RowDefinitions="34,20,*">
+          <components:IconButton Text="Select cars"
+                                 Icon="Add"
+                                 Style="AccentButton TransparentButton"
+                                 Click="SelectCars" />
+
+          <TextBlock Grid.Row="1"
+                     Text="{Binding CarsCount}"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Center" />
+
+          <ListBox Grid.Row="2"
+                   Name="Cars"
+                   Items="{Binding  SelectedCars}">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Grid ColumnDefinitions="*,Auto,Auto">
+                  <TextBlock Grid.Column="0"
+                             Text="{Binding Name}" />
+                  <ComboBox Grid.Column="1"
+                            Items="{Binding Variations}"
+                            SelectedItem="{Binding SelectedVariation}" />
+                  <components:IconButton Grid.Column="2"
+                                         Icon="Trash"
+                                         Style="TransparentButton ListButton"
+                                         Command="{Binding ElementName=Cars, Path=DataContext.Remove}"
+                                         Parameter="{Binding}" />
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Grid>
+        <StackPanel Grid.Row="2" Grid.Column="0"
+                    Orientation="Vertical"
+                    Spacing="10">
+          <components:FormField Label="Server name: ">
+            <TextBox Text="{Binding ServerName}" />
+          </components:FormField>
+          <components:FormField Label="Password: ">
+            <TextBox Text="{Binding Password}" />
+          </components:FormField>
+          <components:FormField Label="Admin password: ">
+            <TextBox Text="{Binding AdminPassword}" />
+          </components:FormField>
+          <components:FormField Label="Public server: ">
+            <ToggleSwitch IsChecked="{Binding PublicServer}" />
+          </components:FormField>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2"
+                    Grid.Row="2"
+                    Orientation="Vertical"
+                    Spacing="10">
+          <components:FormField Label="Udp port: ">
+            <TextBox Text="{Binding UdpPort}" />
+          </components:FormField>
+          <components:FormField Label="Tcp port: ">
+            <TextBox Text="{Binding TcpPort}" />
+          </components:FormField>
+          <components:FormField Label="Http port: ">
+            <TextBox Text="{Binding HttpPort}" />
+          </components:FormField>
+          <components:FormField Label="{Binding PacketSizeLabel}">
+            <Slider Minimum="10"
+                    Maximum="60"
+                    Value="{Binding PacketSize}" />
+          </components:FormField>
+          <components:FormField Label="{Binding ThreadsLabel}">
+            <Slider Minimum="2"
+                    Maximum="8"
+                    Value="{Binding Threads}" />
+          </components:FormField>
+        </StackPanel>
+      </Grid>
+    </Panel>
+  </ScrollViewer>
+</UserControl>
