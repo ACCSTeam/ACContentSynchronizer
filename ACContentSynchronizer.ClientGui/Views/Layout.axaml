@@ -7,39 +7,39 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Layout">
 
-  <Design.DataContext>
-    <views:LayoutViewModel />
-  </Design.DataContext>
+    <Design.DataContext>
+        <views:LayoutViewModel />
+    </Design.DataContext>
 
-  <Grid ColumnDefinitions="Auto,*">
-    <ContentPresenter Grid.Column="0"
-                      Content="{x:Static views:Sidebar.Instance}" />
-    <Panel Grid.Column="1">
-      <Panel IsHitTestVisible="False"
-             Background="{StaticResource UiColorTransparentDark}" />
+    <Grid ColumnDefinitions="Auto,*">
+        <views:Sidebar Grid.Column="0" />
+        <Panel Grid.Column="1">
+            <Panel IsHitTestVisible="False"
+                   Background="{StaticResource UiColorTransparentDark}" />
 
-      <Grid RowDefinitions="30,*, 30">
-        <StackPanel Spacing="30"
-                    Orientation="Horizontal">
-          <components:IconButton
-            Icon="ArrowBack"
-            Style="TransparentButton ListButton"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            IsEnabled="{Binding ServerSelected}"
-            Command="{Binding GoBack}" />
-          <!-- <ComboBox Items="{Binding AllowedThemes}" -->
-          <!--           SelectedItem="{Binding  SelectedTheme}" /> -->
-        </StackPanel>
-        <Panel Grid.Row="1">
-          <ContentPresenter Content="{x:Static views:Main.Instance}"
-                            IsVisible="{Binding !ServerSelected}" />
-          <ContentPresenter Content="{x:Static views:Server.Instance}"
-                            IsVisible="{Binding ServerSelected}" />
+            <Grid RowDefinitions="30,*, 30">
+                <StackPanel Spacing="30"
+                            Orientation="Horizontal">
+                    <components:IconButton
+                        Icon="ArrowBack"
+                        Style="TransparentButton ListButton"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        IsEnabled="{Binding Application.ServerSelected}"
+                        Command="{Binding GoBack}" />
+                    <!-- <ComboBox Items="{Binding AllowedThemes}" -->
+                    <!--           SelectedItem="{Binding  SelectedTheme}" /> -->
+                </StackPanel>
+                <Panel Grid.Row="1">
+                    <ContentControl IsVisible="{Binding !Application.ServerSelected}">
+                        <views:Main />
+                    </ContentControl>
+                    <ContentPresenter Content="{Binding Application.Server}"
+                        IsVisible="{Binding Application.ServerSelected}">
+                    </ContentPresenter>
+                </Panel>
+                <views:StatusBar Grid.Row="2" />
+            </Grid>
         </Panel>
-        <ContentPresenter Grid.Row="2"
-                          Content="{x:Static views:StatusBar.Instance}" />
-      </Grid>
-    </Panel>
-  </Grid>
+    </Grid>
 </UserControl>

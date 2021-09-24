@@ -1,13 +1,14 @@
 using System;
 using System.IO;
 using System.Linq;
-using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using SkiaSharp;
+using Splat;
 
 namespace ACContentSynchronizer.ClientGui.Components {
   public class Preview : UserControl, IDisposable {
@@ -109,7 +110,9 @@ namespace ACContentSynchronizer.ClientGui.Components {
     }
 
     public static Bitmap? GetCarPreview(string entry, string? skinName = null) {
-      var carDirectory = ContentUtils.GetCarDirectory(entry, Settings.Instance.GamePath);
+      var contentService = Locator.Current.GetService<ContentService>();
+      var settings = Locator.Current.GetService<ApplicationViewModel>().Settings;
+      var carDirectory = contentService.GetCarDirectory(entry, settings.GamePath);
       if (string.IsNullOrEmpty(carDirectory)) {
         return null;
       }
@@ -130,7 +133,9 @@ namespace ACContentSynchronizer.ClientGui.Components {
     }
 
     public static Bitmap? GetTrackPreview(string entry) {
-      var trackDirectory = ContentUtils.GetTrackDirectories(entry, Settings.Instance.GamePath)
+      var contentService = Locator.Current.GetService<ContentService>();
+      var settings = Locator.Current.GetService<ApplicationViewModel>().Settings;
+      var trackDirectory = contentService.GetTrackDirectories(entry, settings.GamePath)
         .FirstOrDefault();
       if (string.IsNullOrEmpty(trackDirectory)) {
         return null;

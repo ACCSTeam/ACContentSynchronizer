@@ -27,7 +27,7 @@ namespace ACContentSynchronizer.ClientGui {
       foreach (var (key, value) in vdf.Children) {
         if (long.TryParse(key, out var steamId)) {
           yield return new() {
-            SteamId = steamId,
+            SteamId = steamId.ToString(),
             ProfileName = value.Values.GetValueOrDefault("PersonaName"),
           };
         }
@@ -40,7 +40,7 @@ namespace ACContentSynchronizer.ClientGui {
 
     public string DisplayName => $"{ProfileName} ({SteamId})";
 
-    public long SteamId { get; set; }
+    public string SteamId { get; set; } = "";
   }
 
   public class Vdf {

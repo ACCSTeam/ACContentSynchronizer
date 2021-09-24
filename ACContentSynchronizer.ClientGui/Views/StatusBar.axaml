@@ -36,7 +36,7 @@
            IsLightDismissEnabled="True">
       <Panel Background="{StaticResource UiGrayLight}">
         <ListBox VirtualizationMode="None"
-                 Items="{Binding Tasks}" />
+                 Items="{Binding Application.Tasks}" />
       </Panel>
     </Popup>
   </Panel>

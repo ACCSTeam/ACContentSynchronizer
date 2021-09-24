@@ -2,35 +2,27 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.Services;
 using ReactiveUI;
+using Splat;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
   public abstract class TaskViewModel : ViewModelBase, IDisposable {
+    protected readonly ApplicationViewModel Application;
+    protected readonly ContentService ContentService;
+    protected readonly DataService DataService;
+
+    private HubService? _hubService;
+
+    private string _message = "";
     private double _progress;
 
-    private string _state = "";
-
-    protected TaskViewModel(ServerEntry server) {
+    protected TaskViewModel(ServerEntryViewModel server) {
+      var locator = Locator.Current;
       Server = server;
-
-      ReactiveCommand.CreateFromTask(async () => {
-        ClientId = await Hubs.NotificationHub<double, HubMethods>(Server, HubMethods.Progress, progress => {
-          Progress = progress;
-          return Task.CompletedTask;
-        });
-
-        await Hubs.NotificationHub<string, HubMethods>(Server, HubMethods.Message, message => {
-          State = message;
-          return Task.CompletedTask;
-        });
-
-        await Hubs.NotificationHub<double, string, HubMethods>(Server, HubMethods.ProgressMessage,
-          (progress, message) => {
-            Progress = progress;
-            State = message;
-            return Task.CompletedTask;
-          });
-      });
+      DataService = new(server);
+      Application = locator.GetService<ApplicationViewModel>();
+      ContentService = locator.GetService<ContentService>();
     }
 
     public double Progress {
@@ -38,22 +30,44 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
       set => this.RaiseAndSetIfChanged(ref _progress, value);
     }
 
-    public string State {
-      get => _state;
-      set => this.RaiseAndSetIfChanged(ref _state, value);
+    public string Message {
+      get => _message;
+      set => this.RaiseAndSetIfChanged(ref _message, value);
     }
 
     public Task Worker { get; protected set; } = new(() => { });
 
     protected CancellationTokenSource Canceller { get; set; } = new();
 
-    protected ServerEntry Server { get; }
-
-    protected string ClientId { get; private set; } = "";
+    private ServerEntryViewModel Server { get; }
 
     public void Dispose() {
       Worker.Dispose();
       Canceller.Dispose();
+      _hubService?.Dispose();
+      DataService.Dispose();
+    }
+
+    public async Task Initialize() {
+      _hubService = new(Server);
+      await _hubService.NotificationHub<double, HubMethods>(HubMethods.Progress,
+        progress => {
+          Progress = progress;
+          return Task.CompletedTask;
+        });
+
+      await _hubService.NotificationHub<string, HubMethods>(HubMethods.Message,
+        message => {
+          Message = message;
+          return Task.CompletedTask;
+        });
+
+      await _hubService.NotificationHub<double, string, HubMethods>(HubMethods.ProgressMessage,
+        (progress, message) => {
+          Progress = progress;
+          Message = message;
+          return Task.CompletedTask;
+        });
     }
 
     public abstract void Run();

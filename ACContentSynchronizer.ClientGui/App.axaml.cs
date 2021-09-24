@@ -1,6 +1,3 @@
-using ACContentSynchronizer.ClientGui.Modals;
-using ACContentSynchronizer.ClientGui.Models;
-using ACContentSynchronizer.ClientGui.Views;
 using ACContentSynchronizer.ClientGui.Windows;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -17,14 +14,12 @@ namespace ACContentSynchronizer.ClientGui {
         desktop.MainWindow = MainWindow.Instance;
       }
 
-      var settings = Settings.Instance;
-      if (string.IsNullOrEmpty(settings.GamePath)
-          || string.IsNullOrEmpty(settings.PlayerName)
-          || settings.SteamId == default) {
-        Modal.Open<InitRun>().ConfigureAwait(false);
-      }
-
-      Layout.Instance.SetTheme(settings.Theme);
+      // var settings = Settings.Instance;
+      // if (string.IsNullOrEmpty(settings.GamePath)
+      //     || string.IsNullOrEmpty(settings.PlayerName)
+      //     || settings.SteamId == default) {
+      //   Modal.Open<InitRun>().ConfigureAwait(false);
+      // }
 
       base.OnFrameworkInitializationCompleted();
     }

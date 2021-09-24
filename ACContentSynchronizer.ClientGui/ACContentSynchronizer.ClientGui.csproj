@@ -9,19 +9,20 @@
         <DebugType>none</DebugType>
     </PropertyGroup>
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.6"/>
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.6"/>
-        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6"/>
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.6"/>
-        <PackageReference Include="Avalonia.Svg" Version="0.10.6.2"/>
-        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.6.10"/>
-        <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2"/>
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.8"/>
-        <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0"/>
-        <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0"/>
+        <PackageReference Include="Avalonia" Version="0.10.7" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.7" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.7" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.7" />
+        <PackageReference Include="Avalonia.Svg" Version="0.10.7.1" />
+        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.7.1" />
+        <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.10" />
+        <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+        <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+        <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.3.0" />
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Windows\StatusBar.axaml.cs">
@@ -30,10 +31,6 @@
         </Compile>
         <Compile Update="Windows\MainWindow.axaml.cs">
             <DependentUpon>MainWindow.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Views\MainViewModel.cs">
-            <DependentUpon>Main.axaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
         <Compile Update="Views\SideBarViewModel.cs">
@@ -51,9 +48,6 @@
         </Compile>
         <Compile Update="Modals\ToastViewModel.cs">
             <DependentUpon>Toast.axaml</DependentUpon>
-        </Compile>
-        <Compile Update="Views\ServerViewModel.cs">
-            <DependentUpon>Server.axaml</DependentUpon>
         </Compile>
         <Compile Update="Views\StatusBarViewModel.cs">
             <DependentUpon>StatusBar.axaml</DependentUpon>
@@ -92,8 +86,26 @@
         <Compile Update="Components\Server\ServerWeatherViewModel.cs">
             <DependentUpon>ServerWeather.axaml</DependentUpon>
         </Compile>
+        <Compile Update="Views\ServerViews\ServerConditionsViewModel.cs">
+            <DependentUpon>ServerConditions.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\ServerViews\ServerMainViewModel.cs">
+            <DependentUpon>ServerMain.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\ServerViews\ServerRulesViewModel.cs">
+            <DependentUpon>ServerRules.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\ServerViews\ServerSessionsViewModel.cs">
+            <DependentUpon>ServerSessions.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\ServerViews\ServerSettingsViewModel.cs">
+            <DependentUpon>ServerSettings.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\ServerViews\ServerWeatherViewModel.cs">
+            <DependentUpon>ServerWeather.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\ACContentSynchronizer\ACContentSynchronizer.csproj"/>
+        <ProjectReference Include="..\ACContentSynchronizer\ACContentSynchronizer.csproj" />
     </ItemGroup>
 </Project>

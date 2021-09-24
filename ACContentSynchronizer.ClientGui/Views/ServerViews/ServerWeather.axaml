@@ -1,0 +1,86 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             xmlns:serverViews="clr-namespace:ACContentSynchronizer.ClientGui.Views.ServerViews"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ACContentSynchronizer.ClientGui.Views.ServerViews.ServerWeather"
+             MinWidth="300">
+
+  <Design.DataContext>
+    <serverViews:ServerWeatherViewModel />
+  </Design.DataContext>
+
+  <StackPanel>
+    <components:FormField Label="Weather preset">
+      <ComboBox Items="{Binding AllowedWeathers}"
+                SelectedItem="{Binding SelectedWeather}" />
+    </components:FormField>
+
+    <components:FormField Label="Ambient temperature"
+                          Value="{Binding AmbientTemperature}"
+                          Postfix="℃">
+      <Slider Minimum="{Binding TemperatureMin}"
+              Maximum="{Binding TemperatureMax}"
+              Value="{Binding  AmbientTemperature}" />
+    </components:FormField>
+
+    <components:FormField Label="Ambient variation"
+                          Value="{Binding AmbientVariation}"
+                          Postfix="℃">
+      <Slider Minimum="{Binding TemperatureMin}"
+              Maximum="{Binding TemperatureMax}"
+              Value="{Binding AmbientVariation}" />
+    </components:FormField>
+
+    <components:FormField Label="Road temperature"
+                          Value="{Binding RoadTemperature}"
+                          Postfix="℃">
+      <Slider Minimum="{Binding TemperatureMin}"
+              Maximum="{Binding TemperatureMax}"
+              Value="{Binding RoadTemperature}" />
+    </components:FormField>
+
+    <components:FormField Label="Road variation"
+                          Value="{Binding RoadVariation}"
+                          Postfix="℃">
+      <Slider Minimum="{Binding TemperatureMin}"
+              Maximum="{Binding TemperatureMax}"
+              Value="{Binding RoadVariation}" />
+    </components:FormField>
+
+    <components:FormField Label="Wind min"
+                          Value="{Binding WindMin}"
+                          Postfix="km/h">
+      <Slider Minimum="{Binding WindSpeedMin}"
+              Maximum="{Binding WindSpeedMax}"
+              Value="{Binding WindMin}" />
+    </components:FormField>
+
+    <components:FormField Label="Wind max"
+                          Value="{Binding WindMax}"
+                          Postfix="km/h">
+      <Slider Minimum="{Binding WindSpeedMin}"
+              Maximum="{Binding WindSpeedMax}"
+              Value="{Binding WindMax}" />
+    </components:FormField>
+
+    <components:FormField Label="Wind direction"
+                          Value="{Binding  WindDirection}"
+                          Postfix="°">
+      <Slider Minimum="{Binding WindDirectionMin}"
+              Maximum="{Binding WindDirectionMax}"
+              Value="{Binding WindDirection}" />
+    </components:FormField>
+
+    <components:FormField Label="Wind direction variation"
+                          Value="{Binding WindDirectionVariation}"
+                          Postfix="°">
+      <Slider Minimum="{Binding WindDirectionVariationMin}"
+              Maximum="{Binding WindDirectionVariationMax}"
+              Value="{Binding WindDirectionVariation}" />
+    </components:FormField>
+  </StackPanel>
+
+</UserControl>

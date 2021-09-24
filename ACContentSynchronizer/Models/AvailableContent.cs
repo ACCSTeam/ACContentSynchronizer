@@ -78,7 +78,7 @@ namespace ACContentSynchronizer.Models {
             file.FullName.Replace(path + Path.DirectorySeparatorChar, "")));
           var entryStream = entry.Open();
 
-          await ContentUtils.GrantAccess(async () => {
+          await FileUtils.GrantAccess(async () => {
             await using var fileStream = File.Open(file.FullName, FileMode.Open);
             await fileStream.CopyToAsync(entryStream);
           }, TimeSpan.FromMinutes(1));

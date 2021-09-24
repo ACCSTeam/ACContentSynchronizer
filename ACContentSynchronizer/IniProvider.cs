@@ -15,27 +15,40 @@ namespace ACContentSynchronizer {
         : throw new("Wrong folder");
     }
 
-    public IniFile GetConfig(string config) {
+    public Dictionary<string, Dictionary<string, string>> GetConfigDictionary(string config) {
       var serverCfgPath = Path.Combine(_folderPath, $"{config}.ini");
       return IniToDictionary(serverCfgPath);
+    }
+
+    public IniFile GetConfig(string config) {
+      var dictionary = GetConfigDictionary(config);
+      return DictionaryToIniFile(dictionary);
+    }
+
+    public Dictionary<string, Dictionary<string, string>> GetServerDictionary() {
+      return GetConfigDictionary(Constants.ServerCfg);
+    }
+
+    public Dictionary<string, Dictionary<string, string>> GetEntryDictionary() {
+      return GetConfigDictionary(Constants.EntryList);
     }
 
     public IniFile GetServerConfig() {
       return GetConfig(Constants.ServerCfg);
     }
 
-    public IniFile GetEntryList() {
+    public IniFile GetEntryConfig() {
       return GetConfig(Constants.EntryList);
     }
 
-    private static IniFile IniToDictionary(string path) {
+    private static Dictionary<string, Dictionary<string, string>> IniToDictionary(string path) {
       var lines = File.ReadAllLines(path)
         .Where(line => !string.IsNullOrEmpty(line))
         .ToList();
 
       var lastIndex = 0;
       var sections = new List<int>();
-      var ini = new IniFile();
+      var ini = new Dictionary<string, Dictionary<string, string>>();
 
       while (true) {
         lastIndex = lines.FindIndex(lastIndex,
@@ -59,8 +72,17 @@ namespace ACContentSynchronizer {
         ini.Add(RemoveComment(lines[index]
             .Replace("[", "")
             .Replace("]", "")),
-          new(sectionLines.ToDictionary(entry => RemoveComment(entry[..entry.IndexOf("=", StringComparison.Ordinal)]),
-            entry => (object?) RemoveComment(entry[(entry.IndexOf("=", StringComparison.Ordinal) + 1)..]))));
+          sectionLines.ToDictionary(entry => RemoveComment(entry[..entry.IndexOf("=", StringComparison.Ordinal)]),
+            entry => RemoveComment(entry[(entry.IndexOf("=", StringComparison.Ordinal) + 1)..])));
+      }
+
+      return ini;
+    }
+
+    public static IniFile DictionaryToIniFile(Dictionary<string, Dictionary<string, string>> source) {
+      var ini = new IniFile();
+      foreach (var (key, value) in source) {
+        ini.Add(key, new(value.ToDictionary(x => x.Key, x => (object?) x.Value)));
       }
 
       return ini;

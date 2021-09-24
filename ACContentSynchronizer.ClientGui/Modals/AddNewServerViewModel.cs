@@ -1,68 +1,37 @@
-using System;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.Services;
 using ACContentSynchronizer.ClientGui.ViewModels;
-using ACContentSynchronizer.ClientGui.Views;
-using Avalonia.Data;
-using ReactiveUI;
+using Splat;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
   public class AddNewServerViewModel : ModalViewModel<AddNewServer> {
     private readonly Regex _addressRegex = new($"^{Constants.Pattern}$");
+    private readonly ApplicationViewModel _application;
 
-    private string _ip = "";
-
-    private string _password = "";
-
-    private string _port = "";
-
-    public string Ip {
-      get => _ip;
-      set {
-        if (!_addressRegex.IsMatch(value)) {
-          throw new DataValidationException("Invalid server address");
-        }
-
-        this.RaiseAndSetIfChanged(ref _ip, value);
-      }
+    public AddNewServerViewModel() {
+      _application = Locator.Current.GetService<ApplicationViewModel>();
     }
 
-    public string Port {
-      get => _port;
-      set => this.RaiseAndSetIfChanged(ref _port, value);
-    }
-
-    public string Password {
-      get => _password;
-      set => this.RaiseAndSetIfChanged(ref _password, value);
-    }
-
-    public DateTime DateTime { get; set; } = DateTime.Now;
+    public ServerEntryViewModel Server { get; set; } = new();
 
     public async Task Save() {
-      var serverEntry = new ServerEntry {
-        Ip = Ip,
-        Port = Port,
-        Password = Password,
-        DateTime = DateTime,
-      };
-
       try {
-        using var dataReceiver = new DataReceiver(serverEntry.Http);
-        var serverProps = await dataReceiver.GetServerProps();
+        var dataService = new DataService(Server);
+        var serverProps = await dataService.GetServerProps();
 
         if (serverProps != null) {
-          serverEntry.Name = serverProps.Name;
-          serverEntry.HttpPort = serverProps.HttpPort;
+          Server.Name = serverProps.Name;
+          Server.KunosPort = serverProps.HttpPort;
         }
       } catch (HttpRequestException e) {
         if (e.StatusCode == null) {
           Toast.Open("Cant connect to server");
         }
       } finally {
-        Sidebar.Instance.Save(serverEntry);
+        _application.Servers.Add(Server);
         ControlInstance.Close();
       }
     }

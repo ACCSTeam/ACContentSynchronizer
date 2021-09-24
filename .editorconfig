@@ -21,6 +21,12 @@ curly_bracket_next_line = false
 indent_style = space
 indent_size = 2
 tab_width = 2
+resharper_unused_auto_property_accessor_local_highlighting = none
+resharper_constant_conditional_access_qualifier_highlighting = none
+resharper_object_creation_when_type_evident = target_typed
+resharper_object_creation_when_type_not_evident = target_typed
+resharper_arrange_object_creation_when_type_evident_highlighting = error
+resharper_arrange_object_creation_when_type_not_evident_highlighting = error
 resharper_arrange_trailing_comma_in_multiline_lists_highlighting = warning
 resharper_enforce_do_while_statement_braces_highlighting = error
 resharper_enforce_fixed_statement_braces_highlighting = error
@@ -65,7 +71,7 @@ resharper_csharp_keep_blank_lines_in_declarations = 1
 [{*.htm, *.html, *.sht, *.shtm, *.shtml}]
 ij_html_space_inside_empty_tag = false
 
-[*.{appxmanifest, build, dtd, fs, fsi, fsscript, fsx, ml, mli, nuspec, resw, resx, vb, xamlx, xoml, xsd}]
+[*.{appxmanifest, build, dtd, fs, fsi, fsscript, fsx, ml, mli, nuspec, resw, resx, vb, xaml, xamlx, xoml, xsd}]
 indent_style = space
 indent_size = 2
 tab_width = 2
@@ -78,8 +84,3 @@ tab_width = 2
 [{*.cql, *.ddl, *.sql}]
 indent_style = space
 indent_size = 2
-
-[*.{axaml,  xaml}]
-indent_style = space
-indent_size = 2
-end_of_line = lf

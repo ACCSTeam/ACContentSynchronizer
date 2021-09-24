@@ -3,6 +3,7 @@ using ACContentSynchronizer.ClientGui.Components;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using Avalonia.Collections;
 using ReactiveUI;
+using Splat;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class StatusBarViewModel : ViewModelBase {
@@ -11,33 +12,39 @@ namespace ACContentSynchronizer.ClientGui.Views {
     private string _state = "";
 
     public StatusBarViewModel() {
-      Tasks.CollectionChanged += (_, args) => {
-        var enumerable = args.NewItems?.Cast<StatusBarEntry>();
-        if (enumerable == null) {
+      Application = Locator.Current.GetService<ApplicationViewModel>();
+
+      Application.Tasks.CollectionChanged += (entry, _) => {
+        if (entry is not AvaloniaList<StatusBarEntry> entries) {
           return;
         }
 
-        foreach (var statusBarEntry in enumerable) {
-          if (statusBarEntry is { ViewModel: { } }) {
-            statusBarEntry.ViewModel.Task.PropertyChanged += (_, _) => {
-              var tasks = Tasks.Where(x => !(x.ViewModel?.Task.Worker.IsCompleted ?? true))
-                .ToList();
+        if (!entries.Any()) {
+          Progress = 0;
+          State = "";
+          return;
+        }
 
-              var count = tasks.Count(x => x.ViewModel != null && x.ViewModel.Task.Progress > 0);
-              var progress = tasks.Sum(x => x.ViewModel?.Task.Progress ?? 0);
+        var entriesWithTask = entries.Where(statusBarEntry => statusBarEntry is { ViewModel: { } });
+        foreach (var statusBarEntry in entriesWithTask) {
+          statusBarEntry.ViewModel!.Task.PropertyChanged += (_, _) => {
+            var tasks = Application.Tasks.Where(x => !(x.ViewModel?.Task.Worker.IsCompleted ?? true))
+              .ToList();
 
-              Progress = progress > 0 && count > 0
-                ? progress / count
-                : 0;
+            var count = tasks.Count(x => x.ViewModel != null && x.ViewModel.Task.Progress > 0);
+            var progress = tasks.Sum(x => x.ViewModel?.Task.Progress ?? 0);
 
-              State = statusBarEntry.ViewModel.Task.State;
-            };
-          }
+            Progress = progress > 0 && count > 0
+              ? progress / count
+              : 0;
+
+            State = statusBarEntry.ViewModel.Task.Message;
+          };
         }
       };
     }
 
-    public AvaloniaList<StatusBarEntry> Tasks { get; set; } = new();
+    public ApplicationViewModel Application { get; set; }
 
     public double Progress {
       get => _progress;
@@ -47,12 +54,6 @@ namespace ACContentSynchronizer.ClientGui.Views {
     public string State {
       get => _state;
       set => this.RaiseAndSetIfChanged(ref _state, value);
-    }
-
-    public void AddTask(TaskViewModel task) {
-      var entry = new StatusBarEntry();
-      entry.Run(task, Tasks);
-      Tasks.Insert(0, entry);
     }
   }
 }

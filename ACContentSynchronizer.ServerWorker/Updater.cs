@@ -64,7 +64,7 @@ namespace ACContentSynchronizer.ServerWorker {
 
               foreach (var file in files) {
                 var destinationPath = Path.Combine(serverPath, DirectoryUtils.Name(file));
-                ContentUtils.GrantAccess(() => {
+                FileUtils.GrantAccess(() => {
                   File.Move(file, destinationPath, true);
                   return Task.CompletedTask;
                 }, TimeSpan.FromMinutes(1));
@@ -89,7 +89,7 @@ namespace ACContentSynchronizer.ServerWorker {
         var path = Path.Combine(Directory.GetCurrentDirectory(),
           $"{ServerName}/{_executableName}");
 
-        ContentUtils.ExecuteCommand(path);
+        new ContentService().ExecuteCommand(path);
 
         _logger.LogInformation($"Server started {DateTime.Now}");
       } catch (Exception e) {

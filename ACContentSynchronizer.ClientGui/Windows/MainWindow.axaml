@@ -15,6 +15,6 @@
         Background="{StaticResource UiColorTransparent}"
         ExtendClientAreaToDecorationsHint="True">
 
-  <ContentPresenter Content="{x:Static views:Layout.Instance}" />
+  <views:Layout />
 
 </Window>

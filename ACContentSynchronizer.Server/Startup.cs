@@ -19,6 +19,9 @@ namespace ACContentSynchronizer.Server {
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services) {
       services.AddSignalR();
+      services.AddHttpContextAccessor();
+      services.AddScoped<SignalRService>();
+      services.AddScoped<ContentService>();
       services.AddScoped<ServerConfigurationService>();
 
       services.AddControllers().AddJsonOptions(options => {
@@ -58,8 +61,8 @@ namespace ACContentSynchronizer.Server {
       app.UseHttpMetrics();
 
       app.UseEndpoints(endpoints => {
+        endpoints.MapHub<NotificationHub>(Constants.HubEndpoint);
         endpoints.MapControllers();
-        endpoints.MapHub<NotificationHub>("/notification");
       });
     }
   }

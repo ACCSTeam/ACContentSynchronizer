@@ -16,11 +16,11 @@
   <Border>
     <StackPanel Spacing="5">
       <TextBlock Text="IP address" />
-      <TextBox Text="{Binding Ip}" />
+      <TextBox Text="{Binding Server.Ip}" />
       <TextBlock Text="Port" />
-      <TextBox Text="{Binding Port}" />
+      <TextBox Text="{Binding Server.Port}" />
       <TextBlock Text="Password" />
-      <TextBox Text="{Binding Password}" />
+      <TextBox Text="{Binding Server.Password}" />
       <Grid ColumnDefinitions="*,10,*">
         <Button Grid.Column="0"
                 Content="Save"

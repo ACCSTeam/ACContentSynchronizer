@@ -3,18 +3,16 @@ using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
   public class AddNewServer : Modal {
-    private readonly AddNewServerViewModel _vm;
-
     public AddNewServer() {
-      DataContext = _vm = new() {
+      DataContext = new AddNewServerViewModel {
         ControlInstance = this,
       };
       InitializeComponent();
     }
 
     public AddNewServer(AddNewServerViewModel vm) {
-      DataContext = _vm = vm;
-      _vm.ControlInstance = this;
+      vm.ControlInstance = this;
+      DataContext = vm;
       InitializeComponent();
     }
 

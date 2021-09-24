@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="ApplicationName" xml:space="preserve">
+        <value>Content Synchronizer</value>
+    </data>
+    <data name="GameName" xml:space="preserve">
+        <value>ASSETTO CORSA</value>
+    </data>
+    <data name="ContentComparing" xml:space="preserve">
+        <value>Content comparing...</value>
+    </data>
+    <data name="PackContent" xml:space="preserve">
+        <value>Pack content...</value>
+    </data>
+    <data name="RefreshingServer" xml:space="preserve">
+        <value>Refreshing server...</value>
+    </data>
+    <data name="ServerRefreshed" xml:space="preserve">
+        <value>Server refershed!</value>
+    </data>
+    <data name="Error" xml:space="preserve">
+        <value>ERROR:</value>
+    </data>
+    <data name="Uploading" xml:space="preserve">
+        <value>Uploading...</value>
+    </data>
+    <data name="DownloadingManifest" xml:space="preserve">
+        <value>Downloading manifest...</value>
+    </data>
+    <data name="ManifestDownloaded" xml:space="preserve">
+        <value>Manifest downloaded</value>
+    </data>
+    <data name="PreparingContent" xml:space="preserve">
+        <value>Preparing content...</value>
+    </data>
+    <data name="Downloaded" xml:space="preserve">
+        <value>Downloaded</value>
+    </data>
+    <data name="TryingToSave" xml:space="preserve">
+        <value>Trying to save content...</value>
+    </data>
+    <data name="ContentSaved" xml:space="preserve">
+        <value>Content saved</value>
+    </data>
+    <data name="ApplyingChanges" xml:space="preserve">
+        <value>Applying changes...</value>
+    </data>
+    <data name="Done" xml:space="preserve">
+        <value>Done!</value>
+    </data>
+    <data name="DownloadingContent" xml:space="preserve">
+        <value>Downloading contetnt...</value>
+    </data>
+    <data name="ContentNoNeedToUpdate" xml:space="preserve">
+        <value>Content no need to update</value>
+    </data>
+    <data name="TaskCanceled" xml:space="preserve">
+        <value>Task canceled</value>
+    </data>
+    <data name="Race" xml:space="preserve">
+        <value>Race</value>
+    </data>
+    <data name="Settings" xml:space="preserve">
+        <value>Settings</value>
+    </data>
+    <data name="AddNew" xml:space="preserve">
+        <value>Add new</value>
+    </data>
+    <data name="ContentSize" xml:space="preserve">
+        <value>Content size:</value>
+    </data>
+    <data name="ContentUploaded" xml:space="preserve">
+        <value>Content uploaded</value>
+    </data>
+</root>

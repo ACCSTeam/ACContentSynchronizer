@@ -75,6 +75,8 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
       set => this.RaiseAndSetIfChanged(ref _preview, value);
     }
 
+    public string EntryName => DirectoryUtils.Name(Path);
+
     public void Dispose() {
       _preview?.Dispose();
     }
@@ -82,7 +84,5 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
     public EntryViewModel Clone() {
       return new(Path, Name, Variations, SelectedVariation);
     }
-
-    public string EntryName => DirectoryUtils.Name(Path);
   }
 }

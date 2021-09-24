@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ACContentSynchronizer {
   public class IniFile : IEnumerable<KeyValuePair<string, IniSection>> {
@@ -14,16 +15,16 @@ namespace ACContentSynchronizer {
 
     public int Count => _source.Count;
 
-    public void Add(string key, IniSection section) {
-      _source.Add(key, section);
-    }
-
     public IEnumerator<KeyValuePair<string, IniSection>> GetEnumerator() {
       return _source.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator() {
       return GetEnumerator();
+    }
+
+    public void Add(string key, IniSection section) {
+      _source.Add(key, section);
     }
 
     public T V<T>(string key, string value, T defaultValue) {
@@ -50,6 +51,14 @@ namespace ACContentSynchronizer {
       set => _source[key] = value;
     }
 
+    public IEnumerator<KeyValuePair<string, object?>> GetEnumerator() {
+      return _source.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() {
+      return GetEnumerator();
+    }
+
     public T V<T>(string key, T defaultValue) {
       if (!_source.ContainsKey(key)) {
         return defaultValue;
@@ -59,14 +68,6 @@ namespace ACContentSynchronizer {
       return value != null
         ? (T) value
         : defaultValue;
-    }
-
-    public IEnumerator<KeyValuePair<string, object?>> GetEnumerator() {
-      return _source.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() {
-      return GetEnumerator();
     }
   }
 }

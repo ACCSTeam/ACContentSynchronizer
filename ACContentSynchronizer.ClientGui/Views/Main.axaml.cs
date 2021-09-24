@@ -1,17 +1,14 @@
+using ACContentSynchronizer.ClientGui.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Splat;
 
 namespace ACContentSynchronizer.ClientGui.Views {
   public class Main : UserControl {
-    private static Main? _instance;
-    private readonly MainViewModel _vm;
-
     public Main() {
-      DataContext = _vm = new();
+      DataContext = Locator.Current.GetService<ApplicationViewModel>();
       InitializeComponent();
     }
-
-    public static Main Instance => _instance ??= new();
 
     private void InitializeComponent() {
       AvaloniaXamlLoader.Load(this);

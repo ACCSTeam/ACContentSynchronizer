@@ -6,7 +6,8 @@ using ACContentSynchronizer.ClientGui.ViewModels;
 
 namespace ACContentSynchronizer.ClientGui.Tasks {
   public class ValidationTask : TaskViewModel {
-    public ValidationTask(ServerEntry server) : base(server) {
+    public ValidationTask(ServerEntryViewModel server)
+      : base(server) {
     }
 
     private void SetProgress(double progress) {
@@ -17,65 +18,61 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
     public override void Run() {
       Canceller = new();
       Worker = Task.Run(async () => {
-        var dataReceiver = new DataReceiver(Server.Http);
-        var session = "";
         try {
-          var settings = Settings.Instance;
+          Canceller.Token.ThrowIfCancellationRequested();
+          Message = Localization.DownloadingManifest;
+          var manifest = await DataService.DownloadManifest();
 
           Canceller.Token.ThrowIfCancellationRequested();
-          State = "Downloading manifest...";
-          var manifest = await dataReceiver.DownloadManifest();
-
-          Canceller.Token.ThrowIfCancellationRequested();
-          State = "Manifest downloaded";
-          State = "Content comparing";
+          Message = Localization.ManifestDownloaded;
+          Message = Localization.ContentComparing;
           if (manifest != null) {
-            var comparedManifest = dataReceiver.CompareContent(settings.GamePath, manifest);
+            var comparedManifest = DataService.CompareContent(Application.Settings.GamePath, manifest);
 
             if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
               Canceller.Token.ThrowIfCancellationRequested();
-              State = "Preparing content...";
-              session = await dataReceiver.PrepareContent(comparedManifest);
+              Message = Localization.PreparingContent;
+              await DataService.PrepareContent(comparedManifest);
 
               Canceller.Token.ThrowIfCancellationRequested();
-              State = "Pack content...";
-              await dataReceiver.PackContent(session, ClientId);
+              Message = Localization.PackContent;
+              await DataService.PackContent();
               var applyTask = new Task(() => {
+                if (Progress < 100) {
+                }
+
                 try {
                   Canceller.Token.ThrowIfCancellationRequested();
-                  State = "Downloaded";
-                  State = "Trying to save content...";
-                  dataReceiver.SaveData(session);
+                  Message = Localization.Downloaded;
+                  Message = Localization.TryingToSave;
+                  DataService.SaveData();
 
                   Canceller.Token.ThrowIfCancellationRequested();
-                  State = "Content saved";
-                  State = "Applying changes...";
-                  dataReceiver.Apply(settings.GamePath, session);
+                  Message = Localization.ContentSaved;
+                  Message = Localization.ApplyingChanges;
+                  DataService.Apply(Application.Settings.GamePath);
 
-                  State = "Done!";
+                  Message = Localization.Done;
                 } catch (Exception e) {
-                  State = $"ERROR: {e.Message}";
+                  Message = $"{Localization.Error} {e.Message}";
                 }
               });
 
-              dataReceiver.OnProgress += SetProgress;
-              dataReceiver.OnComplete += () => applyTask.Start();
+              DataService.OnProgress += SetProgress;
+              DataService.OnComplete += () => applyTask.Start();
 
               Canceller.Token.ThrowIfCancellationRequested();
-              State = "Downloading content...";
-              dataReceiver.DownloadContent(session, ClientId);
+              DataService.DownloadContent();
               await applyTask;
             } else {
-              State = "Content no need to update";
+              Message = Localization.ContentNoNeedToUpdate;
             }
           }
         } catch (OperationCanceledException) {
-          State = "Task canceled";
-          if (!string.IsNullOrEmpty(session)) {
-            await dataReceiver.CancelPreparing(session);
-          }
+          Message = Localization.TaskCanceled;
+          await DataService.CancelPack();
         } catch (Exception e) {
-          State = $"ERROR: {e.Message}";
+          Message = $"{Localization.Error}: {e.Message}";
         }
       });
     }

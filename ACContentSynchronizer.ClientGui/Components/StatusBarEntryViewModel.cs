@@ -1,11 +1,15 @@
 using System;
 using ACContentSynchronizer.ClientGui.ViewModels;
+using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Components {
   public class StatusBarEntryViewModel : ViewModelBase, IDisposable {
     public StatusBarEntryViewModel(TaskViewModel task) {
       Task = task;
-      Task.Run();
+      ReactiveCommand.CreateFromTask(async () => {
+        await task.Initialize();
+        Task.Run();
+      }).Execute();
     }
 
     public StatusBarEntryViewModel() {

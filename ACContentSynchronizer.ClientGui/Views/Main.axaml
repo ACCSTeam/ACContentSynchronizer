@@ -2,26 +2,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
              xmlns:svg="clr-namespace:Avalonia.Svg;assembly=Avalonia.Svg"
+             xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
+             xmlns:viewModels="clr-namespace:ACContentSynchronizer.ClientGui.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="ACContentSynchronizer.ClientGui.Views.Main">
 
   <Design.DataContext>
-    <views:MainViewModel />
+    <viewModels:ApplicationViewModel />
   </Design.DataContext>
 
   <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Spacing="100">
     <StackPanel>
       <svg:Svg Width="102" Height="167" Path="/Assets/ac-logo.svg" />
       <TextBlock Classes="TextLogo"
-                 FontSize="40">
-        ASSETTO CORSA
+                 FontSize="40"
+                 clientGui:LContent.LName="GameName">
       </TextBlock>
       <TextBlock Classes="TextLogo"
-                 FontSize="26">
-        CONTENT SYNCHRONIZER
-      </TextBlock>
+                 FontSize="26"
+                 clientGui:LContent.LName="ApplicationName" />
     </StackPanel>
     <Button Classes="AccentButton"
             Content="New Connection"

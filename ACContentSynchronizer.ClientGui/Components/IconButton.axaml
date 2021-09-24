@@ -5,6 +5,7 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
              xmlns:behaviors="clr-namespace:ACContentSynchronizer.ClientGui.Behaviors"
+             xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Components.IconButton">
   <UserControl.Styles>

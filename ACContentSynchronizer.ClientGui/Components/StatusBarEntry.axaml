@@ -14,7 +14,7 @@
   <Grid ColumnDefinitions="*,10,30">
     <StackPanel Grid.Column="0"
                 Spacing="5">
-      <TextBlock Text="{Binding Task.State}" />
+      <TextBlock Text="{Binding Task.Message}" />
       <ProgressBar Value="{Binding Task.Progress}" />
     </StackPanel>
     <Button Grid.Column="2"

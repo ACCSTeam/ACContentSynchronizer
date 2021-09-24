@@ -1,43 +1,35 @@
 ﻿using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
-using ACContentSynchronizer.Server.Hubs;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 
 namespace ACContentSynchronizer.Server.Services {
   public class ServerConfigurationService {
     private readonly IConfiguration _configuration;
-    private readonly IHubContext<NotificationHub> _hub;
+    private readonly ContentService _content;
     private readonly IniProvider _iniProvider;
+    private readonly SignalRService _signalRService;
 
     public ServerConfigurationService(IConfiguration configuration,
-                                      IHubContext<NotificationHub> hub) {
+                                      SignalRService signalRService,
+                                      ContentService content) {
       _configuration = configuration;
-      _hub = hub;
+      _signalRService = signalRService;
+      _content = content;
 
       var gamePath = _configuration.GetValue<string>("GamePath");
       var preset = _configuration.GetValue<string>("Preset");
       _iniProvider = new(Path.Combine(gamePath, Constants.ServerPresetsPath, preset));
     }
 
-    public void CheckAccess(string password) {
-      var adminPassword = _iniProvider.GetServerConfig().V("SERVER", "ADMIN_PASSWORD", "");
-
-      if (adminPassword == password) {
-        return;
-      }
-
-      throw new("");
-    }
-
-    public async Task GetArchive(HttpRequest request, string connectionId, string client) {
+    public async Task GetArchive(HttpRequest request, string connectionId) {
       DirectoryUtils.DeleteIfExists(connectionId);
       DirectoryUtils.CreateIfNotExists(connectionId);
 
@@ -56,7 +48,7 @@ namespace ACContentSynchronizer.Server.Services {
             break;
           }
           await stream.WriteAsync(new(buffer, 0, bytesRead)).ConfigureAwait(false);
-          SendProgress(client, length, stream.Length);
+          SendProgress(length, stream.Length);
         }
       } finally {
         ArrayPool<byte>.Shared.Return(buffer);
@@ -65,9 +57,9 @@ namespace ACContentSynchronizer.Server.Services {
       stream.Close();
     }
 
-    private void SendProgress(string client, long length, long read) {
+    private void SendProgress(long length, long read) {
       var progress = (double) read / length * 100;
-      _hub.Clients.Client(client).SendAsync(HubMethods.Progress.ToString(), progress);
+      _signalRService.Send(HubMethods.Progress, progress);
     }
 
     public async Task UpdateConfig(Manifest manifest) {
@@ -123,15 +115,23 @@ namespace ACContentSynchronizer.Server.Services {
       var runningProcess = Process.GetProcesses().FirstOrDefault(x => x.ProcessName == serverExecutableName);
       runningProcess?.Kill();
 
-      ContentUtils.ExecuteCommand(serverExecutablePath);
+      _content.ExecuteCommand(serverExecutablePath);
+    }
+
+    public Dictionary<string, Dictionary<string, string>> GetServerDictionary() {
+      return _iniProvider.GetServerDictionary();
+    }
+
+    public Dictionary<string, Dictionary<string, string>> GetEntryDictionary() {
+      return _iniProvider.GetEntryDictionary();
     }
 
     public IniFile GetServerConfig() {
       return _iniProvider.GetServerConfig();
     }
 
-    public IniFile GetEntryList() {
-      return _iniProvider.GetEntryList();
+    public IniFile GetEntryConfig() {
+      return _iniProvider.GetEntryConfig();
     }
 
     private string GetLocalPort() {
@@ -167,11 +167,9 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public string[] GetCars() {
-      var cars = _iniProvider.GetServerConfig().V("SERVER", "CARS", "");
-
-      return string.IsNullOrEmpty(cars)
-        ? Array.Empty<string>()
-        : cars.Split(';');
+      return _iniProvider.GetEntryConfig()
+        .Select(x => x.Value.V("MODEL", ""))
+        .ToArray();
     }
   }
 }

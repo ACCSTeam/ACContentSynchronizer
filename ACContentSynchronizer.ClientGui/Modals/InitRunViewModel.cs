@@ -1,17 +1,19 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.ClientGui.Windows;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using ReactiveUI;
+using Splat;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
   public class InitRunViewModel : ModalViewModel<InitRun> {
+    private readonly ApplicationViewModel _application;
+
     private string _path = "";
 
-    private string _playerName = "Player";
+    private string _playerName = "accsPlayer";
 
     private SteamProfile? _profile;
 
@@ -19,11 +21,12 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 
     public InitRunViewModel(InitRun controlInstance) {
       ControlInstance = controlInstance;
-      var settings = Settings.Instance;
-      Path = settings.GamePath;
-      PlayerName = settings.PlayerName;
+      _application = Locator.Current.GetService<ApplicationViewModel>();
+
+      Path = _application.Settings.GamePath;
+      PlayerName = _application.Settings.PlayerName;
       Profiles = new(SteamIdHelper.FindUsers());
-      Profile = Profiles.FirstOrDefault(x => x.SteamId == settings.SteamId);
+      Profile = Profiles.FirstOrDefault(x => x.SteamId == _application.Settings.SteamId);
     }
 
     public string Path {
@@ -54,13 +57,11 @@ namespace ACContentSynchronizer.ClientGui.Modals {
     }
 
     public async Task SaveAndContinue() {
-      var settings = Settings.Instance;
+      _application.Settings.GamePath = Path;
+      _application.Settings.PlayerName = PlayerName;
+      _application.Settings.SteamId = Profile?.SteamId ?? "";
 
-      settings.GamePath = Path;
-      settings.PlayerName = PlayerName;
-      settings.SteamId = Profile?.SteamId ?? default;
-
-      await settings.SaveAsync();
+      await _application.SaveAsync();
       Close();
     }
   }

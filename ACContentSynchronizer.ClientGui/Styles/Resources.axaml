@@ -8,7 +8,7 @@
   </Design.PreviewWith>
 
   <Style Selector="Window">
-    <Setter Property="FontFamily" Value="resm:Assets.Fonts.Roboto.*.ttf" />
+    <Setter Property="FontFamily" Value="avares://ACContentSynchronizer.ClientGui/Assets/Fonts/Roboto/Roboto-*.ttf#Roboto" />
   </Style>
 
   <Style Selector="Window[WindowState=Maximized]">

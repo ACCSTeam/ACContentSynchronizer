@@ -1,5 +1,6 @@
 namespace ACContentSynchronizer {
   public class Constants {
+    public const string HubEndpoint = "/notification";
     public const string DownloadsPath = "downloads";
     public const string ContentType = "application/zip";
     public const string ContentFolder = "content";

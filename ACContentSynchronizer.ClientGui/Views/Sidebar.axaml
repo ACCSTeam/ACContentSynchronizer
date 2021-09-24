@@ -5,6 +5,7 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:views="clr-namespace:ACContentSynchronizer.ClientGui.Views"
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
+             xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Sidebar">
 
@@ -14,7 +15,7 @@
 
   <Grid RowDefinitions="Auto,*,Auto,Auto" Width="{Binding Size}">
     <components:IconButton Grid.Row="0"
-                           Text="CONTENT SYNCHRONIZER"
+                           clientGui:LContent.LName="ApplicationName"
                            Icon="ViewList"
                            Spacing="10"
                            TextVisibleWidth="70"
@@ -25,8 +26,8 @@
     <ListBox Grid.Row="1"
              Name="Servers"
              HorizontalAlignment="Stretch"
-             Items="{Binding Servers}"
-             SelectedItem="{Binding SelectedServer}">
+             Items="{Binding Application.Servers}"
+             SelectedItem="{Binding Application.SelectedServer}">
       <ListBox.ItemTemplate>
         <DataTemplate>
           <Border BorderThickness="0,0,0,1"
@@ -46,14 +47,14 @@
                 <Button Grid.Column="1"
                         Classes="ListButton TransparentButton"
                         IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}"
-                        Command="{Binding ElementName=Servers, Path=DataContext.EditServerDialog}"
+                        Command="{Binding ElementName=Servers, Path=DataContext.Application.EditServerDialog}"
                         CommandParameter="{Binding }">
                   <avalonia:MaterialIcon Kind="Edit" />
                 </Button>
                 <Button Grid.Column="2"
                         Classes="ListButton TransparentButton"
                         IsVisible="{Binding ElementName=Servers, Path=!DataContext.IsMinimized}"
-                        Command="{Binding ElementName=Servers, Path=DataContext.Remove}"
+                        Command="{Binding ElementName=Servers, Path=DataContext.Application.Remove}"
                         CommandParameter="{Binding }">
                   <avalonia:MaterialIcon Kind="Delete" />
                 </Button>
@@ -64,18 +65,18 @@
       </ListBox.ItemTemplate>
     </ListBox>
     <components:IconButton Grid.Row="2"
-                           Text="Add new"
+                           clientGui:LContent.LName="AddNew"
                            Icon="Plus"
                            Spacing="10"
                            Style="TransparentButton SidebarButton"
                            TextVisibleWidth="70"
-                           Command="{Binding OpenAddServerDialog}" />
+                           Command="{Binding Application.AddNewConnection}" />
     <components:IconButton Grid.Row="3"
-                           Text="Settings"
+                           clientGui:LContent.LName="Settings"
                            Icon="Tune"
                            Spacing="10"
                            Style="TransparentButton SidebarButton"
                            TextVisibleWidth="70"
-                           Command="{Binding OpenSettings}" />
+                           Command="{Binding Application.OpenSettings}" />
   </Grid>
 </UserControl>

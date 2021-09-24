@@ -21,8 +21,8 @@ namespace ACContentSynchronizer.ClientGui.Components {
         o => o.Parameter,
         (o, v) => o.Parameter = v);
 
-    public static readonly DirectProperty<IconButton, string> TextProperty =
-      AvaloniaProperty.RegisterDirect<IconButton, string>(
+    public static readonly DirectProperty<IconButton, string?> TextProperty =
+      AvaloniaProperty.RegisterDirect<IconButton, string?>(
         nameof(Text),
         o => o.Text,
         (o, v) => o.Text = v);
@@ -84,7 +84,7 @@ namespace ACContentSynchronizer.ClientGui.Components {
 
     private Classes? _style;
 
-    private string _text = "";
+    private string? _text = "";
 
     private Classes? _textStyle;
 
@@ -106,7 +106,7 @@ namespace ACContentSynchronizer.ClientGui.Components {
       set => SetAndRaise(ParameterProperty, ref _parameter, value);
     }
 
-    public string Text {
+    public string? Text {
       get => _text;
       set => SetAndRaise(TextProperty, ref _text, value);
     }
