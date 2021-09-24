@@ -188,5 +188,35 @@ namespace ACContentSynchronizer.ClientGui {
                 return ResourceManager.GetString("ContentUploaded", resourceCulture);
             }
         }
+        
+        public static string PleaseSelectCar {
+            get {
+                return ResourceManager.GetString("PleaseSelectCar", resourceCulture);
+            }
+        }
+        
+        public static string TrackPreviewNotAllowed {
+            get {
+                return ResourceManager.GetString("TrackPreviewNotAllowed", resourceCulture);
+            }
+        }
+        
+        public static string Join {
+            get {
+                return ResourceManager.GetString("Join", resourceCulture);
+            }
+        }
+        
+        public static string Refresh {
+            get {
+                return ResourceManager.GetString("Refresh", resourceCulture);
+            }
+        }
+        
+        public static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
+            }
+        }
     }
 }

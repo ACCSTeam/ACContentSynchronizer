@@ -17,6 +17,9 @@ namespace ACContentSynchronizer.ClientGui {
         var value = Localization.ResourceManager.GetString(name);
 
         switch (args.Sender) {
+          case Preview:
+            args.Sender.SetValue(Preview.PlaceholderProperty, value);
+            break;
           case IconButton:
             args.Sender.SetValue(IconButton.TextProperty, value);
             break;

@@ -31,13 +31,13 @@
         <value>Применение изменений...</value>
     </data>
     <data name="ContentComparing" xml:space="preserve">
-        <value>Сравнение контента...</value>
+        <value>Сравнение...</value>
     </data>
     <data name="ContentNoNeedToUpdate" xml:space="preserve">
         <value>Обновление не требуется</value>
     </data>
     <data name="ContentSaved" xml:space="preserve">
-        <value>Контент сохранён</value>
+        <value>Сохранено</value>
     </data>
     <data name="Done" xml:space="preserve">
         <value>Готово!</value>
@@ -46,7 +46,7 @@
         <value>Скачано</value>
     </data>
     <data name="DownloadingContent" xml:space="preserve">
-        <value>Скачивание контента...</value>
+        <value>Скачивание...</value>
     </data>
     <data name="DownloadingManifest" xml:space="preserve">
         <value>Скачивание манифеста...</value>
@@ -58,10 +58,10 @@
         <value>Манифест получен</value>
     </data>
     <data name="PackContent" xml:space="preserve">
-        <value>Упаковка контента...</value>
+        <value>Упаковка...</value>
     </data>
     <data name="PreparingContent" xml:space="preserve">
-        <value>Подготовка контента...</value>
+        <value>Подготовка...</value>
     </data>
     <data name="Race" xml:space="preserve">
         <value>Race</value>
@@ -85,9 +85,24 @@
         <value>Загрузка...</value>
     </data>
     <data name="ContentSize" xml:space="preserve">
-        <value>Content size:</value>
+        <value>Размер:</value>
     </data>
     <data name="ContentUploaded" xml:space="preserve">
-        <value>Content uploaded</value>
+        <value>Загружено</value>
+    </data>
+    <data name="PleaseSelectCar" xml:space="preserve">
+        <value>Выберите автомобиль</value>
+    </data>
+    <data name="TrackPreviewNotAllowed" xml:space="preserve">
+        <value>Превью трассы не доступно</value>
+    </data>
+    <data name="Join" xml:space="preserve">
+        <value>Подключиться</value>
+    </data>
+    <data name="Refresh" xml:space="preserve">
+        <value>Обновить</value>
+    </data>
+    <data name="Update" xml:space="preserve">
+        <value>Синхронизировать</value>
     </data>
 </root>

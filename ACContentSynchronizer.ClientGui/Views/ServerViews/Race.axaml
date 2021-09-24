@@ -5,6 +5,7 @@
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
              xmlns:serverViews="clr-namespace:ACContentSynchronizer.ClientGui.Views.ServerViews"
              xmlns:viewModels="clr-namespace:ACContentSynchronizer.ClientGui.ViewModels"
+             xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.ServerViews.Race">
 
@@ -31,12 +32,12 @@
     </ListBox>
     <components:Preview Grid.Row="0"
                         Grid.Column="2"
-                        Placeholder="Please select a car"
+                        clientGui:LContent.LName="PleaseSelectCar"
                         Source="{Binding SelectedCar.Preview}"
                         PreviewName="{Binding SelectedCar.Name}" />
     <components:Preview Grid.Row="2"
                         Grid.Column="2"
-                        Placeholder="Track preview not allowed"
+                        clientGui:LContent.LName="TrackPreviewNotAllowed"
                         Source="{Binding Track.Preview}"
                         PreviewName="{Binding Track.Name}" />
     <StackPanel Grid.Row="4"
@@ -46,13 +47,13 @@
                 Spacing="10"
                 HorizontalAlignment="Right">
       <Button Classes="AccentButton"
-              Content="Join"
+              clientGui:LContent.LName="Join"
               Command="{Binding Join}" />
       <Button Classes="AccentButton"
-              Content="Refresh"
+              clientGui:LContent.LName="Refresh"
               Command="{Binding Refresh}" />
       <Button Classes="AccentButton"
-              Content="Update content"
+              clientGui:LContent.LName="Update"
               Command="{Binding ValidateContent}" />
     </StackPanel>
   </Grid>

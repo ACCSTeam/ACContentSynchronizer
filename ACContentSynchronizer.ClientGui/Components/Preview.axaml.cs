@@ -12,8 +12,8 @@ using Splat;
 
 namespace ACContentSynchronizer.ClientGui.Components {
   public class Preview : UserControl, IDisposable {
-    public static readonly DirectProperty<Preview, string> PlaceholderProperty =
-      AvaloniaProperty.RegisterDirect<Preview, string>(
+    public static readonly DirectProperty<Preview, string?> PlaceholderProperty =
+      AvaloniaProperty.RegisterDirect<Preview, string?>(
         nameof(Placeholder),
         o => o.Placeholder,
         (o, v) => o.Placeholder = v);
@@ -43,7 +43,7 @@ namespace ACContentSynchronizer.ClientGui.Components {
 
     private int _blurAmount = 10;
 
-    private string _placeholder = "";
+    private string? _placeholder = "";
 
     private string _previewName = "";
 
@@ -53,7 +53,7 @@ namespace ACContentSynchronizer.ClientGui.Components {
       InitializeComponent();
     }
 
-    public string Placeholder {
+    public string? Placeholder {
       get => _placeholder;
       set => SetAndRaise(PlaceholderProperty, ref _placeholder, value);
     }

@@ -90,4 +90,19 @@
     <data name="ContentUploaded" xml:space="preserve">
         <value>Content uploaded</value>
     </data>
+    <data name="PleaseSelectCar" xml:space="preserve">
+        <value>Please select a car</value>
+    </data>
+    <data name="TrackPreviewNotAllowed" xml:space="preserve">
+        <value>Track preview not allowed</value>
+    </data>
+    <data name="Join" xml:space="preserve">
+        <value>Join</value>
+    </data>
+    <data name="Refresh" xml:space="preserve">
+        <value>Refresh</value>
+    </data>
+    <data name="Update" xml:space="preserve">
+        <value>Sync content</value>
+    </data>
 </root>
