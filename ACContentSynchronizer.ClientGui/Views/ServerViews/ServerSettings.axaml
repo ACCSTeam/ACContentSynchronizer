@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:components="clr-namespace:ACContentSynchronizer.ClientGui.Components"
              xmlns:serverViews="clr-namespace:ACContentSynchronizer.ClientGui.Views.ServerViews"
+             xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.ServerViews.ServerSettings">
 
@@ -11,15 +12,52 @@
         <serverViews:ServerSettingsViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="*,10,Auto">
-        <TabControl Grid.Row="0"
-                    Name="SettingsTabs"/>
+    <Panel>
+        <Popup Name="ClonePopup"
+               PlacementAnchor="BottomRight"
+               Width="300"
+               IsLightDismissEnabled="True">
+            <Border Padding="10"
+                    Background="{DynamicResource UiGrayLight}">
+                <StackPanel Spacing="10">
+                    <TextBox clientGui:LContent.LName="ServerName"
+                             Text="{Binding NewServerName}" />
+                    <TextBox clientGui:LContent.LName="ServerName"
+                             Text="{Binding NewServerIp}" />
+                    <TextBox clientGui:LContent.LName="Ip"
+                             Text="{Binding NewServerPort}" />
+                    <TextBox clientGui:LContent.LName="Port"
+                             Text="{Binding NewTcpPort}" />
+                    <TextBox clientGui:LContent.LName="UdpPort"
+                             Text="{Binding NewUdpPort}" />
+                    <TextBox clientGui:LContent.LName="HttpPort"
+                             Text="{Binding NewHttpPort}" />
+                    <TextBox clientGui:LContent.LName="Password"
+                             Text="{Binding NewServerPassword}" />
+                    <Button clientGui:LContent.LName="Clone"
+                            Command="{Binding  Clone}" />
+                </StackPanel>
+            </Border>
+        </Popup>
+        <Grid RowDefinitions="*,10,Auto">
+            <TabControl Grid.Row="0"
+                        Name="SettingsTabs" />
 
-        <components:IconButton Grid.Row="2"
-                               Text="Save"
-                               Icon="ContentSave"
-                               Spacing="10"
-                               Style="AccentButton TransparentButton"
-                               Command="{Binding Save}" />
-    </Grid>
+            <DockPanel Grid.Row="2">
+                <components:IconButton DockPanel.Dock="Right"
+                                       Icon="ContentCopy"
+                                       Spacing="10"
+                                       clientGui:LContent.LName="Clone"
+                                       Style="GreyButton TransparentButton"
+                                       Click="OpenClonePopup" />
+                <components:IconButton DockPanel.Dock="Left"
+                                       clientGui:LContent.LName="Save"
+                                       Icon="ContentSave"
+                                       Spacing="10"
+                                       Style="AccentButton TransparentButton"
+                                       Command="{Binding Save}" />
+            </DockPanel>
+
+        </Grid>
+    </Panel>
 </UserControl>

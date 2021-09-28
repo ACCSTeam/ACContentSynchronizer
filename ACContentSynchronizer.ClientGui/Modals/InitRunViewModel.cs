@@ -8,7 +8,7 @@ using ReactiveUI;
 using Splat;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
-  public class InitRunViewModel : ModalViewModel<InitRun> {
+  public class InitRunViewModel : ModalViewModel {
     private readonly ApplicationViewModel _application;
 
     private string _path = "";
@@ -19,8 +19,7 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 
     private AvaloniaList<SteamProfile> _profiles = new();
 
-    public InitRunViewModel(InitRun controlInstance) {
-      ControlInstance = controlInstance;
+    public InitRunViewModel() {
       _application = Locator.Current.GetService<ApplicationViewModel>();
 
       Path = _application.Settings.GamePath;

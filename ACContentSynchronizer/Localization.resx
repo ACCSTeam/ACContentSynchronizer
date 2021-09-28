@@ -105,4 +105,19 @@
     <data name="Update" xml:space="preserve">
         <value>Sync content</value>
     </data>
+    <data name="Clone" xml:space="preserve">
+        <value>Clone</value>
+    </data>
+    <data name="Save" xml:space="preserve">
+        <value>Save</value>
+    </data>
+    <data name="ServerName" xml:space="preserve">
+        <value>Server name</value>
+    </data>
+    <data name="ConnectionEstablishedError" xml:space="preserve">
+        <value>Connection is not established</value>
+    </data>
+    <data name="WrongPassword" xml:space="preserve">
+        <value>Wrong password</value>
+    </data>
 </root>

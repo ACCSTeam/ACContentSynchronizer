@@ -6,7 +6,7 @@ using ACContentSynchronizer.ClientGui.Services;
 using ACContentSynchronizer.ClientGui.ViewModels;
 
 namespace ACContentSynchronizer.ClientGui.Tasks {
-  public class ValidationTask : TaskViewModel, IDisposable {
+  public class ValidationTask : TaskViewModel {
     public ValidationTask(ServerEntryViewModel server,
                           HubService hubService)
       : base(server,hubService) {

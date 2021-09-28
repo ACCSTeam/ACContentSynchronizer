@@ -120,19 +120,19 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
       }
 
       for (var i = 0; i < Weathers.Count; i++) {
-        var weather = Locator.Current.GetService<ServerWeatherViewModel>();
-
-        source.Add($"WEATHER_{i}", new() {
-          ["GRAPHICS"] = weather.Graphics,
-          ["BASE_TEMPERATURE_AMBIENT"] = weather.AmbientTemperature,
-          ["BASE_TEMPERATURE_ROAD"] = weather.RoadTemperature,
-          ["VARIATION_AMBIENT"] = weather.AmbientVariation,
-          ["VARIATION_ROAD"] = weather.RoadVariation,
-          ["WIND_BASE_SPEED_MIN"] = weather.WindMin,
-          ["WIND_BASE_SPEED_MAX"] = weather.WindMax,
-          ["WIND_BASE_DIRECTION"] = weather.WindDirection,
-          ["WIND_VARIATION_DIRECTION"] = weather.WindDirectionVariation,
-        });
+        if (Weathers[i].DataContext is ServerWeatherViewModel weather) {
+          source.Add($"WEATHER_{i}", new() {
+            ["GRAPHICS"] = weather.Graphics,
+            ["BASE_TEMPERATURE_AMBIENT"] = weather.AmbientTemperature,
+            ["BASE_TEMPERATURE_ROAD"] = weather.RoadTemperature,
+            ["VARIATION_AMBIENT"] = weather.AmbientVariation,
+            ["VARIATION_ROAD"] = weather.RoadVariation,
+            ["WIND_BASE_SPEED_MIN"] = weather.WindMin,
+            ["WIND_BASE_SPEED_MAX"] = weather.WindMax,
+            ["WIND_BASE_DIRECTION"] = weather.WindDirection,
+            ["WIND_VARIATION_DIRECTION"] = weather.WindDirectionVariation,
+          });
+        }
       }
 
       return source;

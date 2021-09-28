@@ -1,4 +1,5 @@
 using ACContentSynchronizer.ClientGui.Components;
+using ACContentSynchronizer.ClientGui.Extensions;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
@@ -17,8 +18,8 @@ namespace ACContentSynchronizer.ClientGui.Views {
       AvaloniaXamlLoader.Load(this);
     }
 
-    private void OpenPopup(object? sender, RoutedEventArgs e) {
-      this.FindControl<Popup>("StatusPopup").IsOpen = true;
+    private void OpenStatusPopup(object? sender, RoutedEventArgs e) {
+      this.OpenPopup("StatusPopup");
     }
   }
 }

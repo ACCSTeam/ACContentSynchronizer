@@ -1,7 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Components;
+using ACContentSynchronizer.ClientGui.Extensions;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using ReactiveUI;
 
@@ -55,6 +58,10 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
       return new() {
         DataContext = dataContext,
       };
+    }
+
+    private void OpenClonePopup(object? sender, RoutedEventArgs e) {
+      this.OpenPopup("ClonePopup");
     }
   }
 }

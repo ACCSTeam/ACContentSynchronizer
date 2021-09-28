@@ -7,13 +7,13 @@ using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
   public class ServerViewModel : ViewModelBase, IDisposable {
-    private HubService _hubService;
+    private readonly HubService _hubService;
 
     public ServerViewModel(ServerEntryViewModel server) {
       _hubService = new(server);
       ReactiveCommand.CreateFromTask(() => {
         Race = new(new(server, _hubService));
-        ServerSettings = new(new(server));
+        ServerSettings = new(new(server, _hubService));
         return Task.CompletedTask;
       }).Execute();
     }

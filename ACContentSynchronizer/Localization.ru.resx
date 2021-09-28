@@ -105,4 +105,19 @@
     <data name="Update" xml:space="preserve">
         <value>Синхронизировать</value>
     </data>
+    <data name="Clone" xml:space="preserve">
+        <value>Дублировать</value>
+    </data>
+    <data name="Save" xml:space="preserve">
+        <value>Сохранить</value>
+    </data>
+    <data name="ServerName" xml:space="preserve">
+        <value>Название сервера</value>
+    </data>
+    <data name="ConnectionEstablishedError" xml:space="preserve">
+        <value>Не удалось подключиться к серверу</value>
+    </data>
+    <data name="WrongPassword" xml:space="preserve">
+        <value>Неверный пароль</value>
+    </data>
 </root>

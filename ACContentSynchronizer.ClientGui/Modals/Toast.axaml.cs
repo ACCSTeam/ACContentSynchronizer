@@ -12,18 +12,10 @@ namespace ACContentSynchronizer.ClientGui.Modals {
   public class Toast : Window {
     private const int ToastWidth = 300;
     private const int ActiveToastCount = 3;
-    private readonly ToastViewModel _vm;
 
     public Toast() {
-      DataContext = _vm = new();
-    }
-
-    public Toast(string message) {
-      DataContext = _vm = new(message);
+      DataContext = new ToastViewModel();
       InitializeComponent();
-#if DEBUG
-      this.AttachDevTools();
-#endif
     }
 
     private static List<Toast> ToastsActivated { get; } = new();
@@ -38,7 +30,8 @@ namespace ACContentSynchronizer.ClientGui.Modals {
     }
 
     public static void Open(string message) {
-      var toast = new Toast(message) {
+      var toast = new Toast {
+        DataContext = new ToastViewModel(message),
         Width = ToastWidth,
       };
 

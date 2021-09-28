@@ -5,6 +5,9 @@ using System.Linq;
 namespace ACContentSynchronizer {
   public class IniFile : IEnumerable<KeyValuePair<string, IniSection>> {
     private readonly Dictionary<string, IniSection> _source = new();
+    public Dictionary<string, Dictionary<string, string>> Source =>
+      _source.ToDictionary(x => x.Key,
+        x => x.Value.Source);
 
     public IniSection this[string key] {
       get => _source.ContainsKey(key)
@@ -36,6 +39,9 @@ namespace ACContentSynchronizer {
 
   public class IniSection : IEnumerable<KeyValuePair<string, object?>> {
     private readonly Dictionary<string, object?> _source = new();
+    public Dictionary<string, string> Source => _source
+      .ToDictionary(x => x.Key, x
+        => x.Value?.ToString() ?? "");
 
     public IniSection() {
     }

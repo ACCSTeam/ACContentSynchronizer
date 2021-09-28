@@ -10,9 +10,11 @@ namespace ACContentSynchronizer {
     private readonly string _folderPath;
 
     public IniProvider(string folderPath) {
-      _folderPath = Directory.Exists(folderPath)
-        ? folderPath
-        : throw new("Wrong folder");
+      if (!Directory.Exists(folderPath)) {
+        Directory.CreateDirectory(folderPath);
+      }
+
+      _folderPath = folderPath;
     }
 
     public Dictionary<string, Dictionary<string, string>> GetConfigDictionary(string config) {

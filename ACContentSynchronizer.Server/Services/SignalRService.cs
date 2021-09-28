@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using ACContentSynchronizer.Server.Extensions;
 using ACContentSynchronizer.Server.Hubs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
@@ -15,7 +16,7 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     private string? GetClientId() {
-      return _httpContextAccessor.HttpContext?.Request.Headers[DefaultHeaders.ClientId];
+      return _httpContextAccessor.HttpContext?.GetHeader(DefaultHeaders.WSClientId);
     }
 
     public Task Send<T>(T method, object arg1) {

@@ -7,7 +7,7 @@ using ReactiveUI;
 using Splat;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
-  public abstract class TaskViewModel : ViewModelBase {
+  public abstract class TaskViewModel : ViewModelBase, IDisposable {
     protected readonly ApplicationViewModel Application;
     protected readonly ContentService ContentService;
     protected readonly DataService DataService;

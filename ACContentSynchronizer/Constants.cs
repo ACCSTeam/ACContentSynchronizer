@@ -17,6 +17,7 @@ namespace ACContentSynchronizer {
     public const string UiFolder = "ui";
     public const string UiTrack = "ui_track.json";
     public const string UiCar = "ui_car.json";
+    public const string DefaultServerPreset = "SERVER_00";
     public const int BufferSize = 81920;
   }
 }

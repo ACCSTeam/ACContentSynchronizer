@@ -31,7 +31,7 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
         Server?.Dispose();
         if (value != null) {
           ReactiveCommand.CreateFromTask(() => {
-            Server = new(new (value));
+            Server = new(new(value));
             return Task.CompletedTask;
           }).Execute();
         }
@@ -92,7 +92,7 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
     }
 
     public async Task OpenSettings() {
-      await Modal.Open<InitRun>();
+      await Modal.Open<InitRun, InitRunViewModel>();
     }
 
     public async Task SaveAsync() {

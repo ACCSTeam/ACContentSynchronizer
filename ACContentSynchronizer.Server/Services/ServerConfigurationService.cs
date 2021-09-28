@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
+using ACContentSynchronizer.Server.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
@@ -16,17 +17,38 @@ namespace ACContentSynchronizer.Server.Services {
     private readonly ContentService _content;
     private readonly IniProvider _iniProvider;
     private readonly SignalRService _signalRService;
+    private readonly string _preset;
 
     public ServerConfigurationService(IConfiguration configuration,
                                       SignalRService signalRService,
-                                      ContentService content) {
+                                      ContentService content,
+                                      IHttpContextAccessor context) {
       _configuration = configuration;
       _signalRService = signalRService;
       _content = content;
 
       var gamePath = _configuration.GetValue<string>("GamePath");
-      var preset = _configuration.GetValue<string>("Preset");
-      _iniProvider = new(Path.Combine(gamePath, Constants.ServerPresetsPath, preset));
+      _preset = context.HttpContext?.GetServerPreset() ?? Constants.DefaultServerPreset;
+      _iniProvider = new(Path.Combine(gamePath, Constants.ServerPresetsPath, _preset));
+    }
+
+    public List<ServerPreset> GetAllowedServers() {
+      var gamePath = _configuration.GetValue<string>("GamePath");
+      var serverPath = Path.Combine(gamePath, Constants.ServerPresetsPath);
+      if (!Directory.Exists(serverPath)) {
+        return new();
+      }
+
+      var presets = Directory.GetDirectories(serverPath);
+      return presets.Select(path => {
+        var preset = DirectoryUtils.Name(path);
+        var serverConfig = new IniProvider(Path.Combine(serverPath, preset));
+        var serverName = serverConfig.GetServerConfig().V("SERVER", "NAME", preset);
+        return new ServerPreset {
+          Name = serverName,
+          Preset = preset,
+        };
+      }).ToList();
     }
 
     public async Task GetArchive(HttpRequest request, string connectionId) {
@@ -62,18 +84,17 @@ namespace ACContentSynchronizer.Server.Services {
       _signalRService.Send(HubMethods.Progress, progress);
     }
 
-    public async Task UpdateConfig(Manifest manifest) {
-      var serverConfig = _iniProvider.GetServerConfig();
+    public async Task UpdateConfig(UploadManifest manifest) {
       var entryList = new IniFile();
 
       if (!string.IsNullOrEmpty(manifest.Track?.Name)) {
-        serverConfig["SERVER"]["TRACK"] = manifest.Track.Name;
+        manifest.ServerConfig["SERVER"]["TRACK"] = manifest.Track.Name;
 
-        serverConfig["SERVER"]["CONFIG_TRACK"] = manifest.Track.SelectedVariation ?? "";
+        manifest.ServerConfig["SERVER"]["CONFIG_TRACK"] = manifest.Track.SelectedVariation ?? "";
       }
 
       if (manifest.Cars.Any()) {
-        serverConfig["SERVER"]["CARS"] = string.Join(';', manifest.Cars
+        manifest.ServerConfig["SERVER"]["CARS"] = string.Join(';', manifest.Cars
           .DistinctBy(x => x.Name)
           .Select(x => x.Name));
 
@@ -98,8 +119,10 @@ namespace ACContentSynchronizer.Server.Services {
         }
       }
 
+      var serverConfig = IniProvider.DictionaryToIniFile(manifest.ServerConfig);
       await _iniProvider.SaveConfig(Constants.EntryList, entryList);
-      await _iniProvider.SaveConfig(Constants.ServerCfg, serverConfig);
+      await _iniProvider.SaveConfig(Constants.ServerCfg,
+        serverConfig);
     }
 
     public async Task RunServer() {
@@ -115,7 +138,7 @@ namespace ACContentSynchronizer.Server.Services {
       var runningProcess = Process.GetProcesses().FirstOrDefault(x => x.ProcessName == serverExecutableName);
       runningProcess?.Kill();
 
-      _content.ExecuteCommand(serverExecutablePath);
+      _content.ExecuteCommand(serverExecutablePath, _preset);
     }
 
     public Dictionary<string, Dictionary<string, string>> GetServerDictionary() {

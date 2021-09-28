@@ -1,11 +1,13 @@
 using ACContentSynchronizer.ClientGui.Models;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
-  public class ModalViewModel<T> : ViewModelBase where T : Modal {
-    public T ControlInstance { get; set; } = null!;
+  public class ModalViewModel : ViewModelBase {
+    public delegate void RequestClose();
+
+    public event RequestClose? CloseRequest;
 
     protected void Close() {
-      ControlInstance.Close();
+      CloseRequest?.Invoke();
     }
   }
 }

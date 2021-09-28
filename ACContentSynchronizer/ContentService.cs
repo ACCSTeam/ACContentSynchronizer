@@ -126,9 +126,9 @@ namespace ACContentSynchronizer {
       FileUtils.DeleteIfExists(archive);
     }
 
-    public void ExecuteCommand(string command) {
+    public void ExecuteCommand(string command, params string[] args) {
       Task.Run(async () => {
-        ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command}\"") {
+        ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command} {string.Join(' ', args)}\"") {
           CreateNoWindow = true,
           UseShellExecute = false,
           RedirectStandardError = true,

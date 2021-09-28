@@ -8,7 +8,7 @@ using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ACContentSynchronizer.Server.Endpoints.ContentEndpoints {
-  public class RefreshServer : BaseAsyncEndpoint.WithRequest<Manifest>.WithoutResponse {
+  public class RefreshServer : BaseAsyncEndpoint.WithRequest<UploadManifest>.WithoutResponse {
     private readonly ServerConfigurationService _serverConfiguration;
     private readonly SignalRService _signalR;
 
@@ -21,7 +21,7 @@ namespace ACContentSynchronizer.Server.Endpoints.ContentEndpoints {
     [HttpPost(Routes.RefreshServer)]
     [AuthorizedRoute(PasswordType.Admin)]
     public override async Task<ActionResult>
-      HandleAsync(Manifest manifest, CancellationToken cancellationToken = new()) {
+      HandleAsync(UploadManifest manifest, CancellationToken cancellationToken = new()) {
       await _serverConfiguration.UpdateConfig(manifest);
       await _serverConfiguration.RunServer();
 

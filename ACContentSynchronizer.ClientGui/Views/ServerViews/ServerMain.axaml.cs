@@ -1,4 +1,5 @@
 using ACContentSynchronizer.ClientGui.Components;
+using ACContentSynchronizer.ClientGui.Extensions;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
@@ -15,11 +16,11 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
     }
 
     public void SelectCarsClick(object? sender, RoutedEventArgs e) {
-      this.FindControl<Popup>("SelectCars").Open();
+      this.OpenPopup("SelectCars");
     }
 
     public void SelectTrackClick(object? sender, RoutedEventArgs e) {
-      this.FindControl<Popup>("SelectTrack").Open();
+      this.OpenPopup("SelectTrack");
     }
   }
 }

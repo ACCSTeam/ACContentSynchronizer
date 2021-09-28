@@ -4,6 +4,7 @@
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
               xmlns:models="clr-namespace:ACContentSynchronizer.ClientGui.Models"
               xmlns:modals="clr-namespace:ACContentSynchronizer.ClientGui.Modals"
+              xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
               mc:Ignorable="d" d:DesignWidth="356" d:DesignHeight="200"
               x:Class="ACContentSynchronizer.ClientGui.Modals.AddNewServer"
               Classes="ModalDialog"
@@ -15,19 +16,29 @@
 
   <Border>
     <StackPanel Spacing="5">
-      <TextBlock Text="IP address" />
+      <TextBlock clientGui:LContent.LName="Ip" />
       <TextBox Text="{Binding Server.Ip}" />
-      <TextBlock Text="Port" />
+      <TextBlock clientGui:LContent.LName="Port" />
       <TextBox Text="{Binding Server.Port}" />
-      <TextBlock Text="Password" />
+      <TextBlock clientGui:LContent.LName="Password" />
       <TextBox Text="{Binding Server.Password}" />
+      <TextBlock clientGui:LContent.LName="ServerPresets" />
+      <ComboBox Items="{Binding ServerPresets}"
+                SelectedItem="{Binding SelectedServerPreset}">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding Name}" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
       <Grid ColumnDefinitions="*,10,*">
         <Button Grid.Column="0"
-                Content="Save"
+                clientGui:LContent.LName="Save"
                 Classes="AccentButton TransparentButton"
-                Command="{Binding Save}" />
+                Command="{Binding Save}"
+                CommandParameter="{Binding ElementName=Window, }"/>
         <Button Grid.Column="2"
-                Content="Close"
+                clientGui:LContent.LName="Close"
                 Classes="TransparentButton"
                 Command="{Binding Close}" />
       </Grid>

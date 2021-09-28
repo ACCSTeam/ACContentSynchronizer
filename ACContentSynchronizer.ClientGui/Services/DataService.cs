@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using ACContentSynchronizer.ClientGui.Extensions;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
@@ -19,29 +20,49 @@ namespace ACContentSynchronizer.ClientGui.Services {
 
     public delegate void ProgressEvent(double progress);
 
-    private readonly HttpClient _client;
+    private HttpClient _client;
     private readonly ContentService _contentService;
 
     private string _session = "";
 
     public DataService(ServerEntryViewModel serverEntry) {
       _contentService = Locator.Current.GetService<ContentService>();
+      _client = CreateClient(serverEntry);
 
+      serverEntry.SubscribeValue(model => model.Http, http => {
+        if (string.IsNullOrEmpty(http)
+            || _client?.BaseAddress?.ToString() == http) {
+          return;
+        }
+
+        _client = CreateClient(serverEntry);
+      });
+
+      serverEntry.SubscribeValue(model => model.Password,
+        password => _client.DefaultRequestHeaders.Add(DefaultHeaders.AccessPassword, password));
+
+      serverEntry.SubscribeValue(model => model.ClientId,
+        clientId => _client.DefaultRequestHeaders.Add(DefaultHeaders.WSClientId, clientId));
+
+      serverEntry.SubscribeValue(model => model.ServerPreset,
+        serverPreset => _client.DefaultRequestHeaders.Add(DefaultHeaders.ServerPreset, serverPreset));
+    }
+
+    private HttpClient CreateClient(ServerEntryViewModel serverEntry) {
       if (string.IsNullOrEmpty(serverEntry.Http)) {
-        throw new NullReferenceException(nameof(serverEntry.Http));
+        return new();
       }
 
-      _client = new() {
+      var client =  new HttpClient {
         BaseAddress = new(serverEntry.Http),
         Timeout = Timeout.InfiniteTimeSpan,
       };
 
-      _client.DefaultRequestHeaders.Add(DefaultHeaders.Password, serverEntry.Password);
-      serverEntry.WhenAnyValue(model => model.ClientId).Subscribe(clientId => {
-          _client.DefaultRequestHeaders.Remove(DefaultHeaders.ClientId);
-          _client.DefaultRequestHeaders.Add(DefaultHeaders.ClientId, clientId);
-        }
-      );
+      client.DefaultRequestHeaders.Add(DefaultHeaders.AccessPassword, serverEntry.Password);
+      client.DefaultRequestHeaders.Add(DefaultHeaders.WSClientId, serverEntry.ClientId);
+      client.DefaultRequestHeaders.Add(DefaultHeaders.ServerPreset, serverEntry.ServerPreset);
+
+      return client;
     }
 
     private HttpClient Client {
@@ -126,6 +147,10 @@ namespace ACContentSynchronizer.ClientGui.Services {
       return Client.GetJson<ServerProps>(Routes.GetServerProps);
     }
 
+    public Task<List<ServerPreset>?> GetAllowedServers() {
+      return Client.GetJson<List<ServerPreset>>(Routes.GetAllowedServers);
+    }
+
     public async Task<IniFile?> GetServerConfig() {
       var dictionary = await Client.GetJson<Dictionary<string, Dictionary<string, string>>?>(Routes.GetServerConfig);
       return dictionary == null
@@ -138,6 +163,10 @@ namespace ACContentSynchronizer.ClientGui.Services {
       return dictionary == null
         ? new()
         : IniProvider.DictionaryToIniFile(dictionary);
+    }
+
+    public void AddHeader(DefaultHeaders header, string value) {
+      Client.DefaultRequestHeaders.Add(header, value);
     }
   }
 }

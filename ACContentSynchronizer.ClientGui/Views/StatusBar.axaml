@@ -20,7 +20,7 @@
     <Button Classes="TransparentButton"
             VerticalAlignment="Stretch"
             Padding="0"
-            Click="OpenPopup">
+            Click="OpenStatusPopup">
       <StackPanel Margin="20,0"
                   Orientation="Horizontal"
                   Spacing="20">

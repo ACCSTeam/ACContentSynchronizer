@@ -218,5 +218,35 @@ namespace ACContentSynchronizer.ClientGui {
                 return ResourceManager.GetString("Update", resourceCulture);
             }
         }
+        
+        public static string Clone {
+            get {
+                return ResourceManager.GetString("Clone", resourceCulture);
+            }
+        }
+        
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        public static string ServerName {
+            get {
+                return ResourceManager.GetString("ServerName", resourceCulture);
+            }
+        }
+        
+        public static string ConnectionEstablishedError {
+            get {
+                return ResourceManager.GetString("ConnectionEstablishedError", resourceCulture);
+            }
+        }
+        
+        public static string WrongPassword {
+            get {
+                return ResourceManager.GetString("WrongPassword", resourceCulture);
+            }
+        }
     }
 }
