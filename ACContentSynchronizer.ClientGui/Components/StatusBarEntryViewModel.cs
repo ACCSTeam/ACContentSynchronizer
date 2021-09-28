@@ -8,8 +8,8 @@ namespace ACContentSynchronizer.ClientGui.Components {
       Task = task;
       ReactiveCommand.CreateFromTask(async () => {
         await task.Initialize();
-        Task.Run();
       }).Execute();
+      Task.Run();
     }
 
     public StatusBarEntryViewModel() {

@@ -70,7 +70,7 @@
                      Items="{Binding Cars}">
               <ListBox.ItemTemplate>
                 <DataTemplate>
-                  <Grid ColumnDefinitions="*, Auto, Auto">
+                  <Grid ColumnDefinitions="*, 200, Auto">
                     <TextBlock Grid.Column="0"
                                Text="{Binding Name}" />
                     <ComboBox Grid.Column="1"
@@ -117,7 +117,7 @@
                    Items="{Binding  SelectedCars}">
             <ListBox.ItemTemplate>
               <DataTemplate>
-                <Grid ColumnDefinitions="*,Auto,Auto">
+                <Grid ColumnDefinitions="*,130,Auto">
                   <TextBlock Grid.Column="0"
                              Text="{Binding Name}" />
                   <ComboBox Grid.Column="1"

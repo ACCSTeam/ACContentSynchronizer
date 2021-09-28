@@ -2,12 +2,14 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.Services;
 using ACContentSynchronizer.ClientGui.ViewModels;
 
 namespace ACContentSynchronizer.ClientGui.Tasks {
-  public class ValidationTask : TaskViewModel {
-    public ValidationTask(ServerEntryViewModel server)
-      : base(server) {
+  public class ValidationTask : TaskViewModel, IDisposable {
+    public ValidationTask(ServerEntryViewModel server,
+                          HubService hubService)
+      : base(server,hubService) {
     }
 
     private void SetProgress(double progress) {
@@ -75,6 +77,12 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
           Message = $"{Localization.Error}: {e.Message}";
         }
       });
+    }
+
+    public override void Dispose() {
+      Worker.Dispose();
+      Canceller.Dispose();
+      DataService.Dispose();
     }
   }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -27,14 +28,16 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
       get => _selectedServer;
       set {
         ServerSelected = value != null;
+        Server?.Dispose();
         if (value != null) {
           ReactiveCommand.CreateFromTask(() => {
-            Server = new(new(value));
+            Server = new(new (value));
             return Task.CompletedTask;
           }).Execute();
         }
 
         this.RaiseAndSetIfChanged(ref _selectedServer, value);
+        GC.Collect();
       }
     }
 

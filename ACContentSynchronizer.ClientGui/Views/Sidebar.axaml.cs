@@ -1,9 +1,10 @@
+using ACContentSynchronizer.ClientGui.Components;
 using ACContentSynchronizer.ClientGui.Models;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Views {
-  public class Sidebar : UserControl {
+  public class Sidebar : DisposableControl {
     private readonly SideBarViewModel _vm;
 
     public Sidebar() {

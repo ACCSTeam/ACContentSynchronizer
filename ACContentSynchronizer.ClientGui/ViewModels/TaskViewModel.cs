@@ -7,19 +7,20 @@ using ReactiveUI;
 using Splat;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
-  public abstract class TaskViewModel : ViewModelBase, IDisposable {
+  public abstract class TaskViewModel : ViewModelBase {
     protected readonly ApplicationViewModel Application;
     protected readonly ContentService ContentService;
     protected readonly DataService DataService;
-
-    private HubService? _hubService;
+    private readonly HubService _hubService;
 
     private string _message = "";
     private double _progress;
 
-    protected TaskViewModel(ServerEntryViewModel server) {
+    protected TaskViewModel(ServerEntryViewModel server,
+                            HubService hubService) {
       var locator = Locator.Current;
       Server = server;
+      _hubService = hubService;
       DataService = new(server);
       Application = locator.GetService<ApplicationViewModel>();
       ContentService = locator.GetService<ContentService>();
@@ -41,15 +42,7 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
 
     private ServerEntryViewModel Server { get; }
 
-    public void Dispose() {
-      Worker.Dispose();
-      Canceller.Dispose();
-      _hubService?.Dispose();
-      DataService.Dispose();
-    }
-
     public async Task Initialize() {
-      _hubService = new(Server);
       await _hubService.NotificationHub<double, HubMethods>(HubMethods.Progress,
         progress => {
           Progress = progress;
@@ -75,5 +68,7 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
     public void Cancel() {
       Canceller.Cancel();
     }
+
+    public abstract void Dispose();
   }
 }

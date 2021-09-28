@@ -90,6 +90,8 @@ namespace ACContentSynchronizer.ClientGui.Components {
         var blurOffsetX = width * 15 / 100;
         var blurOffsetY = height * 15 / 100;
         var data = SKData.Create(ms);
+        ms.Close();
+        ms.Dispose();
         var image = SKImage.FromEncodedData(data);
         var filter = SKImageFilter.CreateBlur(BlurAmount, BlurAmount);
         var clip = SKRectI.Create(width, height);
@@ -107,6 +109,7 @@ namespace ACContentSynchronizer.ClientGui.Components {
 
     public void Dispose() {
       _source?.Dispose();
+      GC.Collect();
     }
 
     public static Bitmap? GetCarPreview(string entry, string? skinName = null) {

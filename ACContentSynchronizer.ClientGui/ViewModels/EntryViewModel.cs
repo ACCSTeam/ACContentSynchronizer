@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Media.Imaging;
 using ReactiveUI;
@@ -35,12 +37,43 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
       Preview = preview;
     }
 
+    public EntryViewModel(string path, string name, string? variation, Func<string, Bitmap?> getPreview) {
+      Path = path;
+      Name = name;
+      SelectedVariation = variation;
+
+      Task.Run(() => {
+        var preview = getPreview(path);
+        Preview = preview;
+      });
+    }
+
     public EntryViewModel(string path, string name, AvaloniaList<string> variations, Bitmap? preview) {
       Path = path;
       Name = name;
       Variations = variations;
       SelectedVariation = variations.FirstOrDefault();
       Preview = preview;
+    }
+
+    public EntryViewModel(string path,
+                          string gamePath,
+                          Func<string, string, string?> getName,
+                          Func<string, string, List<string>> getSkins,
+                          Func<string, string?, Bitmap?> getPreview) {
+      Path = path;
+      Task.Run(() => {
+        var directName = DirectoryUtils.Name(path);
+        var name = getName(directName, gamePath) ?? directName;
+        Name = name;
+
+        var skins = getSkins(directName, gamePath);
+        Variations = new(skins);
+        SelectedVariation = skins.FirstOrDefault();
+
+        var preview = getPreview("", "");
+        Preview = preview;
+      });
     }
 
     public EntryViewModel(string path, string name, AvaloniaList<string> variations, string? selectedVariation) {

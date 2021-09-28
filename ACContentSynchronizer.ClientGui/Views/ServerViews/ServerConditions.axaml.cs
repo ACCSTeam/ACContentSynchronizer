@@ -1,9 +1,10 @@
 using System;
+using ACContentSynchronizer.ClientGui.Components;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
-  public class ServerConditions : UserControl {
+  public class ServerConditions : DisposableControl {
     public ServerConditions() {
       InitializeComponent();
     }

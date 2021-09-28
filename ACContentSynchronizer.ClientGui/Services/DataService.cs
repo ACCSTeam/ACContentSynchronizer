@@ -83,7 +83,7 @@ namespace ACContentSynchronizer.ClientGui.Services {
 
     public void DownloadContent() {
       var archive = Path.Combine(_session, Constants.ContentArchive);
-      var server = $"{Client.BaseAddress}/{Routes.DownloadContent}?session={_session}";
+      var server = $"{Client.BaseAddress}{Routes.DownloadContent}?session={_session}";
       using var client = new WebClient();
       foreach (var (header, value) in _client.DefaultRequestHeaders) {
         client.Headers[header] = value.FirstOrDefault();

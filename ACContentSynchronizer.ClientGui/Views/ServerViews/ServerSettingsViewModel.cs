@@ -15,10 +15,11 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
     private IniFile? _serverConfig;
 
     public ServerSettingsViewModel(ServerEntryViewModel serverEntry) {
+      _tracks = new(new());
+      _cars = new(new());
       _settings = Locator.Current.GetService<ApplicationViewModel>().Settings;
       _contentService = Locator.Current.GetService<ContentService>();
-
-      ReactiveCommand.CreateFromTask(() => Load(serverEntry)).Execute();
+      Load(serverEntry);
     }
 
     public void Dispose() {
@@ -27,14 +28,16 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
       _selectedTrack?.Dispose();
     }
 
-    public async Task Load(ServerEntryViewModel server) {
+    public void Load(ServerEntryViewModel server) {
       InitMainView();
-      var dataService = new DataService(server);
-      _serverConfig = await dataService.GetServerConfig() ?? new();
-      _entryList = await dataService.GetEntryList() ?? new();
+      Task.Run(async () => {
+        var dataService = new DataService(server);
+        _serverConfig = await dataService.GetServerConfig() ?? new();
+        _entryList = await dataService.GetEntryList() ?? new();
 
-      LoadMain(_serverConfig, _entryList);
-      LoadRules(_serverConfig);
+        LoadMain(_serverConfig, _entryList);
+        LoadRules(_serverConfig);
+      });
     }
 
     public void Save() {

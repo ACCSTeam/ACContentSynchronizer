@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Components;
 using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.Services;
 using ACContentSynchronizer.ClientGui.Tasks;
 using ACContentSynchronizer.Models;
 using Avalonia.Collections;
@@ -17,6 +18,7 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
     private ContentService _contentService;
     private ServerEntryViewModel _server;
     private SettingsViewModel _settings;
+    private readonly HubService _hubService;
 
     private AvaloniaList<ContentEntry> _cars = new();
 
@@ -24,13 +26,15 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
 
     private ContentEntry _track = new();
 
-    public RaceViewModel(ServerEntryViewModel serverEntry) {
+    public RaceViewModel(ServerEntryViewModel serverEntry,
+                         HubService hubService) {
       _application = Locator.Current.GetService<ApplicationViewModel>();
       _contentService = Locator.Current.GetService<ContentService>();
       _settings = _application.Settings;
       _server = serverEntry;
+      _hubService = hubService;
 
-      ReactiveCommand.CreateFromTask(Refresh).Execute();
+      Task.Run(Refresh);
     }
 
     public AvaloniaList<ContentEntry> Cars {
@@ -51,6 +55,9 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
     public void Dispose() {
       _selectedCar?.Dispose();
       _track.Dispose();
+      foreach (var car in _cars) {
+        car.Dispose();
+      }
     }
 
     private Task Booking(ContentEntry value) {
@@ -102,10 +109,6 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
     }
 
     public async Task Refresh() {
-      var watcher = new FileSystemWatcher();
-      watcher.Path = Path.Combine(_settings.GamePath, Constants.ContentFolder, Constants.CarsFolder);
-      watcher.Changed += (sender, args) => { };
-
       var selectedCar = SelectedCar?.DirectoryName;
 
       Cars = new();
@@ -158,10 +161,9 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
     }
 
     public async Task ValidateContent() {
-      var validationTask = new ValidationTask(_server);
+      var validationTask = new ValidationTask(_server, _hubService);
       _application.AddTask(validationTask);
       await validationTask.Worker;
-
       await Refresh();
     }
 

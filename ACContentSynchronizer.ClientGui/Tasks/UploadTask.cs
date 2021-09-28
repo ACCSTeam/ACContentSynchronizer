@@ -2,17 +2,19 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Models;
+using ACContentSynchronizer.ClientGui.Services;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.ClientGui.Views.ServerViews;
 using ACContentSynchronizer.Models;
 
 namespace ACContentSynchronizer.ClientGui.Tasks {
-  public class UploadTask : TaskViewModel {
+  public class UploadTask : TaskViewModel, IDisposable {
     private readonly ServerSettingsViewModel _content;
 
     public UploadTask(ServerEntryViewModel server,
+                      HubService hubService,
                       ServerSettingsViewModel content)
-      : base(server) {
+      : base(server, hubService) {
       _content = content;
     }
 
@@ -70,6 +72,13 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
     private void Pack(double progress, string entry) {
       Progress = progress;
       Message = entry;
+    }
+
+    public override void Dispose() {
+      Worker.Dispose();
+      Canceller.Dispose();
+      DataService.Dispose();
+      _content.Dispose();
     }
   }
 }

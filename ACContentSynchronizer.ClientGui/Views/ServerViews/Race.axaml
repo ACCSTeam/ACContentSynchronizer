@@ -32,11 +32,13 @@
     </ListBox>
     <components:Preview Grid.Row="0"
                         Grid.Column="2"
+                        Name="CarPreview"
                         clientGui:LContent.LName="PleaseSelectCar"
                         Source="{Binding SelectedCar.Preview}"
                         PreviewName="{Binding SelectedCar.Name}" />
     <components:Preview Grid.Row="2"
                         Grid.Column="2"
+                        Name="TrackPreview"
                         clientGui:LContent.LName="TrackPreviewNotAllowed"
                         Source="{Binding Track.Preview}"
                         PreviewName="{Binding Track.Name}" />

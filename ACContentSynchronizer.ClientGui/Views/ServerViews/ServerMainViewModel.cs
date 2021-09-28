@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
-using System.Xml.Schema;
+using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Components;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using ACContentSynchronizer.Extensions;
 using Avalonia.Collections;
 using Avalonia.Threading;
 using DynamicData;
-using DynamicData.Binding;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
@@ -192,29 +190,30 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
       return new(chars.ToArray());
     }
 
-    private void LoadContent() {
+    private Task LoadContent() {
       var carsDirectory = Path.Combine(_settings.GamePath, Constants.ContentFolder, Constants.CarsFolder);
       var tracksDirectory = Path.Combine(_settings.GamePath, Constants.ContentFolder, Constants.TracksFolder);
 
       if (Directory.Exists(carsDirectory)) {
-        AvailableCars.AddRange(Directory.GetDirectories(carsDirectory)
-          .Select(x => new EntryViewModel(x,
-            _contentService.GetCarName(DirectoryUtils.Name(x), _settings.GamePath) ?? DirectoryUtils.Name(x),
-            new AvaloniaList<string>(_contentService
-              .GetCarSkins(DirectoryUtils.Name(x), _settings.GamePath)),
-            Preview.GetCarPreview("", ""))));
+          AvailableCars.AddRange(Directory.GetDirectories(carsDirectory)
+            .Select(x => new EntryViewModel(x,
+              _settings.GamePath,
+              _contentService.GetCarName,
+              _contentService.GetCarSkins,
+              Preview.GetCarPreview)));
       }
 
       if (!Directory.Exists(tracksDirectory)) {
-        return;
+        return Task.CompletedTask;
       }
 
       var tracks = Directory.GetDirectories(tracksDirectory)
         .SelectMany(x => _contentService.GetTrackName(x, _settings.GamePath)
           .Select(v => new EntryViewModel(x, v.Name, v.Variation,
-            Preview.GetTrackPreview(x))));
+            Preview.GetTrackPreview)));
 
       AvailableTracks.AddRange(tracks);
+      return Task.CompletedTask;
     }
 
     public IniFile SaveMain(IniFile source) {

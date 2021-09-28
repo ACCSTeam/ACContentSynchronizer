@@ -1,10 +1,11 @@
+using ACContentSynchronizer.ClientGui.Components;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
-  public class ServerMain : UserControl {
+  public class ServerMain : DisposableControl {
     public ServerMain() {
       InitializeComponent();
     }

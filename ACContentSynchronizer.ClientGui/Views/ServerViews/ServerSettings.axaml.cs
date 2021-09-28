@@ -1,11 +1,12 @@
 using System;
 using System.Threading.Tasks;
+using ACContentSynchronizer.ClientGui.Components;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
-  public class ServerSettings : UserControl {
+  public class ServerSettings : DisposableControl {
     public ServerSettings() {
       InitializeComponent();
     }

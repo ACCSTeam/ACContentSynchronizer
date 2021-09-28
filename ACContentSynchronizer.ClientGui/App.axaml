@@ -9,6 +9,8 @@
   <Application.Styles>
     <FluentTheme Mode="Dark" />
     <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml" />
+    <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/DefaultTheme.axaml" />
+    <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/CarsListBox.axaml" />
     <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/Colors.axaml" />
     <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/Resources.axaml" />
     <StyleInclude Source="avares://ACContentSynchronizer.ClientGui/Styles/AccentButton.axaml" />
