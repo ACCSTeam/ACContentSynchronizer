@@ -21,39 +21,18 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
     public EntryViewModel() {
     }
 
-    public EntryViewModel(string path) {
-      Path = path;
-    }
-
-    public EntryViewModel(string path, string? variation) {
-      Path = path;
-      SelectedVariation = variation;
-    }
-
-    public EntryViewModel(string path, string name, string? variation, Bitmap? preview) {
-      Path = path;
-      Name = name;
-      SelectedVariation = variation;
-      Preview = preview;
-    }
-
-    public EntryViewModel(string path, string name, string? variation, Func<string, Bitmap?> getPreview) {
-      Path = path;
-      Name = name;
-      SelectedVariation = variation;
-
+    public EntryViewModel(string path,
+                          string name,
+                          string? variation,
+                          Func<string, Bitmap?> getPreview) {
       Task.Run(() => {
+        Path = path;
+        Name = name;
+        SelectedVariation = variation;
+
         var preview = getPreview(path);
         Preview = preview;
       });
-    }
-
-    public EntryViewModel(string path, string name, AvaloniaList<string> variations, Bitmap? preview) {
-      Path = path;
-      Name = name;
-      Variations = variations;
-      SelectedVariation = variations.FirstOrDefault();
-      Preview = preview;
     }
 
     public EntryViewModel(string path,
@@ -61,8 +40,8 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
                           Func<string, string, string?> getName,
                           Func<string, string, List<string>> getSkins,
                           Func<string, string?, Bitmap?> getPreview) {
-      Path = path;
       Task.Run(() => {
+        Path = path;
         var directName = DirectoryUtils.Name(path);
         var name = getName(directName, gamePath) ?? directName;
         Name = name;
@@ -76,7 +55,7 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
       });
     }
 
-    public EntryViewModel(string path, string name, AvaloniaList<string> variations, string? selectedVariation) {
+    private EntryViewModel(string path, string name, AvaloniaList<string> variations, string? selectedVariation) {
       Path = path;
       Name = name;
       Variations = variations;

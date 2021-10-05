@@ -6,7 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace ACContentSynchronizer.ClientGui.Components {
-  public class StatusBarEntry : DisposableControl {
+  public class StatusBarEntry : UserControl, IDisposable {
     public StatusBarEntry() {
       InitializeComponent();
     }
@@ -27,6 +27,10 @@ namespace ACContentSynchronizer.ClientGui.Components {
     private void Cancel(object? sender, RoutedEventArgs e) {
       ViewModel?.Task.Cancel();
       Source?.Remove(this);
+    }
+
+    public void Dispose() {
+      ViewModel?.Dispose();
     }
   }
 }

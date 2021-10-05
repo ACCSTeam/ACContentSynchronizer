@@ -61,6 +61,10 @@ namespace ACContentSynchronizer {
     }
 
     public static long Size(string dirName) {
+      if (!Directory.Exists(dirName)) {
+        return 0;
+      }
+
       var dirInfo = new DirectoryInfo(dirName);
 
       return dirInfo.GetFiles("*", SearchOption.AllDirectories)

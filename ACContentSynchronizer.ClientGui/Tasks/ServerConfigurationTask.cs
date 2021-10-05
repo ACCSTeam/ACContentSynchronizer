@@ -9,7 +9,7 @@ using ACContentSynchronizer.Models;
 namespace ACContentSynchronizer.ClientGui.Tasks {
   public class ServerConfigurationTask : TaskViewModel {
     public ServerConfigurationTask(ServerEntryViewModel server,
-                      HubService hubService)
+                                   HubService hubService)
       : base(server, hubService) {
     }
 
@@ -17,46 +17,62 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
 
     public override void Run() {
       Worker = Task.Run(async () => {
+        AvailableContent? content = null;
         try {
-          Canceller.Token.ThrowIfCancellationRequested();
-          Message = Localization.ContentComparing;
-          var comparedManifest = await DataService.GetUpdateManifest(Manifest);
-          Message = Localization.PackContent;
-
+          var comparedManifest = await GetUpdateManifest();
           if (comparedManifest != null && (comparedManifest.Cars.Any() || comparedManifest.Track != null)) {
-            await UpdateContent(comparedManifest);
+            content = PrepareContent(comparedManifest);
+            await PackContent(content);
+            await UploadContent(content);
           }
 
-          Canceller.Token.ThrowIfCancellationRequested();
-          Message = Localization.RefreshingServer;
-          await DataService.RefreshServer(Manifest);
-          Message = Localization.ServerRefreshed;
-        } catch (Exception e) {
+          await RefreshServer();
+          Message = Localization.Done;
+        } catch (OperationCanceledException) {
+          content?.AbortPacking();
+        }
+        catch (Exception e) {
           Message = $"{Localization.Error} {e.Message}";
         }
       });
     }
 
-    public override void Dispose() {
-
+    private Task RefreshServer() {
+      Canceller.Token.ThrowIfCancellationRequested();
+      Message = Localization.RefreshingServer;
+      return DataService.RefreshServer(Manifest);
     }
 
-    private async Task UpdateContent(Manifest manifest) {
-      Canceller.Token.ThrowIfCancellationRequested();
-      var content = ContentService.PrepareContent(Application.Settings.GamePath, manifest);
-      content.OnProgress += Pack;
-
-      Canceller.Token.ThrowIfCancellationRequested();
-      await content.Pack(Constants.Client);
-
+    private Task UploadContent(AvailableContent content) {
       Canceller.Token.ThrowIfCancellationRequested();
       Message = Localization.Uploading;
-
-      await DataService.UpdateContent();
-      content.OnProgress -= Pack;
+      content.OnProgress -= ProgressEvent;
+      return DataService.UpdateContent();
     }
 
-    private void Pack(double progress, string entry) {
+    private Task PackContent(AvailableContent content) {
+      Canceller.Token.ThrowIfCancellationRequested();
+      Message = Localization.PackContent;
+      content.OnProgress += ProgressEvent;
+      return content.Pack(Constants.Client);
+    }
+
+    private AvailableContent PrepareContent(Manifest comparedManifest) {
+      Canceller.Token.ThrowIfCancellationRequested();
+      Message = Localization.PreparingContent;
+      return ContentService.PrepareContent(Application.Settings.GamePath, comparedManifest);
+    }
+
+    private Task<Manifest?> GetUpdateManifest() {
+      Canceller.Token.ThrowIfCancellationRequested();
+      Message = Localization.ContentComparing;
+      return DataService.GetUpdateManifest(Manifest);
+    }
+
+    public override void Dispose() {
+    }
+
+    private void ProgressEvent(double progress, string entry) {
       Progress = progress;
       Message = entry;
     }

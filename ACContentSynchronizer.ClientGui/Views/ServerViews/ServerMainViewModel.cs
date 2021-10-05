@@ -272,7 +272,7 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
 
       SelectedCars = new();
 
-      foreach (var (_, car) in entryList) {
+      foreach (var (_, car) in entryList.Source) {
         var name = car.V("MODEL", "");
         if (string.IsNullOrEmpty(name)) {
           continue;
@@ -286,7 +286,7 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
         SelectedCars.Add(new() {
           Name = _contentService.GetCarName(name, _settings.GamePath) ?? name,
           Preview = Preview.GetCarPreview(name, skin),
-          Path = name,
+          Path = _contentService.GetCarDirectory(name, _settings.GamePath) ?? name,
           Variations = new() {
             skin,
           },

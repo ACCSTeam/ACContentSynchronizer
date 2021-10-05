@@ -4,79 +4,113 @@ using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Services;
 using ACContentSynchronizer.ClientGui.ViewModels;
+using ACContentSynchronizer.Models;
 
 namespace ACContentSynchronizer.ClientGui.Tasks {
   public class ValidationTask : TaskViewModel {
     public ValidationTask(ServerEntryViewModel server,
                           HubService hubService)
-      : base(server,hubService) {
+      : base(server, hubService) {
     }
 
     private void SetProgress(double progress) {
-      Canceller.Token.ThrowIfCancellationRequested();
       Progress = progress;
     }
 
     public override void Run() {
       Canceller = new();
       Worker = Task.Run(async () => {
+        Task? applyTask = null;
         try {
-          Canceller.Token.ThrowIfCancellationRequested();
-          Message = Localization.DownloadingManifest;
-          var manifest = await DataService.DownloadManifest();
-
-          Canceller.Token.ThrowIfCancellationRequested();
-          Message = Localization.ManifestDownloaded;
-          Message = Localization.ContentComparing;
+          var manifest = await DownloadManifest();
           if (manifest != null) {
-            var comparedManifest = DataService.CompareContent(Application.Settings.GamePath, manifest);
-
+            var comparedManifest = CompareManifest(manifest);
             if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
-              Canceller.Token.ThrowIfCancellationRequested();
-              Message = Localization.PreparingContent;
-              await DataService.PrepareContent(comparedManifest);
-
-              Canceller.Token.ThrowIfCancellationRequested();
-              Message = Localization.PackContent;
-              await DataService.PackContent();
-              var applyTask = new Task(() => {
-                if (Progress < 100) {
-                }
-
-                try {
-                  Canceller.Token.ThrowIfCancellationRequested();
-                  Message = Localization.Downloaded;
-                  Message = Localization.TryingToSave;
-                  DataService.SaveData();
-
-                  Canceller.Token.ThrowIfCancellationRequested();
-                  Message = Localization.ContentSaved;
-                  Message = Localization.ApplyingChanges;
-                  DataService.Apply(Application.Settings.GamePath);
-
-                  Message = Localization.Done;
-                } catch (Exception e) {
-                  Message = $"{Localization.Error} {e.Message}";
-                }
-              });
+              await PrepareContent(comparedManifest);
+              await PackContent();
+              applyTask = CreateApplyTask();
 
               DataService.OnProgress += SetProgress;
-              DataService.OnComplete += () => applyTask.Start();
+              DataService.OnComplete += applyTask.Start;
 
-              Canceller.Token.ThrowIfCancellationRequested();
-              DataService.DownloadContent();
+              DownloadContent();
               await applyTask;
             } else {
               Message = Localization.ContentNoNeedToUpdate;
             }
           }
         } catch (OperationCanceledException) {
-          Message = Localization.TaskCanceled;
-          await DataService.CancelPack();
+          await CancelPack(applyTask);
         } catch (Exception e) {
           Message = $"{Localization.Error}: {e.Message}";
         }
       });
+    }
+
+    private async Task CancelPack(Task? applyTask) {
+      Message = Localization.TaskCanceled;
+      await DataService.CancelPack();
+      DataService.OnProgress -= SetProgress;
+
+      if (applyTask != null) {
+        DataService.OnComplete -= applyTask.Start;
+      }
+    }
+
+    private Task CreateApplyTask() {
+      return new(() => {
+        Message = Localization.Downloaded;
+        try {
+          SaveData();
+          Apply();
+
+          Message = Localization.Done;
+        } catch (Exception e) {
+          Message = $"{Localization.Error} {e.Message}";
+        }
+      });
+    }
+
+    private void DownloadContent() {
+      Canceller.Token.ThrowIfCancellationRequested();
+      DataService.DownloadContent();
+    }
+
+    private void Apply() {
+      Canceller.Token.ThrowIfCancellationRequested();
+      Message = Localization.ApplyingChanges;
+      DataService.Apply(Application.Settings.GamePath);
+    }
+
+    private void SaveData() {
+      Canceller.Token.ThrowIfCancellationRequested();
+      Message = Localization.TryingToSave;
+      DataService.SaveData();
+      Message = Localization.ContentSaved;
+    }
+
+    private Task PackContent() {
+      Canceller.Token.ThrowIfCancellationRequested();
+      Message = Localization.PackContent;
+      return DataService.PackContent();
+    }
+
+    private Task PrepareContent(Manifest comparedManifest) {
+      Canceller.Token.ThrowIfCancellationRequested();
+      Message = Localization.PreparingContent;
+      return DataService.PrepareContent(comparedManifest);
+    }
+
+    private Manifest CompareManifest(Manifest manifest) {
+      Canceller.Token.ThrowIfCancellationRequested();
+      Message = Localization.ContentComparing;
+      return DataService.CompareContent(Application.Settings.GamePath, manifest);
+    }
+
+    private Task<Manifest?> DownloadManifest() {
+      Canceller.Token.ThrowIfCancellationRequested();
+      Message = Localization.DownloadingManifest;
+      return DataService.DownloadManifest();
     }
 
     public override void Dispose() {

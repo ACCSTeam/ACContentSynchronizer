@@ -20,5 +20,6 @@ namespace ACContentSynchronizer.ClientGui.Models {
     public string KunosPort { get; set; } = "";
     public DateTime DateTime { get; set; }
     public string Password { get; set; } = "";
+    public string ServerPreset { get; set; } = "";
   }
 }

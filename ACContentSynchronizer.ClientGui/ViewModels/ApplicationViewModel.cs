@@ -11,7 +11,7 @@ using Avalonia.Collections;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
-  public class ApplicationViewModel : ViewModelBase {
+  public class ApplicationViewModel : ViewModelBase { //-V3072
     private ServerEntryViewModel? _selectedServer;
 
     private Server? _server;
@@ -109,6 +109,7 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
             KunosPort = x.KunosPort,
             Password = x.Password,
             DateTime = x.DateTime,
+            ServerPreset = x.ServerPreset,
           })
           .ToList(),
       };
@@ -137,6 +138,7 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
           Port = entry.Port,
           KunosPort = entry.KunosPort,
           DateTime = entry.DateTime,
+          ServerPreset = entry.ServerPreset,
         }));
     }
   }

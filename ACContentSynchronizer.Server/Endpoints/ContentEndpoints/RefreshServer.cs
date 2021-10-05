@@ -20,11 +20,10 @@ namespace ACContentSynchronizer.Server.Endpoints.ContentEndpoints {
 
     [HttpPost(Routes.RefreshServer)]
     [AuthorizedRoute(PasswordType.Admin)]
-    public override async Task<ActionResult>
-      HandleAsync(UploadManifest manifest, CancellationToken cancellationToken = new()) {
+    public override async Task<ActionResult> HandleAsync(UploadManifest manifest,
+                                                         CancellationToken cancellationToken = new()) {
       await _serverConfiguration.UpdateConfig(manifest);
       await _serverConfiguration.RunServer();
-
       await _signalR.SendAll(HubMethods.Message, Localization.ServerRefreshed);
 
       return Ok();

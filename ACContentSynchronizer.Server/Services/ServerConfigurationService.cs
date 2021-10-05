@@ -119,10 +119,8 @@ namespace ACContentSynchronizer.Server.Services {
         }
       }
 
-      var serverConfig = IniProvider.DictionaryToIniFile(manifest.ServerConfig);
       await _iniProvider.SaveConfig(Constants.EntryList, entryList);
-      await _iniProvider.SaveConfig(Constants.ServerCfg,
-        serverConfig);
+      await _iniProvider.SaveConfig(Constants.ServerCfg, manifest.ServerConfig);
     }
 
     public async Task RunServer() {
@@ -141,20 +139,12 @@ namespace ACContentSynchronizer.Server.Services {
       _content.ExecuteCommand(serverExecutablePath, _preset);
     }
 
-    public Dictionary<string, Dictionary<string, string>> GetServerDictionary() {
-      return _iniProvider.GetServerDictionary();
-    }
-
-    public Dictionary<string, Dictionary<string, string>> GetEntryDictionary() {
-      return _iniProvider.GetEntryDictionary();
-    }
-
     public IniFile GetServerConfig() {
       return _iniProvider.GetServerConfig();
     }
 
-    public IniFile GetEntryConfig() {
-      return _iniProvider.GetEntryConfig();
+    public IniFile GetEntryList() {
+      return _iniProvider.GetEntryList();
     }
 
     private string GetLocalPort() {
@@ -190,7 +180,7 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public string[] GetCars() {
-      return _iniProvider.GetEntryConfig()
+      return _iniProvider.GetEntryList().Source
         .Select(x => x.Value.V("MODEL", ""))
         .ToArray();
     }

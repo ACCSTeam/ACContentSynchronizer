@@ -11,7 +11,6 @@ using ACContentSynchronizer.ClientGui.Extensions;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
-using ReactiveUI;
 using Splat;
 
 namespace ACContentSynchronizer.ClientGui.Services {
@@ -39,13 +38,13 @@ namespace ACContentSynchronizer.ClientGui.Services {
       });
 
       serverEntry.SubscribeValue(model => model.Password,
-        password => _client.DefaultRequestHeaders.Add(DefaultHeaders.AccessPassword, password));
+        password => _client.AddHeader(DefaultHeaders.AccessPassword, password));
 
       serverEntry.SubscribeValue(model => model.ClientId,
-        clientId => _client.DefaultRequestHeaders.Add(DefaultHeaders.WSClientId, clientId));
+        clientId => _client.AddHeader(DefaultHeaders.WSClientId, clientId));
 
       serverEntry.SubscribeValue(model => model.ServerPreset,
-        serverPreset => _client.DefaultRequestHeaders.Add(DefaultHeaders.ServerPreset, serverPreset));
+        serverPreset => _client.AddHeader(DefaultHeaders.ServerPreset, serverPreset));
     }
 
     private HttpClient CreateClient(ServerEntryViewModel serverEntry) {
@@ -53,14 +52,14 @@ namespace ACContentSynchronizer.ClientGui.Services {
         return new();
       }
 
-      var client =  new HttpClient {
+      var client = new HttpClient {
         BaseAddress = new(serverEntry.Http),
         Timeout = Timeout.InfiniteTimeSpan,
       };
 
-      client.DefaultRequestHeaders.Add(DefaultHeaders.AccessPassword, serverEntry.Password);
-      client.DefaultRequestHeaders.Add(DefaultHeaders.WSClientId, serverEntry.ClientId);
-      client.DefaultRequestHeaders.Add(DefaultHeaders.ServerPreset, serverEntry.ServerPreset);
+      client.AddHeader(DefaultHeaders.AccessPassword, serverEntry.Password);
+      client.AddHeader(DefaultHeaders.WSClientId, serverEntry.ClientId);
+      client.AddHeader(DefaultHeaders.ServerPreset, serverEntry.ServerPreset);
 
       return client;
     }
@@ -130,7 +129,7 @@ namespace ACContentSynchronizer.ClientGui.Services {
     }
 
     public Task<Manifest?> GetUpdateManifest(Manifest manifest) {
-      return Client.PostJson<Manifest>(Routes.GetUpdateManifest, manifest);
+      return Client.PostJson<Manifest, Manifest>(Routes.GetUpdateManifest, manifest);
     }
 
     public async Task UpdateContent() {
@@ -139,7 +138,7 @@ namespace ACContentSynchronizer.ClientGui.Services {
       await Client.PostAsync(Routes.UpdateContent, new StreamContent(stream));
     }
 
-    public async Task RefreshServer(Manifest manifest) {
+    public async Task RefreshServer(UploadManifest manifest) {
       await Client.PostAsJsonAsync(Routes.RefreshServer, manifest);
     }
 
@@ -151,22 +150,12 @@ namespace ACContentSynchronizer.ClientGui.Services {
       return Client.GetJson<List<ServerPreset>>(Routes.GetAllowedServers);
     }
 
-    public async Task<IniFile?> GetServerConfig() {
-      var dictionary = await Client.GetJson<Dictionary<string, Dictionary<string, string>>?>(Routes.GetServerConfig);
-      return dictionary == null
-        ? new()
-        : IniProvider.DictionaryToIniFile(dictionary);
+    public Task<IniFile?> GetServerConfig() {
+      return Client.GetJson<IniFile?>(Routes.GetServerConfig);
     }
 
-    public async Task<IniFile?> GetEntryList() {
-      var dictionary = await Client.GetJson<Dictionary<string, Dictionary<string, string>>?>(Routes.GetEntryConfig);
-      return dictionary == null
-        ? new()
-        : IniProvider.DictionaryToIniFile(dictionary);
-    }
-
-    public void AddHeader(DefaultHeaders header, string value) {
-      Client.DefaultRequestHeaders.Add(header, value);
+    public Task<IniFile?> GetEntryList() {
+      return Client.GetJson<IniFile?>(Routes.GetEntryConfig);
     }
   }
 }

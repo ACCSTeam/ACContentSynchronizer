@@ -90,18 +90,19 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
       AvailableCars.Dispose();
       AvailableTracks.Dispose();
       _selectedTrack?.Dispose();
+      _selectedWeather?.Dispose();
     }
 
     public void Load(ServerEntryViewModel server) {
       InitMainView();
-      Task.Run(async () => {
+      ReactiveCommand.CreateFromTask(async () => {
         var dataService = new DataService(server);
         _serverConfig = await dataService.GetServerConfig() ?? new();
         _entryList = await dataService.GetEntryList() ?? new();
 
         LoadMain(_serverConfig, _entryList);
         LoadRules(_serverConfig);
-      });
+      }).Execute();
     }
 
     public async Task Clone() {
@@ -120,15 +121,15 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
 
       var manifest = CreateManifest();
       manifest.ServerConfig["SERVER"]["NAME"] = NewServerName;
+      manifest.ServerConfig["SERVER"]["ADMIN_PASSWORD"] = NewServerPassword;
       manifest.ServerConfig["SERVER"]["TCP_PORT"] = NewTcpPort;
       manifest.ServerConfig["SERVER"]["UDP_PORT"] = NewUdpPort;
       manifest.ServerConfig["SERVER"]["HTTP_PORT"] = NewHttpPort;
-      var cloneTask = new ServerConfigurationTask(_server, _hubService) {
+      var cloneTask = new ServerConfigurationTask(newServer, _hubService) {
         Manifest = manifest,
       };
 
       _application.AddTask(cloneTask);
-      NewServerName = "";
       await cloneTask.Worker;
     }
 
@@ -159,7 +160,7 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
           .Select(car => new EntryManifest(car.Path,
             DirectoryUtils.Size(car.Path)))
           .ToList(),
-        ServerConfig = _serverConfig.Source,
+        ServerConfig = _serverConfig,
       };
 
       if (_selectedTrack != null) {

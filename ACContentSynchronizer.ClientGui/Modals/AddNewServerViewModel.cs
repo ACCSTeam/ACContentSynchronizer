@@ -13,7 +13,7 @@ using ReactiveUI;
 using Splat;
 
 namespace ACContentSynchronizer.ClientGui.Modals {
-  public class AddNewServerViewModel : ModalViewModel {
+  public class AddNewServerViewModel : ModalViewModel, IDisposable {
     private readonly ApplicationViewModel _application;
     private readonly DataService _dataService;
 
@@ -61,6 +61,11 @@ namespace ACContentSynchronizer.ClientGui.Modals {
     }
 
     private async Task GetServerProps() {
+      if (SelectedServerPreset == null
+          || string.IsNullOrEmpty(Server.Password)) {
+        return;
+      }
+
       try {
         var serverProps = await _dataService.GetServerProps();
         if (serverProps != null) {
@@ -86,6 +91,10 @@ namespace ACContentSynchronizer.ClientGui.Modals {
     public void Save() {
       _application.Servers.Add(Server);
       Close();
+    }
+
+    public void Dispose() {
+      _dataService.Dispose();
     }
   }
 }

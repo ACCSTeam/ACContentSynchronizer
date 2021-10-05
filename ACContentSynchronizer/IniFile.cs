@@ -1,79 +1,89 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ACContentSynchronizer {
-  public class IniFile : IEnumerable<KeyValuePair<string, IniSection>> {
-    private readonly Dictionary<string, IniSection> _source = new();
-    public Dictionary<string, Dictionary<string, string>> Source =>
-      _source.ToDictionary(x => x.Key,
-        x => x.Value.Source);
+  public class IniFile {
+    public Dictionary<string, IniSection> Source { get; set; } = new();
 
     public IniSection this[string key] {
-      get => _source.ContainsKey(key)
-        ? _source[key]
+      get => Source.ContainsKey(key)
+        ? Source[key]
         : new();
-      set => _source[key] = value;
-    }
-
-    public int Count => _source.Count;
-
-    public IEnumerator<KeyValuePair<string, IniSection>> GetEnumerator() {
-      return _source.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() {
-      return GetEnumerator();
+      set => Source[key] = value;
     }
 
     public void Add(string key, IniSection section) {
-      _source.Add(key, section);
+      Source.Add(key, section);
     }
 
     public T V<T>(string key, string value, T defaultValue) {
-      return _source.ContainsKey(key)
-        ? _source[key].V(value, defaultValue)
+      return Source.ContainsKey(key)
+        ? Source[key].V(value, defaultValue)
         : defaultValue;
     }
   }
 
-  public class IniSection : IEnumerable<KeyValuePair<string, object?>> {
-    private readonly Dictionary<string, object?> _source = new();
-    public Dictionary<string, string> Source => _source
-      .ToDictionary(x => x.Key, x
-        => x.Value?.ToString() ?? "");
+  public class IniSection {
+    public Dictionary<string, string> Source { get; } = new();
 
     public IniSection() {
     }
 
-    public IniSection(Dictionary<string, object?> source) {
-      _source = source;
+    public IniSection(Dictionary<string, string> source) {
+      Source = source;
     }
 
     public object? this[string key] {
-      get => _source.ContainsKey(key)
-        ? _source[key]
+      get => Source.ContainsKey(key)
+        ? Source[key]
         : null;
-      set => _source[key] = value;
-    }
-
-    public IEnumerator<KeyValuePair<string, object?>> GetEnumerator() {
-      return _source.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() {
-      return GetEnumerator();
+      set => Source[key] = $"{value}";
     }
 
     public T V<T>(string key, T defaultValue) {
-      if (!_source.ContainsKey(key)) {
-        return defaultValue;
+      return Source.ContainsKey(key)
+        ? Converter(Source[key], defaultValue)
+        : defaultValue;
+    }
+
+    private T Converter<T>(string value, T defaultValue) {
+      var type = typeof(T);
+      if (IsNumericType(type)) {
+        value = string.Join("", value.Where(char.IsDigit));
+        if (string.IsNullOrEmpty(value)) {
+          return defaultValue;
+        }
       }
 
-      var value = _source[key];
-      return value != null
-        ? (T) value
-        : defaultValue;
+      if (type != typeof(bool)) {
+        return (T) Convert.ChangeType(value, type);
+      }
+
+      var byteValue = Convert.ToByte(value);
+      return (T) Convert.ChangeType(byteValue, type);
+    }
+
+    private bool IsNumericType(Type type) {
+      var typeCode = Type.GetTypeCode(type);
+      switch (typeCode) {
+        case TypeCode.Byte:
+        case TypeCode.SByte:
+        case TypeCode.UInt16:
+        case TypeCode.UInt32:
+        case TypeCode.UInt64:
+        case TypeCode.Int16:
+        case TypeCode.Int32:
+        case TypeCode.Int64:
+        case TypeCode.Decimal:
+        case TypeCode.Double:
+        case TypeCode.Single:
+        case TypeCode.Boolean:
+          return true;
+        default:
+          return false;
+      }
     }
   }
 }

@@ -20,13 +20,11 @@ namespace ACContentSynchronizer.Server {
     public void ConfigureServices(IServiceCollection services) {
       services.AddSignalR();
       services.AddHttpContextAccessor();
-      services.AddScoped<SignalRService>();
-      services.AddScoped<ContentService>();
-      services.AddScoped<ServerConfigurationService>();
+      services.AddTransient<SignalRService>();
+      services.AddTransient<ContentService>();
+      services.AddTransient<ServerConfigurationService>();
 
-      services.AddControllers().AddJsonOptions(options => {
-        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-      });
+      services.AddControllers().AddNewtonsoftJson();
 
       services.AddSwaggerGen(c => {
         c.SwaggerDoc("v1", new() { Title = "ACContentSynchronizer.Server", Version = "v1" });
