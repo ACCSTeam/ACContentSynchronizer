@@ -24,8 +24,11 @@ namespace ACContentSynchronizer.ClientGui.Components {
       Source = source;
     }
 
-    private void Cancel(object? sender, RoutedEventArgs e) {
-      ViewModel?.Task.Cancel();
+    private async void Cancel(object? sender, RoutedEventArgs e) {
+      if (ViewModel != null) {
+        ViewModel.Task.Cancel();
+        await ViewModel.Task.Worker;
+      }
       Source?.Remove(this);
     }
 

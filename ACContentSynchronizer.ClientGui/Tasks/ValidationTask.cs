@@ -23,21 +23,19 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
         Task? applyTask = null;
         try {
           var manifest = await DownloadManifest();
-          if (manifest != null) {
-            var comparedManifest = CompareManifest(manifest);
-            if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
-              await PrepareContent(comparedManifest);
-              await PackContent();
-              applyTask = CreateApplyTask();
+          var comparedManifest = CompareManifest(manifest);
+          if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
+            await PrepareContent(comparedManifest);
+            await PackContent();
+            applyTask = CreateApplyTask();
 
-              DataService.OnProgress += SetProgress;
-              DataService.OnComplete += applyTask.Start;
+            DataService.OnProgress += SetProgress;
+            DataService.OnComplete += applyTask.Start;
 
-              DownloadContent();
-              await applyTask;
-            } else {
-              Message = Localization.ContentNoNeedToUpdate;
-            }
+            DownloadContent();
+            await applyTask;
+          } else {
+            Message = Localization.ContentNoNeedToUpdate;
           }
         } catch (OperationCanceledException) {
           await CancelPack(applyTask);
@@ -107,7 +105,7 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
       return DataService.CompareContent(Application.Settings.GamePath, manifest);
     }
 
-    private Task<Manifest?> DownloadManifest() {
+    private Task<Manifest> DownloadManifest() {
       Canceller.Token.ThrowIfCancellationRequested();
       Message = Localization.DownloadingManifest;
       return DataService.DownloadManifest();

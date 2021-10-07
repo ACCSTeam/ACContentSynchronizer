@@ -20,7 +20,7 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
         AvailableContent? content = null;
         try {
           var comparedManifest = await GetUpdateManifest();
-          if (comparedManifest != null && (comparedManifest.Cars.Any() || comparedManifest.Track != null)) {
+          if (comparedManifest.Cars.Any() || comparedManifest.Track != null) {
             content = PrepareContent(comparedManifest);
             await PackContent(content);
             await UploadContent(content);
@@ -30,8 +30,7 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
           Message = Localization.Done;
         } catch (OperationCanceledException) {
           content?.AbortPacking();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           Message = $"{Localization.Error} {e.Message}";
         }
       });
@@ -63,7 +62,7 @@ namespace ACContentSynchronizer.ClientGui.Tasks {
       return ContentService.PrepareContent(Application.Settings.GamePath, comparedManifest);
     }
 
-    private Task<Manifest?> GetUpdateManifest() {
+    private Task<Manifest> GetUpdateManifest() {
       Canceller.Token.ThrowIfCancellationRequested();
       Message = Localization.ContentComparing;
       return DataService.GetUpdateManifest(Manifest);

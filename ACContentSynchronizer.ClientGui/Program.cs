@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Threading;
+﻿using System;
 using Avalonia;
 using Avalonia.ReactiveUI;
 using Splat;

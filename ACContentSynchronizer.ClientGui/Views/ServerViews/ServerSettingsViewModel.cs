@@ -97,8 +97,8 @@ namespace ACContentSynchronizer.ClientGui.Views.ServerViews {
       InitMainView();
       ReactiveCommand.CreateFromTask(async () => {
         var dataService = new DataService(server);
-        _serverConfig = await dataService.GetServerConfig() ?? new();
-        _entryList = await dataService.GetEntryList() ?? new();
+        _serverConfig = await dataService.GetServerConfig();
+        _entryList = await dataService.GetEntryList();
 
         LoadMain(_serverConfig, _entryList);
         LoadRules(_serverConfig);

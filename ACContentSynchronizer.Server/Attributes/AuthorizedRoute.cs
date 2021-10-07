@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Server.Extensions;
+using ACContentSynchronizer.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
@@ -20,35 +21,17 @@ namespace ACContentSynchronizer.Server.Attributes {
   }
 
   public class CheckPassword : IAsyncActionFilter {
-    private readonly IConfiguration _configuration;
     private readonly PasswordType _passwordType;
+    private readonly ServerConfigurationService _serverConfiguration;
 
     public CheckPassword(PasswordType passwordType,
-                         IConfiguration configuration) {
+                         ServerConfigurationService serverConfiguration) {
       _passwordType = passwordType;
-      _configuration = configuration;
+      _serverConfiguration = serverConfiguration;
     }
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
-      var serverPreset = context.HttpContext.GetServerPreset();
-      var gamePath = _configuration.GetValue<string>("GamePath");
-      var iniProvider = new IniProvider(Path.Combine(gamePath, Constants.ServerPresetsPath, serverPreset));
-
-      var passwordTypeString = _passwordType switch {
-        PasswordType.User => new[] { "PASSWORD", "ADMIN_PASSWORD" },
-        PasswordType.Admin => new[] { "ADMIN_PASSWORD" },
-        _ => throw new ArgumentOutOfRangeException(),
-      };
-
-      var password = context.HttpContext.GetHeader(DefaultHeaders.AccessPassword);
-      var hasAccess = passwordTypeString.Any(s => {
-        var serverPassword = iniProvider.GetServerConfig().V("SERVER", s, "");
-        if (string.IsNullOrEmpty(serverPassword)) {
-          return true;
-        }
-
-        return serverPassword == password;
-      });
+      var hasAccess = _serverConfiguration.HasPrivileges(_passwordType);
 
       if (hasAccess) {
         await next();

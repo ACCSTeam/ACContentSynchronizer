@@ -30,29 +30,35 @@ namespace ACContentSynchronizer.ClientGui.Modals {
     }
 
     public static void Open(string message) {
-      var toast = new Toast {
-        DataContext = new ToastViewModel(message),
-        Width = ToastWidth,
-      };
+      try {
+        var toast = new Toast {
+          DataContext = new ToastViewModel(message),
+          Width = ToastWidth,
+        };
 
-      if (ToastsActivated.Count > ActiveToastCount) {
-        return;
+        if (ToastsActivated.Count > ActiveToastCount) {
+          Console.WriteLine("avoided");
+          return;
+        }
+
+        var bounds = toast.Screens.Primary.Bounds;
+        var x = bounds.Width - ToastWidth - 30;
+
+        var lastToast = ToastsActivated.OrderByDescending(t => t.Position.Y).FirstOrDefault();
+        var prevY = (int) (lastToast != null
+          ? lastToast.Position.Y + lastToast.Height
+          : 0);
+
+        var y = prevY + 20;
+        toast.Position = new(x, y);
+
+        ToastsActivated.Add(toast);
+
+        toast.Show();
+        Console.WriteLine("showed");
+      } catch (Exception ex) {
+        Console.WriteLine(ex);
       }
-
-      var bounds = toast.Screens.Primary.Bounds;
-      var x = bounds.Width - ToastWidth - 30;
-
-      var lastToast = ToastsActivated.OrderByDescending(t => t.Position.Y).FirstOrDefault();
-      var prevY = (int) (lastToast != null
-        ? lastToast.Position.Y + lastToast.Height
-        : 0);
-
-      var y = prevY + 20;
-      toast.Position = new(x, y);
-
-      ToastsActivated.Add(toast);
-
-      toast.Show();
     }
 
     private void Close(object? sender, RoutedEventArgs e) {

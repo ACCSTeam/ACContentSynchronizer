@@ -10,38 +10,39 @@
               Classes="ModalDialog"
               Title="AddNewServer">
 
-  <Design.DataContext>
-    <modals:AddNewServerViewModel />
-  </Design.DataContext>
+    <Design.DataContext>
+        <modals:AddNewServerViewModel />
+    </Design.DataContext>
 
-  <Border>
-    <StackPanel Spacing="5">
-      <TextBlock clientGui:LContent.LName="Ip" />
-      <TextBox Text="{Binding Server.Ip}" />
-      <TextBlock clientGui:LContent.LName="Port" />
-      <TextBox Text="{Binding Server.Port}" />
-      <TextBlock clientGui:LContent.LName="ServerPresets" />
-      <ComboBox Items="{Binding ServerPresets}"
-                SelectedItem="{Binding SelectedServerPreset}">
-        <ComboBox.ItemTemplate>
-          <DataTemplate>
-            <TextBlock Text="{Binding BindingValue}" />
-          </DataTemplate>
-        </ComboBox.ItemTemplate>
-      </ComboBox>
-      <TextBlock clientGui:LContent.LName="Password" />
-      <TextBox Text="{Binding Server.Password}" />
-      <Grid ColumnDefinitions="*,10,*">
-        <Button Grid.Column="0"
-                clientGui:LContent.LName="Save"
-                Classes="AccentButton TransparentButton"
-                Command="{Binding Save}"
-                CommandParameter="{Binding ElementName=Window, }"/>
-        <Button Grid.Column="2"
-                clientGui:LContent.LName="Close"
-                Classes="TransparentButton"
-                Command="{Binding Close}" />
-      </Grid>
-    </StackPanel>
-  </Border>
+    <Border>
+        <StackPanel Spacing="5">
+            <TextBlock clientGui:LContent.LName="Ip" />
+            <TextBox Text="{Binding Server.Ip}" />
+            <TextBlock clientGui:LContent.LName="Port" />
+            <TextBox Text="{Binding Server.Port}" />
+            <TextBlock clientGui:LContent.LName="ServerPresets" />
+            <ComboBox Items="{Binding ServerPresets}"
+                      SelectedItem="{Binding SelectedServerPreset}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding BindingValue}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock clientGui:LContent.LName="Password" />
+            <TextBox Text="{Binding Server.Password}" />
+            <Grid ColumnDefinitions="*,10,*">
+                <Button Grid.Column="0"
+                        clientGui:LContent.LName="Save"
+                        Classes="AccentButton TransparentButton"
+                        Command="{Binding Save}"
+                        CommandParameter="{Binding ElementName=Window, }"
+                        IsEnabled="{Binding CanSave}" />
+                <Button Grid.Column="2"
+                        clientGui:LContent.LName="Close"
+                        Classes="TransparentButton"
+                        Command="{Binding Close}" />
+            </Grid>
+        </StackPanel>
+    </Border>
 </models:Modal>

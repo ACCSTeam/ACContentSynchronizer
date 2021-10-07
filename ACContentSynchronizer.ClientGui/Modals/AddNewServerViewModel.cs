@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using ACContentSynchronizer.ClientGui.Extensions;
 using ACContentSynchronizer.ClientGui.Models;
@@ -25,6 +22,7 @@ namespace ACContentSynchronizer.ClientGui.Modals {
         _ => ReactiveCommand.CreateFromTask(GetServerPresets).Execute());
 
       Server.SubscribeValue(x => x.ServerPreset,
+        x => x.Password,
         _ => ReactiveCommand.CreateFromTask(GetServerProps).Execute());
     }
 
@@ -49,15 +47,15 @@ namespace ACContentSynchronizer.ClientGui.Modals {
       }
     }
 
+    private bool _canSave;
+
+    public bool CanSave {
+      get => _canSave;
+      set => this.RaiseAndSetIfChanged(ref _canSave, value);
+    }
+
     private async Task GetServerPresets() {
-      try {
-        ServerPresets = await _dataService.GetAllowedServers() ?? new();
-      } catch (Exception e) {
-        if (e is HttpRequestException { StatusCode: null }) {
-          Toast.Open(Localization.ConnectionEstablishedError);
-        }
-        ServerPresets = new();
-      }
+      ServerPresets = await _dataService.GetAllowedServers();
     }
 
     private async Task GetServerProps() {
@@ -68,33 +66,25 @@ namespace ACContentSynchronizer.ClientGui.Modals {
 
       try {
         var serverProps = await _dataService.GetServerProps();
-        if (serverProps != null) {
-          Server.Name = serverProps.Name;
-          Server.KunosPort = serverProps.HttpPort;
-        }
-      } catch (Exception e) {
-        if (e is HttpRequestException re) {
-          switch (re.StatusCode) {
-            case HttpStatusCode.Forbidden:
-              Toast.Open(Localization.WrongPassword);
-              break;
-            default:
-              Toast.Open(Localization.ConnectionEstablishedError);
-              break;
-          }
-        }
+        Server.Name = serverProps.Name;
+        Server.KunosPort = serverProps.HttpPort;
+        CanSave = true;
+      } catch {
         Server.Name = "";
         Server.KunosPort = "";
+        CanSave = false;
+        throw;
       }
     }
 
     public void Save() {
       _application.Servers.Add(Server);
+
       Close();
     }
 
     public void Dispose() {
-      _dataService.Dispose();
+      _dataService?.Dispose();
     }
   }
 }

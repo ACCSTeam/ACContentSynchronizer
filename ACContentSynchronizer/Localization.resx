@@ -120,4 +120,19 @@
     <data name="WrongPassword" xml:space="preserve">
         <value>Wrong password</value>
     </data>
+    <data name="Close" xml:space="preserve">
+        <value>Close</value>
+    </data>
+    <data name="Ip" xml:space="preserve">
+        <value>Ip</value>
+    </data>
+    <data name="Port" xml:space="preserve">
+        <value>Port</value>
+    </data>
+    <data name="Password" xml:space="preserve">
+        <value>Password</value>
+    </data>
+    <data name="ServerPresets" xml:space="preserve">
+        <value>Server presets</value>
+    </data>
 </root>

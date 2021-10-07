@@ -248,5 +248,35 @@ namespace ACContentSynchronizer.ClientGui {
                 return ResourceManager.GetString("WrongPassword", resourceCulture);
             }
         }
+        
+        public static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        public static string Ip {
+            get {
+                return ResourceManager.GetString("Ip", resourceCulture);
+            }
+        }
+        
+        public static string Port {
+            get {
+                return ResourceManager.GetString("Port", resourceCulture);
+            }
+        }
+        
+        public static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        public static string ServerPresets {
+            get {
+                return ResourceManager.GetString("ServerPresets", resourceCulture);
+            }
+        }
     }
 }

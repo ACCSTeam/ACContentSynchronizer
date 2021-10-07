@@ -1,4 +1,5 @@
 using ACContentSynchronizer.ClientGui.ViewModels;
+using ACContentSynchronizer.ClientGui.Windows;
 using ReactiveUI;
 using Splat;
 
@@ -37,6 +38,7 @@ namespace ACContentSynchronizer.ClientGui.Views {
     }
 
     public void Toggle() {
+      MainWindow.Instance.Activate();
       IsMinimized = !IsMinimized;
     }
   }

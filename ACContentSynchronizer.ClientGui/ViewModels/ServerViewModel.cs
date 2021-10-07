@@ -11,15 +11,33 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
 
     public ServerViewModel(ServerEntryViewModel server) {
       _hubService = new(server);
-      ReactiveCommand.CreateFromTask(() => {
+      ReactiveCommand.CreateFromTask(async () => {
         Race = new(new(server, _hubService));
-        ServerSettings = new(new(server, _hubService));
-        return Task.CompletedTask;
+
+        var dataService = new DataService(server);
+        HasPrivileges = await dataService.HasPrivileges();
+        if (HasPrivileges) {
+          ServerSettings = new(new(server, _hubService));
+        }
+        dataService.Dispose();
       }).Execute();
     }
 
     private Race? Race { get; set; }
-    private ServerSettings? ServerSettings { get; set; }
+
+    private ServerSettings? _serverSettings;
+
+    public ServerSettings? ServerSettings {
+      get => _serverSettings;
+      set => this.RaiseAndSetIfChanged(ref _serverSettings, value);
+    }
+
+    private bool _hasPrivileges;
+
+    public bool HasPrivileges {
+      get => _hasPrivileges;
+      set => this.RaiseAndSetIfChanged(ref _hasPrivileges, value);
+    }
 
     public void Dispose() {
       _hubService.Dispose();

@@ -128,7 +128,7 @@ namespace ACContentSynchronizer {
 
     public void ExecuteCommand(string command, params string[] args) {
       Task.Run(async () => {
-        ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command} {string.Join(' ', args)}\"") {
+        ProcessStartInfo processInfo = new("cmd.exe", $"/k \"{command} {string.Join(" ", args)}\"") {
           CreateNoWindow = true,
           UseShellExecute = false,
           RedirectStandardError = true,

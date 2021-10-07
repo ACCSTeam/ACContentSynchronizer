@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:ACContentSynchronizer.ClientGui.ViewModels"
-             xmlns:server="clr-namespace:ACContentSynchronizer.ClientGui.Views.ServerViews"
              xmlns:clientGui="clr-namespace:ACContentSynchronizer.ClientGui"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="ACContentSynchronizer.ClientGui.Views.Server">
@@ -16,7 +15,8 @@
         <TabItem clientGui:LContent.LName="Race">
             <ContentPresenter Content="{Binding  Race}" />
         </TabItem>
-        <TabItem clientGui:LContent.LName="Settings">
+        <TabItem clientGui:LContent.LName="Settings"
+                 IsEnabled="{Binding HasPrivileges}">
             <ContentPresenter Content="{Binding  ServerSettings}" />
         </TabItem>
     </TabControl>

@@ -6,9 +6,11 @@ riderModule.iml
 .idea/
 content/
 deploy/
+build/
 downloads/
 Runner/
 logs/
 *.zip
 appsettings.*.json
 pvs-output
+*.user

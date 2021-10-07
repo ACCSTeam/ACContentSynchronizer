@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ACContentSynchronizer.Extensions;
 using ACContentSynchronizer.Models;
+using ACContentSynchronizer.Server.Attributes;
 using ACContentSynchronizer.Server.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,7 @@ namespace ACContentSynchronizer.Server.Services {
     private readonly ContentService _content;
     private readonly IniProvider _iniProvider;
     private readonly SignalRService _signalRService;
+    private readonly IHttpContextAccessor _context;
     private readonly string _preset;
 
     public ServerConfigurationService(IConfiguration configuration,
@@ -26,6 +28,7 @@ namespace ACContentSynchronizer.Server.Services {
       _configuration = configuration;
       _signalRService = signalRService;
       _content = content;
+      _context = context;
 
       var gamePath = _configuration.GetValue<string>("GamePath");
       _preset = context.HttpContext?.GetServerPreset() ?? Constants.DefaultServerPreset;
@@ -183,6 +186,27 @@ namespace ACContentSynchronizer.Server.Services {
       return _iniProvider.GetEntryList().Source
         .Select(x => x.Value.V("MODEL", ""))
         .ToArray();
+    }
+
+    public bool HasPrivileges(PasswordType passwordType) {
+      var gamePath = _configuration.GetValue<string>("GamePath");
+      var iniProvider = new IniProvider(Path.Combine(gamePath, Constants.ServerPresetsPath, _preset));
+
+      var passwordTypeString = passwordType switch {
+        PasswordType.User => new[] { "PASSWORD", "ADMIN_PASSWORD" },
+        PasswordType.Admin => new[] { "ADMIN_PASSWORD" },
+        _ => throw new ArgumentOutOfRangeException(),
+      };
+
+      var password = _context.HttpContext?.GetHeader(DefaultHeaders.AccessPassword);
+      return passwordTypeString.Any(s => {
+        var serverPassword = iniProvider.GetServerConfig().V("SERVER", s, "");
+        if (string.IsNullOrEmpty(serverPassword)) {
+          return true;
+        }
+
+        return serverPassword == password;
+      });
     }
   }
 }

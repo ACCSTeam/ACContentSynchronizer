@@ -7,11 +7,13 @@ using ACContentSynchronizer.ClientGui.Components;
 using ACContentSynchronizer.ClientGui.Modals;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.Views;
+using ACContentSynchronizer.ClientGui.Windows;
 using Avalonia.Collections;
 using ReactiveUI;
 
 namespace ACContentSynchronizer.ClientGui.ViewModels {
-  public class ApplicationViewModel : ViewModelBase { //-V3072
+  public class ApplicationViewModel : ViewModelBase {
+    //-V3072
     private ServerEntryViewModel? _selectedServer;
 
     private Server? _server;
@@ -66,12 +68,12 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
     }
 
     public async Task AddNewConnection() {
-      await Modal.Open<AddNewServer, AddNewServerViewModel>();
+      MainWindow.Instance.DoShowDialogAsync<AddNewServer, AddNewServerViewModel>();
       await SaveServersState();
     }
 
     public async Task EditServerDialog(ServerEntryViewModel server) {
-      await Modal.Open<AddNewServer, AddNewServerViewModel>(new() {
+      MainWindow.Instance.DoShowDialogAsync<AddNewServer, AddNewServerViewModel>(new() {
         Server = new() {
           Ip = server.Ip,
           Port = server.Port,
@@ -92,7 +94,7 @@ namespace ACContentSynchronizer.ClientGui.ViewModels {
     }
 
     public async Task OpenSettings() {
-      await Modal.Open<InitRun, InitRunViewModel>();
+      MainWindow.Instance.DoShowDialogAsync<InitRun, InitRunViewModel>();
     }
 
     public async Task SaveAsync() {

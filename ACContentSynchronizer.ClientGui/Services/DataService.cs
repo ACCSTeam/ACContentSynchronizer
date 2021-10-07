@@ -81,8 +81,8 @@ namespace ACContentSynchronizer.ClientGui.Services {
     public event ProgressEvent? OnProgress;
     public event CompleteEvent? OnComplete;
 
-    public Task<Manifest?> DownloadManifest() {
-      return Client.GetJson<Manifest>(Routes.GetManifest);
+    public Task<Manifest> DownloadManifest() {
+      return Client.Wrap(client => client.GetJson<Manifest>(Routes.GetManifest));
     }
 
     public Manifest CompareContent(string gamePath, Manifest manifest) {
@@ -90,15 +90,15 @@ namespace ACContentSynchronizer.ClientGui.Services {
     }
 
     public async Task PrepareContent(Manifest manifest) {
-      _session = await Client.PostString(Routes.PrepareContent, manifest);
+      _session = await Client.Wrap(client => client.PostString(Routes.PrepareContent, manifest), "");
     }
 
     public Task PackContent() {
-      return Client.GetAsync($"{Routes.PackContent}?session={_session}");
+      return Client.Wrap(client => client.GetAsync($"{Routes.PackContent}?session={_session}")!);
     }
 
     public Task CancelPack() {
-      return Client.GetAsync($"{Routes.CancelPack}?session={_session}");
+      return Client.Wrap(client => client.GetAsync($"{Routes.CancelPack}?session={_session}")!);
     }
 
     public void DownloadContent() {
@@ -128,34 +128,38 @@ namespace ACContentSynchronizer.ClientGui.Services {
       _contentService.ApplyContent(gamePath, _session);
     }
 
-    public Task<Manifest?> GetUpdateManifest(Manifest manifest) {
-      return Client.PostJson<Manifest, Manifest>(Routes.GetUpdateManifest, manifest);
+    public Task<Manifest> GetUpdateManifest(Manifest manifest) {
+      return Client.Wrap(client => client.PostJson<Manifest, Manifest>(Routes.GetUpdateManifest, manifest));
     }
 
     public async Task UpdateContent() {
       var contentArchive = Path.Combine(Constants.Client, Constants.ContentArchive);
       await using var stream = File.OpenRead(contentArchive);
-      await Client.PostAsync(Routes.UpdateContent, new StreamContent(stream));
+      await Client.Wrap(client => client.PostAsync(Routes.UpdateContent, new StreamContent(stream))!);
     }
 
     public async Task RefreshServer(UploadManifest manifest) {
-      await Client.PostAsJsonAsync(Routes.RefreshServer, manifest);
+      await Client.Wrap(client => client.PostAsJsonAsync(Routes.RefreshServer, manifest)!);
     }
 
-    public Task<ServerProps?> GetServerProps() {
-      return Client.GetJson<ServerProps>(Routes.GetServerProps);
+    public Task<ServerProps> GetServerProps() {
+      return Client.Wrap(client => client.GetJson<ServerProps>(Routes.GetServerProps));
     }
 
-    public Task<List<ServerPreset>?> GetAllowedServers() {
-      return Client.GetJson<List<ServerPreset>>(Routes.GetAllowedServers);
+    public Task<List<ServerPreset>> GetAllowedServers() {
+      return Client.Wrap(client => client.GetJson<List<ServerPreset>>(Routes.GetAllowedServers));
     }
 
-    public Task<IniFile?> GetServerConfig() {
-      return Client.GetJson<IniFile?>(Routes.GetServerConfig);
+    public Task<IniFile> GetServerConfig() {
+      return Client.Wrap(client => client.GetJson<IniFile?>(Routes.GetServerConfig));
     }
 
-    public Task<IniFile?> GetEntryList() {
-      return Client.GetJson<IniFile?>(Routes.GetEntryConfig);
+    public Task<IniFile> GetEntryList() {
+      return Client.Wrap(client => client.GetJson<IniFile?>(Routes.GetEntryConfig));
+    }
+
+    public Task<bool> HasPrivileges() {
+      return Client.Wrap(client => client.GetJson<bool>(Routes.HasPrivileges));
     }
   }
 }
