@@ -55,6 +55,10 @@ namespace ACContentSynchronizer.ClientGui.Modals {
     }
 
     private async Task GetServerPresets() {
+      if (string.IsNullOrEmpty(Server.Http)) {
+        return;
+      }
+
       ServerPresets = await _dataService.GetAllowedServers();
     }
 

@@ -55,17 +55,23 @@ namespace ACContentSynchronizer {
         if (string.IsNullOrEmpty(value)) {
           return defaultValue;
         }
+
+        var longValue = Convert.ToInt64(value);
+        if (type.IsEnum) {
+          return (T) Enum.ToObject(typeof(T), longValue);
+        }
+
+        return (T) Convert.ChangeType(longValue, type);
       }
 
-      if (type != typeof(bool)) {
-        return (T) Convert.ChangeType(value, type);
-      }
-
-      var byteValue = Convert.ToByte(value);
-      return (T) Convert.ChangeType(byteValue, type);
+      return (T) Convert.ChangeType(value, type);
     }
 
     private bool IsNumericType(Type type) {
+      if (type.IsEnum) {
+        return true;
+      }
+
       var typeCode = Type.GetTypeCode(type);
       switch (typeCode) {
         case TypeCode.Byte:

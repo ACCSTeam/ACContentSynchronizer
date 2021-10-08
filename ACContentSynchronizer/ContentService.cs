@@ -151,7 +151,7 @@ namespace ACContentSynchronizer {
       var downloadedTrack = GetDownloadedEntries(Constants.TracksFolder, connectionId)
         .FirstOrDefault();
 
-      var content = GetContentHierarchy(gamePath);
+      var (carsPath, tracksPath) = GetContentHierarchy(gamePath);
 
       foreach (var car in downloadedCars) {
         var carName = DirectoryUtils.Name(car);
@@ -159,7 +159,7 @@ namespace ACContentSynchronizer {
           continue;
         }
 
-        var contentCarPath = Path.Combine(content.CarsPath, carName);
+        var contentCarPath = Path.Combine(carsPath, carName);
         if (Directory.Exists(car)) {
           MoveContent(car, contentCarPath);
         }
@@ -167,7 +167,7 @@ namespace ACContentSynchronizer {
 
       if (!string.IsNullOrEmpty(downloadedTrack)) {
         var trackName = DirectoryUtils.Name(downloadedTrack);
-        var contentTrackPath = Path.Combine(content.TracksPath, trackName);
+        var contentTrackPath = Path.Combine(tracksPath, trackName);
 
         if (Directory.Exists(downloadedTrack)) {
           MoveContent(downloadedTrack, contentTrackPath);
@@ -177,19 +177,19 @@ namespace ACContentSynchronizer {
       DirectoryUtils.DeleteIfExists(Path.Combine(connectionId, Constants.DownloadsPath));
     }
 
-    private void MoveContent(string entry, string contentPath) {
+    private static void MoveContent(string entry, string contentPath) {
       DirectoryUtils.DeleteIfExists(contentPath);
       DirectoryUtils.Move(entry, contentPath);
     }
 
-    private IEnumerable<string> GetDownloadedEntries(string entryType, string connectionId) {
+    private static IEnumerable<string> GetDownloadedEntries(string entryType, string connectionId) {
       var path = Path.Combine(connectionId, Constants.DownloadsPath, entryType);
       return Directory.Exists(path)
         ? Directory.GetDirectories(path).ToList()
         : new();
     }
 
-    private (string CarsPath, string TracksPath) GetContentHierarchy(string path) {
+    private static (string CarsPath, string TracksPath) GetContentHierarchy(string path) {
       var contentPath = Path.Combine(path, Constants.ContentFolder);
       var contentCarsPath = Path.Combine(contentPath, Constants.CarsFolder);
       var contentTracksPath = Path.Combine(contentPath, Constants.TracksFolder);

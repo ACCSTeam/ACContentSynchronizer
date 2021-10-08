@@ -12,7 +12,6 @@
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.7" />
         <PackageReference Include="Avalonia.Desktop" Version="0.10.7" />
         <PackageReference Include="Avalonia.Diagnostics" Version="0.10.7" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.7" />
@@ -107,5 +106,64 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\ACContentSynchronizer\ACContentSynchronizer.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="Avalonia, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Animation, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Animation.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Base, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Base.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Controls, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Controls.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.DesignerSupport, Version=0.7.0.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.DesignerSupport.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Dialogs, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Dialogs.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Input, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Input.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Interactivity, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Interactivity.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Layout, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Layout.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Markup, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Markup.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Markup.Xaml, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Markup.Xaml.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.MicroCom, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.MicroCom.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.OpenGL, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.OpenGL.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Remote.Protocol, Version=0.10.999.0, Culture=neutral, PublicKeyToken=7ecde292c616a9f3">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Remote.Protocol.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Skia, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Skia.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Styling, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Styling.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Themes.Default, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Themes.Default.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Themes.Fluent, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Themes.Fluent.dll</HintPath>
+      </Reference>
+      <Reference Include="Avalonia.Visuals, Version=0.10.999.0, Culture=neutral, PublicKeyToken=c8d484a7012f9a8b">
+        <HintPath>..\..\Avalonia\src\Skia\Avalonia.Skia\bin\Debug\netstandard2.0\Avalonia.Visuals.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>

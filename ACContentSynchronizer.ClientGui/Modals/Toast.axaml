@@ -21,7 +21,6 @@
                              Kind="Close" />
     </Button>
     <Border>
-
       <TextBlock TextWrapping="Wrap"
                  Text="{Binding Message}" />
     </Border>

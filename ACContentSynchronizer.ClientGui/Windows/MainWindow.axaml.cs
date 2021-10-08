@@ -1,7 +1,10 @@
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using ACContentSynchronizer.ClientGui.Modals;
 using ACContentSynchronizer.ClientGui.Models;
 using ACContentSynchronizer.ClientGui.ViewModels;
 using Avalonia;
@@ -32,30 +35,26 @@ namespace ACContentSynchronizer.ClientGui.Windows {
         ? WindowTransparencyLevel.Transparent
         : WindowTransparencyLevel.AcrylicBlur;
 
-      this.GetObservable(IsActiveProperty).Subscribe(x => {
-        if (!x) {
-          Activate();
-        }
-        Console.WriteLine(x);
-      });
+      this.GetObservable(IsActiveProperty).Subscribe(Console.WriteLine);
     }
 
     public void DoShowDialogAsync<T, TInput>(TInput? vm = null)
       where T : Modal, new()
       where TInput : ModalViewModel, new() {
       ReactiveCommand.CreateFromTask(async () => {
-        var modal = (T?) Activator.CreateInstance(typeof(T));
-        vm ??= new();
+          var modal = (T?) Activator.CreateInstance(typeof(T));
+          vm ??= new();
 
-        if (modal == null) {
-          return;
-        }
+          if (modal == null) {
+            return;
+          }
 
-        modal.DataContext = vm;
-        vm.CloseRequest += () => { modal.Close(); };
-
-        await modal.ShowDialog(this);
-      }, null, AvaloniaScheduler.Instance).Execute();
+          modal.DataContext = vm;
+          vm.CloseRequest += modal.Close;
+          await modal.ShowDialog(this);
+          vm.CloseRequest -= modal.Close;
+        })
+        .Execute();
     }
   }
 }

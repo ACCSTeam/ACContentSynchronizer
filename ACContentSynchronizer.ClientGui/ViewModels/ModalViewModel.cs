@@ -1,5 +1,3 @@
-using ACContentSynchronizer.ClientGui.Models;
-
 namespace ACContentSynchronizer.ClientGui.ViewModels {
   public class ModalViewModel : ViewModelBase {
     public delegate void RequestClose();

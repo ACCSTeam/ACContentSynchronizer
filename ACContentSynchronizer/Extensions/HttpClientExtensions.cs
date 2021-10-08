@@ -6,17 +6,29 @@ using Newtonsoft.Json;
 namespace ACContentSynchronizer.Extensions {
   public static class HttpClientExtensions {
     public static async Task<T?> GetJson<T>(this HttpClient client, string action) {
+      if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) {
+        return default;
+      }
+
       var json = await client.GetStringAsync(action);
       return JsonConvert.DeserializeObject<T>(json);
     }
 
     public static async Task<T?> PostJson<T, TBody>(this HttpClient client, string action, TBody body) {
+      if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) {
+        return default;
+      }
+
       var response = await client.PostAsJsonAsync(action, body);
       var json = await response.Content.ReadAsStringAsync();
       return JsonConvert.DeserializeObject<T>(json);
     }
 
     public static async Task<string?> PostString<TBody>(this HttpClient client, string action, TBody body) {
+      if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) {
+        return default;
+      }
+
       var response = await client.PostAsJsonAsync(action, body);
       return await response.Content.ReadAsStringAsync();
     }
