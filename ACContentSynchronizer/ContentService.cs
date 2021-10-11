@@ -310,8 +310,9 @@ namespace ACContentSynchronizer {
         .Select(x => {
           var iniProvider = new IniProvider(x);
           var config = iniProvider.GetConfig(Constants.WeatherFolder);
-          return config.V("LAUNCHER", "NAME", DirectoryUtils.Name(x));
-          ;
+          return config != null
+            ? config.V("LAUNCHER", "NAME", DirectoryUtils.Name(x))
+            : "";
         });
 
       return weathers;

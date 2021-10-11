@@ -44,14 +44,20 @@ namespace ACContentSynchronizer.Server.Services {
 
       var presets = Directory.GetDirectories(serverPath);
       return presets.Select(path => {
-        var preset = DirectoryUtils.Name(path);
-        var serverConfig = new IniProvider(Path.Combine(serverPath, preset));
-        var serverName = serverConfig.GetServerConfig().V("SERVER", "NAME", preset);
-        return new ServerPreset {
-          Name = serverName,
-          Preset = preset,
-        };
-      }).ToList();
+          var preset = DirectoryUtils.Name(path);
+          var iniProvider = new IniProvider(Path.Combine(serverPath, preset));
+          var serverConfig = iniProvider.GetServerConfig();
+          if (serverConfig == null) {
+            return null;
+          }
+
+          var serverName = serverConfig.V("SERVER", "NAME", preset);
+          return new ServerPreset {
+            Name = serverName,
+            Preset = preset,
+          };
+        }).Where(preset => preset != null)
+        .ToList()!;
     }
 
     public async Task GetArchive(HttpRequest request, string connectionId) {
@@ -142,16 +148,20 @@ namespace ACContentSynchronizer.Server.Services {
       _content.ExecuteCommand(serverExecutablePath, _preset);
     }
 
-    public IniFile GetServerConfig() {
+    public IniFile? GetServerConfig() {
       return _iniProvider.GetServerConfig();
     }
 
-    public IniFile GetEntryList() {
+    public IniFile? GetEntryList() {
       return _iniProvider.GetEntryList();
     }
 
     private string GetLocalPort() {
-      return _iniProvider.GetServerConfig().V("SERVER", "HTTP_PORT", "8081");
+      const string? defaultPort = "8081";
+      var serverConfig = _iniProvider.GetServerConfig();
+      return serverConfig == null
+        ? defaultPort
+        : serverConfig.V("SERVER", "HTTP_PORT", defaultPort);
     }
 
     private KunosClient Client() {
@@ -169,11 +179,16 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public string? GetTrackName() {
-      return _iniProvider.GetServerConfig().V<string?>("SERVER", "TRACK", null);
+      var serverConfig = _iniProvider.GetServerConfig();
+      return serverConfig?.V<string?>("SERVER", "TRACK", null);
     }
 
     public ServerProps GetServerProps() {
       var serverConfig = _iniProvider.GetServerConfig();
+      if (serverConfig == null) {
+        throw new("");
+      }
+
       return new() {
         Name = serverConfig.V("SERVER",
           "NAME", ""),
@@ -183,7 +198,12 @@ namespace ACContentSynchronizer.Server.Services {
     }
 
     public string[] GetCars() {
-      return _iniProvider.GetEntryList().Source
+      var entryList = _iniProvider.GetEntryList();
+      if (entryList == null) {
+        return Array.Empty<string>();
+      }
+
+      return entryList.Source
         .Select(x => x.Value.V("MODEL", ""))
         .ToArray();
     }
@@ -199,8 +219,18 @@ namespace ACContentSynchronizer.Server.Services {
       };
 
       var password = _context.HttpContext?.GetHeader(DefaultHeaders.AccessPassword);
-      return passwordTypeString.Any(s => {
-        var serverPassword = iniProvider.GetServerConfig().V("SERVER", s, "");
+      var adminPassword = _configuration["AdminPassword"];
+      if (!string.IsNullOrEmpty(adminPassword) && adminPassword == password) {
+        return true;
+      }
+
+      var serverConfig = iniProvider.GetServerConfig();
+      if (serverConfig == null) {
+        return false;
+      }
+
+      return passwordTypeString.Any(type => {
+        var serverPassword = serverConfig.V("SERVER", type, "");
         if (string.IsNullOrEmpty(serverPassword)) {
           return true;
         }

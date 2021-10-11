@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ACContentSynchronizer.Server.Endpoints.InformationEndpoints {
   public class GetServerConfig : BaseAsyncEndpoint
     .WithoutRequest
-    .WithResponse<IniFile> {
+    .WithResponse<IniFile?> {
     private readonly ServerConfigurationService _serverConfiguration;
 
     public GetServerConfig(ServerConfigurationService serverConfiguration) {
@@ -17,8 +17,8 @@ namespace ACContentSynchronizer.Server.Endpoints.InformationEndpoints {
 
     [HttpGet(Routes.GetServerConfig)]
     [AuthorizedRoute(PasswordType.User)]
-    public override Task<ActionResult<IniFile>> HandleAsync(CancellationToken cancellationToken = new()) {
-      return Task.FromResult<ActionResult<IniFile>>(_serverConfiguration.GetServerConfig());
+    public override Task<ActionResult<IniFile?>> HandleAsync(CancellationToken cancellationToken = new()) {
+      return Task.FromResult<ActionResult<IniFile?>>(_serverConfiguration.GetServerConfig());
     }
   }
 }

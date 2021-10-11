@@ -1,35 +1,36 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Design.PreviewWith>
-    <Border Padding="20">
-      <!-- Add Controls for Previewer Here -->
-    </Border>
-  </Design.PreviewWith>
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
 
-  <Style Selector="TextBox.Inline">
-    <Setter Property="Padding" Value="0" />
-    <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="MinHeight" Value="0" />
-    <Setter Property="MinWidth" Value="0" />
-    <Setter Property="Height" Value="20" />
-  </Style>
+    <Style Selector="TextBox.Inline">
+        <Setter Property="Margin" Value="0,4,0,0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Height" Value="20" />
+    </Style>
 
-  <Style Selector="TextBox.Inline ItemsPresenter">
-    <Setter Property="MaxHeight" Value="0" />
-    <Setter Property="MaxWidth" Value="0" />
-  </Style>
+    <Style Selector="TextBox.Inline ItemsPresenter">
+        <Setter Property="MaxHeight" Value="0" />
+        <Setter Property="MaxWidth" Value="0" />
+    </Style>
 
-  <Style Selector="TextBox.Inline /template/ Border#PART_BorderElement">
-    <Setter Property="BorderThickness" Value="0" />
-  </Style>
+    <Style Selector="TextBox.Inline /template/ Border#PART_BorderElement">
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
 
-  <Style Selector="TextBox.Inline Layoutable">
-    <Setter Property="HorizontalAlignment" Value="Left" />
-    <Setter Property="VerticalAlignment" Value="Center" />
-  </Style>
+    <Style Selector="TextBox.Inline Layoutable">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
 
-  <Style Selector="TextBox.Inline ContentControl">
-    <Setter Property="HorizontalContentAlignment" Value="Left" />
-    <Setter Property="VerticalContentAlignment" Value="Center" />
-  </Style>
+    <Style Selector="TextBox.Inline ContentControl">
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
 </Styles>

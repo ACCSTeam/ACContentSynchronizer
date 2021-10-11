@@ -17,22 +17,22 @@ namespace ACContentSynchronizer {
       _folderPath = folderPath;
     }
 
-    public IniFile GetConfig(string config) {
+    public IniFile? GetConfig(string config) {
       var serverCfgPath = Path.Combine(_folderPath, $"{config}.ini");
       return IniToDictionary(serverCfgPath);
     }
 
-    public IniFile GetServerConfig() {
+    public IniFile? GetServerConfig() {
       return GetConfig(Constants.ServerCfg);
     }
 
-    public IniFile GetEntryList() {
+    public IniFile? GetEntryList() {
       return GetConfig(Constants.EntryList);
     }
 
-    private static IniFile IniToDictionary(string path) {
+    private static IniFile? IniToDictionary(string path) {
       if (!File.Exists(path)) {
-        return new();
+        return null;
       }
 
       var lines = File.ReadAllLines(path)
